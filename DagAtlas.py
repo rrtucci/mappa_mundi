@@ -13,10 +13,10 @@ def get_all_dag_titles(dag_dir):
             for file_name in os.listdir(dag_dir)]
 
 class DagAtlas:
-    def __init__(self, txt_dir, dag_dir, least_sim=.3):
+    def __init__(self, txt_dir, dag_dir, sim_threshold=.3):
         self.txt_dir = txt_dir
         self.dag_dir = dag_dir
-        self.least_sim = least_sim
+        self.sim_threshold = sim_threshold
 
     def update_gains_for_two_m_titles(self, title1, title2):
         all_dag_titles = get_all_dag_titles(self.dag_dir)
@@ -33,22 +33,24 @@ class DagAtlas:
 
         nd1_nd2_pairs = []
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
-                    if ztnz_similarity(nd1.zntz, nd2.zntz) > self.least_sim:
+                    if ztnz_similarity(nd1.zntz, nd2.zntz)\
+                            > self.sim_threshold:
                         nd1_nd2_pairs.append((nd1, nd2))
         nodes1, nodes2 = list(zip(*nd1_nd2_pairs))
-        nodes1, nodes2 = set(nodes1), set(nodes2)
+        # remove repeats
+        nodes1, nodes2 = list(set(nodes1)), list(set(nodes2))
 
         for nd1a, nd1b in product(nodes1, nodes1):
             if nd1a.id_num < nd1b.id_num:
                 nd1a_matches = set([nd2 in nodes2 for (nd1a, nd2) in \
                         nd1_nd2_pairs])
-                nd2b_matches = set([nd2 in nodes2 for (nd1b, nd2) in \
+                nd1b_matches = set([nd2 in nodes2 for (nd1b, nd2) in \
                         nd1_nd2_pairs])
-                for nd2a, nd2b in product(nd1a_matches, nd2b_matches):
+                for nd2a, nd2b in product(nd1a_matches, nd1b_matches):
                     if nd2a.id_num < nd2b.id_num:
-                        dag1.update_gains((nd1a.id_num,
+                        dag1.update_arrow((nd1a.id_num,
                                            nd1b.id_num))
-                        dag2.update_gains((nd2a.id_num,
+                        dag2.update_arrow((nd2a.id_num,
                                            nd2b.id_num))
         dag1.save_self(self.dag_dir)
         dag2.save_self(self.dag_dir)
@@ -58,6 +60,7 @@ class DagAtlas:
         if titles_list is None:
             titles_list = all_titles
         assert set(titles_list).issubset(set(all_titles))
+        assert len(titles_list)>=2
         title_ids = [all_titles.index(title) for title in titles_list]
         num = len(titles_list)
         for i, j in product(range(num), range(num)):

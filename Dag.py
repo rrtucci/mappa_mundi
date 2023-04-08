@@ -27,7 +27,7 @@ class Dag:
         path = dag_dir + "/" + self.m_title + ".skops"
         dump(self, path)
 
-    def update_gains(self, arrow):
+    def update_arrow(self, arrow):
         if arrow not in self.arrows:
             self.arrows.append(arrow)
             self.gains.append(1)
