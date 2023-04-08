@@ -1,0 +1,30 @@
+Consider the following quote:
+"A range of mountains takes form in the haze.
+Moving closer.
+The mountains are piles of TRASH.
+The entire surface is nothing but waste.
+
+'..We're gonna find adventure in the evening air...'
+
+A silhouetted city in the distance.
+What looks like skyscrapers turns into trash.
+Thousands of neatly stacked CUBES OF TRASH, stories high.
+Rows and rows of stacked cubes, like city avenues.
+They go on for miles."
+
+Give an enumerated list summarizing this quote.
+Each list item is a simple declarative sentence
+consisting of a subject phrase and a verb phrase.
+The list items are in chronological order of occurrence
+in the quote.
+
+1. A range of mountains appears in the haze.
+2. The narrator moves closer.
+3. The mountains are revealed to be piles of trash.
+4. The entire surface is described as nothing but waste.
+5. The narrator speaks of finding adventure in the evening air.
+6. A silhouetted city appears in the distance.
+7. The skyscrapers turn out to be made of trash.
+8. Thousands of neatly stacked cubes of trash are seen, stories high.
+9. Rows and rows of stacked cubes are seen, resembling city avenues.
+10. The expanse of trash goes on for miles.

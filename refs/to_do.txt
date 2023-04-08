@@ -1,0 +1,47 @@
+
+
+1211 films
+
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from collections import defaultdict
+
+# Download required NLTK resources
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# Open the input text file
+with open('input.txt', 'r') as file:
+    text = file.read()
+
+# Tokenize the text into sentences
+sentences = sent_tokenize(text)
+
+# Initialize the lemmatizer
+lemmatizer = WordNetLemmatizer()
+
+# Initialize a dictionary to store the results
+results = defaultdict(list)
+
+# Loop over the sentences
+for sentence in sentences:
+    # Tokenize the sentence into words
+    words = word_tokenize(sentence)
+
+    # Filter out stopwords
+    words = [word.lower() for word in words if word.lower() not in stopwords.words('english') and word.isalpha()]
+
+    # Lemmatize the words
+    lemmas = [lemmatizer.lemmatize(word) for word in words]
+
+    # Identify the nouns in the lemmas
+    nouns = [word for word, pos in nltk.pos_tag(lemmas) if pos.startswith('N')]
+
+    # Add the nouns to the results dictionary
+    results[sentence] = nouns
+
+# Print the results
+print(results)
