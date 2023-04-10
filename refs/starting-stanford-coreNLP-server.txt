@@ -1,0 +1,14 @@
+Reference:
+https://towardsdatascience.com/natural-language-processing-using-stanfords-corenlp-d9e64c1e1024
+
+# check java installed properly
+java -version
+
+# starting server
+# cd to folder with stanford java code
+cd /StanfordParser/stanford-corenlp-4.5.4/
+
+# no need to deactivate conda virtual environment
+
+# start server (IMPORTANT: make sure this is one line)
+java -mx6g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -timeout 5000

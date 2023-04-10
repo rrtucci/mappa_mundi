@@ -1,0 +1,5 @@
+CLASSPATH
+C:\NLP\stanford-parser-full-2018-02-27;C:\NLP\stanford-postagger-full-2015-12-09;C:\NLP\stanford-ner-2015-12-09
+
+STANFORD_MODELS
+C:\NLP\stanford-ner-2015-12-09\classifiers;C:\NLP\stanford-postagger-full-2015-12-09\models
