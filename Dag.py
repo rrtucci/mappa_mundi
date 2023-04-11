@@ -50,7 +50,7 @@ class Dag:
         else:
             self.arrow_to_reps[arrow] += 1
 
-    def get_node_to_sentences_dict(self, remove_dialog=False):
+    def get_node_to_zntz_dicts(self, remove_dialog=False):
         if remove_dialog:
             prep_dir = PREP_DIR
             simp_dir = SIMP_DIR

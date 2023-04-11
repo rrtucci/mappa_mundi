@@ -45,7 +45,7 @@ class DagAtlas:
         dag1.save_self(self.dag_dir)
         dag2.save_self(self.dag_dir)
             
-    def update_arrows_for_batch_of_m_scripts(self, titles_list=None):
+    def update_arrows_in_batch_of_m_scripts(self, titles_list=None):
         all_titles = [file_name[:-len(".txt")]
             for file_name in os.listdir(self.txt_dir)]
 
@@ -59,3 +59,14 @@ class DagAtlas:
             if i < j:
                 self.update_arrows_for_two_m_titles(title_ids[i],
                                                     title_ids[j])
+if __name__ == "__main__":
+    def main():
+        remove_dialog = True
+        atlas = DagAtlas(
+            txt_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,
+            dag_dir= DAG_DIR,
+            simi_threshold=SIMI_THRESHOLD)
+        all_titles = [file_name[:-len(".txt")] \
+                      for file_name in os.listdir(M_SCRIPTS_DIR)]
+        atlas.update_arrows_in_batch_of_m_scripts(
+            titles_list= all_titles[0:2])

@@ -621,9 +621,25 @@ def simplify_batch_of_m_scripts(
 
 
 if __name__ == "__main__":
-    def main():
+    def main1():
         path = "All_types_of_inputs.txt"
         with open(path, "r") as f:
             paragraph = f.read()
         simplify_paragraph(paragraph, verbose=True)
-    main()
+    def main2():
+        in_dir = "short_stories"
+        out_dir = "short_stories_prep"
+        file_names = os.listdir(in_dir)[0:2]
+        simplify_batch_of_m_scripts(
+            in_dir, out_dir,
+            file_names)
+    def main3():
+        remove_dialogs = True
+        in_dir = PREP_DIR if not remove_dialogs else PREP_RD_DIR
+        out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
+        file_names = os.listdir(in_dir)[0:2]
+        simplify_batch_of_m_scripts(
+            in_dir, out_dir,
+            file_names)
+
+    main1()

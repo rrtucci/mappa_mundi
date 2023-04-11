@@ -180,15 +180,13 @@ def preprocess_batch_of_m_scripts(
                                 file_name,
                                 remove_dialog=remove_dialog)
 
+
 if __name__ == "__main__":
     from my_globals import *
     def main1():
         remove_dialog = True
         in_dir = M_SCRIPTS_DIR
-        if remove_dialog:
-            out_dir = PREP_DIR
-        else:
-            out_dir = PREP_RD_DIR
+        out_dir = PREP_DIR if not remove_dialog else PREP_RD_DIR
         file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
             in_dir, out_dir,
