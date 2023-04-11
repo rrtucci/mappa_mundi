@@ -9,6 +9,7 @@ from anytree import NodeMixin, Node, AnyNode, RenderTree
 import re
 import os
 import subprocess
+from my_globals import *
 
 version = subprocess.check_output(
     ['java', '-version'], stderr=subprocess.STDOUT)
@@ -20,7 +21,8 @@ print("JAVA_HOME=\t", os.environ['JAVA_HOME'])
 from nltk.parse.stanford import StanfordParser
 parser = StanfordParser()
 
-def simplify_paragraph(in_path):
+def simplify_paragraph(paragraph, verbose=True):
+    simple_ztnz_list = []
 
     # split = []
     # simple_sent = []
@@ -456,12 +458,11 @@ def simplify_paragraph(in_path):
 
         return tokenized_sent
 
-    with open(in_path, "r") as f:
-        paragraph = f.read()
     sentences = nltk.sent_tokenize(paragraph)
     for sentence in sentences:
-        print(sentences.index(sentence)),
-        print("ComplexSentence: " + sentence)
+        if verbose:
+            print(sentences.index(sentence)),
+            print("ComplexSentence: " + sentence)
         tokenized_sent = tokenize(sentence)
         # print(tokenized_sent)
 
@@ -503,9 +504,13 @@ def simplify_paragraph(in_path):
                     # i.pop(i.index(","))
                     del (i[i.index(",")])
                 if (".") not in (i):
-                    print("Simple sentence: " + "".join(i) + ".")
+                    if verbose:
+                        print("Simple sentence: " + "".join(i) + ".")
+                    simple_ztnz_list.append("".join(i) + ".")
                 else:
-                    print("Simple sentence: " + "".join(i))
+                    if verbose:
+                        print("Simple sentence: " + "".join(i))
+                    simple_ztnz_list.append("".join(i))
             n = 0
             but = 0
             # print("."),
@@ -555,9 +560,13 @@ def simplify_paragraph(in_path):
                     while i.count(",") > 0:
                         i.pop(i.index(","))
                     if (".") not in (i):
-                        print("Simple sentence: " + " ".join(i) + ".")
+                        if verbose:
+                            print("Simple sentence: " + " ".join(i) + ".")
+                        simple_ztnz_list.append(" ".join(i) + ".")
                     else:
-                        print("Simple sentence: " + " ".join(i))
+                        if verbose:
+                            print("Simple sentence: " + " ".join(i))
+                        simple_ztnz_list.append(" ".join(i))
                 # print("."),
             except:
                 continue
@@ -583,9 +592,38 @@ def simplify_paragraph(in_path):
                 # print("."),
             except:
                 continue
+    return simple_ztnz_list
+
+def simplify_one_m_script(
+    in_dir, out_dir,
+    file_name):
+    inpath = in_dir + "/" + file_name
+    outpath = out_dir + "/" + file_name
+    new_lines = []
+    with open(inpath, "r") as f:
+        for line in f:
+            simple_ztnz_list = simplify_paragraph(line)
+            new_lines.append(ZNTZ_SEPARATOR.join(simple_ztnz_list))
+    with open(outpath, "w", encoding="utf-8") as f:
+        for line in new_lines:
+            f.write(line + "\n")
+
+
+def simplify_batch_of_m_scripts(
+        in_dir, out_dir,
+        file_names):
+    all_file_names = os.listdir(in_dir)
+    assert set(file_names) in set(all_file_names)
+    for file_name in file_names:
+        i = all_file_names.index(file_name)
+        print('%i.' % (i + 1))
+        simplify_one_m_script(in_dir, out_dir, file_name)
+
 
 if __name__ == "__main__":
     def main():
         path = "All_types_of_inputs.txt"
-        simplify_paragraph(path)
+        with open(path, "r") as f:
+            paragraph = f.read()
+        simplify_paragraph(paragraph, verbose=True)
     main()

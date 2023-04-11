@@ -1,0 +1,13 @@
+nltk~=3.8.1
+# pycorenlp~=0.3.0
+anytree~=2.8.0
+skops~=0.6.0
+graphviz~=2.50.0
+matplotlib~=3.6.3
+pydotplus~=2.0.2
+networkx~=3.0
+ipython~=8.8.0
+pillow~=9.4.0
+requests~=2.28.2
+beautifulsoup4~=4.11.1
+python-slugify~=8.0.1

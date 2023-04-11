@@ -6,11 +6,13 @@ import re
 import os
 from nltk import tokenize
 import collections as co
+from my_globals import *
+
 
 def preprocess_one_m_script(in_dir,
                             out_dir,
                             file_name,
-                            remove_dialog=True):
+                            remove_dialog=False):
     print('fetching %s' % file_name)
     def count_leading_wh_sp(str0):
         # wh_sp = white space
@@ -165,38 +167,32 @@ def preprocess_one_m_script(in_dir,
 
 def preprocess_batch_of_m_scripts(
         in_dir, out_dir,
-        first=1, last=5000,
-        remove_dialog=True):
+        file_names,
+        remove_dialog=False):
 
-    file_list = os.listdir(in_dir)
-    num_files = len(file_list)
-    # print("kkdfg", num_files)
-    assert first <= last
-    if last > num_files:
-        last = num_files
-    if first < 1:
-        first = 1
-    # print("cvgt", os.listdir(in_dir))
-    for i, file_name in enumerate(file_list):
-        if first<= i+1 <= last:
-            print('%i.' % (i + 1))
-            preprocess_one_m_script(in_dir,
-                                    out_dir,
-                                    file_name,
-                                    remove_dialog)
-
+    all_file_names = os.listdir(in_dir)
+    assert set(file_names) in set(all_file_names)
+    for file_name in file_names:
+        i = all_file_names.index(file_name)
+        print('%i.' % (i + 1))
+        preprocess_one_m_script(in_dir,
+                                out_dir,
+                                file_name,
+                                remove_dialog=remove_dialog)
 
 if __name__ == "__main__":
+    from my_globals import *
     def main1():
         remove_dialog = True
-        in_dir = "m_scripts"
+        in_dir = M_SCRIPTS_DIR
         if remove_dialog:
-            out_dir = "m_scripts_prep_n"
+            out_dir = PREP_DIR
         else:
-            out_dir = "m_scripts_prep_nd"
+            out_dir = PREP_RD_DIR
+        file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
             in_dir, out_dir,
-            first=1, last=1,
+            file_names,
             remove_dialog=remove_dialog)
 
         file_name = "x-men.txt"
@@ -208,9 +204,10 @@ if __name__ == "__main__":
         remove_dialog = False
         in_dir = "short_stories"
         out_dir = "short_stories_prep"
+        file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
             in_dir, out_dir,
-            first=1, last=2,
+            file_names,
             remove_dialog=remove_dialog)
 
     # main1()

@@ -1,12 +1,15 @@
 class Node:
-    def __init__(self,
-                 m_title,
-                 id_num,
-                 zntz):
-        self.m_title = m_title
-        assert id_num >=0
-        self.id_num = id_num
-        self.zntz = zntz
+    def __init__(self, time, place):
+        self.time = time
+        self.place = place
+        assert time >=0 and place >= 0
+
+    def coords(self):
+        return (self.time, self.place)
+
+
+
+
 
 
 

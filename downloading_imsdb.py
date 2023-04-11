@@ -26,7 +26,7 @@ d1_html, d1_soup->d2_url
 from bs4 import BeautifulSoup
 import requests
 from slugify import slugify # python-slugify
-BASE_URL = "https://imsdb.com"
+from my_globals import *
 
 def get_d1_urls_and_titles():
     d1_urls = []
@@ -96,7 +96,7 @@ def get_batch_of_m_scripts(d1_urls, titles,
         dashed_title = slugify(titles[i])
         print('%i. fetching %s' % (i+1, dashed_title))
         m_script, missing = get_one_m_script(d1_url, stub_only=stub_only)
-        outpath = "m_scripts" + '/' + dashed_title + '.txt'
+        outpath = M_SCRIPTS_DIR + '/' + dashed_title + '.txt'
         if missing:
             missing_m_scripts.append(dashed_title + '.txt')
         else:
