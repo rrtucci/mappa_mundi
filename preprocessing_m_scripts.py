@@ -50,7 +50,9 @@ def preprocess_one_m_script(in_dir,
     lines = new_lines
 
     # regex for parenthetical remarks
-    pattern_par = re.compile(r'\[(.*?)\]|\((.*?)\)|\{(.*?)\}')
+    pattern_paren = re.compile(r'\[(.*?)\]|\((.*?)\)|\{(.*?)\}')
+    # regex for period followed by white spaces + number
+    pattern_period = r"\.(?=\s*\d)"
 
     # Substitutions. If this results in empty line,
     # remove it.
@@ -58,9 +60,11 @@ def preprocess_one_m_script(in_dir,
     for line in lines:
         # print("ssdf", line)
         # remove parenthetical remarks
-        line = re.sub(pattern_par, "", line)
+        line = re.sub(pattern_paren, "", line)
         # Replace tabs by 12 blank spaces
         line = re.sub(r"\t", " "*12, line)
+        # replace period by dash if period followed by number
+        line = re.sub(pattern_period, "-", line)
         # print("\tssdf", line)
         if len(line)>=1:
             new_lines.append(line)
@@ -82,7 +86,7 @@ def preprocess_one_m_script(in_dir,
         indent = next_indent
 
     # Regex for string that contains at least 2 lower case letters
-    # Got cases where line was just "is."
+    # Found cases where line was just "is."
     pattern_lc = re.compile(r'^(.*[a-z]){2,}.*$')
 
     # Reject lines that don't contain at least 2 lower case letters string.
@@ -90,6 +94,7 @@ def preprocess_one_m_script(in_dir,
     lines = [line for line in lines if re.search(pattern_lc, line)]
 
     white_spaces = [count_leading_wh_sp(line) for line in lines]
+    # Counter returns dictionary mapping item to its number of repetitions
     wh_sp_counter = co.Counter(white_spaces)
     # print("llkh", wh_sp_counter)
     sum_reps = sum(wh_sp_counter.values())
@@ -123,18 +128,13 @@ def preprocess_one_m_script(in_dir,
     print("\tdialog indents=", dial_indents)
     print("\tnarration indents=", narr_indents)
 
-
-    # case more narration than dialog
-    if dial_indents and narr_indents:
-        if max(dial_indents) < min(narr_indents):
-            dial_indents, narr_indents = narr_indents, dial_indents
-
-    # keep only narration and dialog indentations. Also remove smallest indent.
+    # keep only narration (less likely than narration) indentations. Also
+    # remove smallest indent.
     new_lines = []
     for line in lines:
         indent = count_leading_wh_sp(line)
         if indent in dial_indents +  narr_indents:
-            if len(narr_indents)==0:
+            if not narr_indents or not dial_indents:
                 # there is no difference in indentation between narr and dial
                 new_lines.append(line)
             else:
@@ -161,18 +161,21 @@ def preprocess_one_m_script(in_dir,
     # split script into sentences
     lines = tokenize.sent_tokenize(script)
 
+    # remove sentences that are a single character
+    lines = [line for line in lines if len(line)>1]
+
     with open(outpath, "w", encoding="utf-8") as f:
         for line in lines:
             f.write(line + "\n")
 
 def preprocess_batch_of_m_scripts(
         in_dir, out_dir,
-        file_names,
+        batch_file_names,
         remove_dialog=False):
 
     all_file_names = os.listdir(in_dir)
-    assert set(file_names) in set(all_file_names)
-    for file_name in file_names:
+    assert set(batch_file_names).issubset(set(all_file_names))
+    for file_name in batch_file_names:
         i = all_file_names.index(file_name)
         print('%i.' % (i + 1))
         preprocess_one_m_script(in_dir,
@@ -184,29 +187,30 @@ def preprocess_batch_of_m_scripts(
 if __name__ == "__main__":
     from my_globals import *
     def main1():
-        remove_dialog = True
-        in_dir = M_SCRIPTS_DIR
-        out_dir = PREP_DIR if not remove_dialog else PREP_RD_DIR
-        file_names = os.listdir(in_dir)[0:2]
+        remove_dialog = False
         preprocess_batch_of_m_scripts(
-            in_dir, out_dir,
-            file_names,
+            in_dir=M_SCRIPTS_DIR,
+            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
+            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:10],
             remove_dialog=remove_dialog)
 
-        file_name = "x-men.txt"
-        preprocess_one_m_script(in_dir,
-                                out_dir,
-                                file_name,
-                                remove_dialog=remove_dialog)
     def main2():
+        remove_dialog = True
+        preprocess_one_m_script(
+            in_dir=M_SCRIPTS_DIR,
+            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
+            file_name = "x-men.txt",
+            remove_dialog=remove_dialog)
+    def main3():
         remove_dialog = False
         in_dir = "short_stories"
         out_dir = "short_stories_prep"
-        file_names = os.listdir(in_dir)[0:2]
+        batch_file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
             in_dir, out_dir,
-            file_names,
+            batch_file_names,
             remove_dialog=remove_dialog)
 
-    # main1()
-    main2()
+    main1()
+    # main2()
+    # main3()

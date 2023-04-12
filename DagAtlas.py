@@ -10,6 +10,7 @@ class DagAtlas:
         self.simi_threshold = simi_threshold
 
     def update_arrows_for_two_m_titles(self, title1, title2):
+
         all_dag_titles = [file_name[:-len(".skops")]
             for file_name in os.listdir(self.dag_dir)]
 
@@ -23,14 +24,19 @@ class DagAtlas:
         else:
             dag2 = Dag(title2, dag_dir=self.dag_dir)
 
+        node_to_simple_zntz1 = dag1.get_node_to_simple_zntz_dict()
+        node_to_simple_zntz2 = dag2.get_node_to_simple_zntz_dict()
+
         nd1_nd2_pairs = []
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
-                    if ztnz_similarity(nd1.zntz, nd2.zntz)\
-                            > self.simi_threshold:
-                        nd1_nd2_pairs.append((nd1, nd2))
+            ztnz1 = node_to_simple_zntz1[nd1]
+            ztnz2 = node_to_simple_zntz1[nd2]
+            if ztnz_similarity(ztnz1, ztnz2) > self.simi_threshold:
+                nd1_nd2_pairs.append((nd1, nd2))
         nodes1, nodes2 = list(zip(*nd1_nd2_pairs))
         # remove repeats
-        nodes1, nodes2 = list(set(nodes1)), list(set(nodes2))
+        nodes1 = list(set(nodes1))
+        nodes2 = list(set(nodes2))
 
         for nd1a, nd1b in product(nodes1, nodes1):
             if nd1a.time < nd1b.time:
@@ -40,21 +46,27 @@ class DagAtlas:
                         nd1_nd2_pairs])
                 for nd2a, nd2b in product(nd1a_matches, nd1b_matches):
                     if nd2a.time < nd2b.time:
-                        dag1.update_arrow((nd1a, nd1b))
-                        dag2.update_arrow((nd2a, nd2b))
+                        change = 1
+                    elif nd2a.time > nd2b.time:
+                        change = -PENALTY
+                    else:
+                        change = 0
+                    dag1.update_arrow((nd1a, nd1b), change)
+                    dag2.update_arrow((nd2a, nd2b), change)
+
         dag1.save_self(self.dag_dir)
         dag2.save_self(self.dag_dir)
             
-    def update_arrows_in_batch_of_m_scripts(self, titles_list=None):
+    def update_arrows_in_batch_of_m_scripts(self, batch_titles=None):
         all_titles = [file_name[:-len(".txt")]
             for file_name in os.listdir(self.txt_dir)]
 
-        if titles_list is None:
-            titles_list = all_titles
-        assert set(titles_list).issubset(set(all_titles))
-        assert len(titles_list)>=2
-        title_ids = [all_titles.index(title) for title in titles_list]
-        num = len(titles_list)
+        if batch_titles is None:
+            batch_titles = all_titles
+        assert set(batch_titles).issubset(set(all_titles))
+        assert len(batch_titles) >= 2
+        title_ids = [all_titles.index(title) for title in batch_titles]
+        num = len(batch_titles)
         for i, j in product(range(num), range(num)):
             if i < j:
                 self.update_arrows_for_two_m_titles(title_ids[i],
@@ -69,4 +81,4 @@ if __name__ == "__main__":
         all_titles = [file_name[:-len(".txt")] \
                       for file_name in os.listdir(M_SCRIPTS_DIR)]
         atlas.update_arrows_in_batch_of_m_scripts(
-            titles_list= all_titles[0:2])
+            batch_titles=all_titles[0:2])

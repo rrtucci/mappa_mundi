@@ -101,13 +101,16 @@ def get_batch_of_m_scripts(d1_urls, titles,
             missing_m_scripts.append(dashed_title + '.txt')
         else:
             written = False
-            with open(outpath, "w", encoding='utf-8',
-                      newline="\n") as f:
-                print("m_script num of characters=", len(m_script))
-                f.write(m_script)
-                written = True
+            len_script = len(m_script)
+            print("m_script num of characters=", len_script)
+            if len_script > 500:
+                with open(outpath, "w", encoding='utf-8',
+                          newline="\n") as f:
+                    f.write(m_script)
+                    written = True
             if not written:
-                print("----------- Not written: ", dashed_title)
+                # m-scripts with less than 500 char are just stubs
+                print("------------------ Found just a stub: ", dashed_title)
                 missing_m_scripts.append(dashed_title + '.txt')
     print("missing m_scripts:")
     print(missing_m_scripts)
@@ -121,13 +124,12 @@ if __name__ == "__main__":
         print(titles)
         assert len(urls)==len(titles)
         print("number of films=", len(urls)) # 1211
-        # 64 missing
-        # 1211-64=1147 expected 238 MB
-        # folder only has 1136, 11 less than 1147 expected
+        # 75 missing
+        # 1211-75=1136 expected 238 MB
 
     def main2():
         d1_urls, titles = get_d1_urls_and_titles()
         get_batch_of_m_scripts(d1_urls, titles,
-            first=1, last=10, stub_only=False)
+            first=1, last=100, stub_only=False)
     #main1()
     main2()

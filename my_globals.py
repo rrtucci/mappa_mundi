@@ -9,5 +9,5 @@ DAG_DIR = "dag_atlas"
 DAG_RD_DIR = "dag_atlas_rd"
 
 ZNTZ_SEPARATOR = "(^)"
-
 SIMI_THRESHOLD = .3
+PENALTY = 2/3  # PENALTY >= 2/3
