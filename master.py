@@ -1,6 +1,6 @@
 from downloading_imsdb import *
 from preprocessing_m_scripts import *
-from ztnz_simplification import *
+from ztnz_simplification_stanford import *
 from DagAtlas import *
 
 remove_dialog = True

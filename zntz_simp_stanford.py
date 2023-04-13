@@ -23,6 +23,7 @@ parser = StanfordParser()
 
 def simplify_zntz(sentence0, verbose=False):
     simple_ztnz_list = []
+    success = False
 
     # split = []
     # simple_sent = []
@@ -506,10 +507,12 @@ def simplify_zntz(sentence0, verbose=False):
                     if verbose:
                         print("Simple sentence: " + "".join(i) + ".")
                     simple_ztnz_list.append("".join(i) + ".")
+                    success = True
                 else:
                     if verbose:
                         print("Simple sentence: " + "".join(i))
                     simple_ztnz_list.append("".join(i))
+                    success = True
             n = 0
             but = 0
             # print("."),
@@ -562,10 +565,12 @@ def simplify_zntz(sentence0, verbose=False):
                         if verbose:
                             print("Simple sentence: " + " ".join(i) + ".")
                         simple_ztnz_list.append(" ".join(i) + ".")
+                        success = True
                     else:
                         if verbose:
                             print("Simple sentence: " + " ".join(i))
                         simple_ztnz_list.append(" ".join(i))
+                        success = True
                 # print("."),
             except:
                 continue
@@ -588,68 +593,15 @@ def simplify_zntz(sentence0, verbose=False):
                         if verbose:
                             print("Simple sentence: " + i)
                         simple_ztnz_list.append(i)
+                        success = True
                     else:
                         if verbose:
                             print("Simple sentence: " + i)
                         simple_ztnz_list.append(i)
+                        success = True
                 # print("."),
             except:
                 continue
+    if not success:
+        simple_ztnz_list.append(sentence0)
     return [zntz for zntz in simple_ztnz_list if len(zntz)>2]
-
-def simplify_one_m_script(
-    in_dir, out_dir,
-    file_name):
-    inpath = in_dir + "/" + file_name
-    outpath = out_dir + "/" + file_name
-    new_lines = []
-    with open(inpath, "r", encoding="utf-8") as f:
-        count = 1
-        for line in f:
-            print(count)
-            simple_ztnz_list = simplify_zntz(line)
-            new_lines.append(ZNTZ_SEPARATOR.join(simple_ztnz_list))
-            count += 1
-    with open(outpath, "w", encoding="utf-8") as f:
-        for line in new_lines:
-            f.write(line + "\n")
-
-
-def simplify_batch_of_m_scripts(
-        in_dir, out_dir,
-        batch_file_names):
-    all_file_names = os.listdir(in_dir)
-    assert set(batch_file_names).issubset(set(all_file_names))
-    for file_name in batch_file_names:
-        i = all_file_names.index(file_name)
-        print('%i.' % (i + 1), file_name)
-        simplify_one_m_script(in_dir, out_dir, file_name)
-
-
-if __name__ == "__main__":
-    def main1():
-        path = "All_types_of_inputs.txt"
-        with open(path, "r") as f:
-            count = 1
-            for line in f:
-                print(count, ".")
-                simplify_zntz(line, verbose=True)
-                count += 1
-    def main2():
-        in_dir = "short_stories_prep"
-        out_dir = "short_stories_simp"
-        batch_file_names = os.listdir(in_dir)[1:2]
-        simplify_batch_of_m_scripts(
-            in_dir, out_dir,
-            batch_file_names)
-    def main3():
-        remove_dialogs = True
-        in_dir = PREP_DIR if not remove_dialogs else PREP_RD_DIR
-        out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
-        batch_file_names = os.listdir(in_dir)[0:2]
-        simplify_batch_of_m_scripts(
-            in_dir, out_dir,
-            batch_file_names)
-
-    main1()
-    # main2()
