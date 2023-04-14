@@ -1,6 +1,6 @@
 from downloading_imsdb import *
 from preprocessing_m_scripts import *
-from ztnz_simplification_stanford import *
+from ztz_simplification_stanford import *
 from DagAtlas import *
 
 remove_dialog = True
@@ -18,7 +18,7 @@ preprocess_batch_of_m_scripts(
     batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:num_movies],
     remove_dialog=remove_dialog)
 
-# zntz_simplification
+# ztz_simplification
 simplify_batch_of_m_scripts(
     in_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
     out_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,

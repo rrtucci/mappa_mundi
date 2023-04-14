@@ -1,4 +1,6 @@
 """
+https://spacy.io/usage/spacy-101/
+
 https://github.com/ac491/Sentence-simplifier/blob/master/simplifcation.ipynb
 """
 import spacy
@@ -251,9 +253,9 @@ def relative_clauses(dep_dict, words, root, dep_root, rel, ant):
 sentence0 = 'Robert, who lives nearby, was walking his dog'
 sentence1 = 'Marcus, my sister\'s hamster, likes to run in a wheel.'
 
-def simplify_zntz(zntz, verbose=False):
-    zntz.strip()
-    sentences = [zntz]
+def simplify_ztz(ztz, verbose=False):
+    ztz.strip()
+    sentences = [ztz]
     result = []
 
     for s in sentences:
@@ -308,4 +310,5 @@ def simplify_zntz(zntz, verbose=False):
         result.append(s)
 
     if verbose:
+        print(ztz.strip())
         print(result)

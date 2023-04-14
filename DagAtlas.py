@@ -1,7 +1,9 @@
 from Dag import *
 import os
-from zntz_distance import ztnz_similarity
 from itertools import product
+from my_globals import *
+import importlib as imp
+simi = imp.import_module(SIMI_DEF)
 
 class DagAtlas:
     def __init__(self, txt_dir, dag_dir, simi_threshold=SIMI_THRESHOLD):
@@ -15,23 +17,23 @@ class DagAtlas:
             for file_name in os.listdir(self.dag_dir)]
 
         if title1 not in all_dag_titles:
-            dag1 = Dag(title1, simp_zntz_dir=self.txt_dir)
+            dag1 = Dag(title1, simp_ztz_dir=self.txt_dir)
         else:
             dag1 = Dag(title1, dag_dir=self.dag_dir)
 
         if title2 not in all_dag_titles:
-            dag2 = Dag(title2, simp_zntz_dir=self.txt_dir)
+            dag2 = Dag(title2, simp_ztz_dir=self.txt_dir)
         else:
             dag2 = Dag(title2, dag_dir=self.dag_dir)
 
-        node_to_simple_zntz1 = dag1.get_node_to_simple_zntz_dict()
-        node_to_simple_zntz2 = dag2.get_node_to_simple_zntz_dict()
+        node_to_simple_ztz1 = dag1.get_node_to_simple_ztz_dict()
+        node_to_simple_ztz2 = dag2.get_node_to_simple_ztz_dict()
 
         nd1_nd2_pairs = []
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
-            ztnz1 = node_to_simple_zntz1[nd1]
-            ztnz2 = node_to_simple_zntz1[nd2]
-            if ztnz_similarity(ztnz1, ztnz2) > self.simi_threshold:
+            ztz1 = node_to_simple_ztz1[nd1]
+            ztz2 = node_to_simple_ztz1[nd2]
+            if simi.ztz_similarity(ztz1, ztz2) > self.simi_threshold:
                 nd1_nd2_pairs.append((nd1, nd2))
         nodes1, nodes2 = list(zip(*nd1_nd2_pairs))
         # remove repeats

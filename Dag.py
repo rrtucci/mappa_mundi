@@ -7,11 +7,11 @@ from my_globals import *
 from DotTool import *
 
 class Dag:
-    def __init__(self, m_title, simp_zntz_dir=None, dag_dir=None):
+    def __init__(self, m_title, simp_ztz_dir=None, dag_dir=None):
         self.m_title = m_title
 
-        if simp_zntz_dir and not dag_dir: # dsg file doesn't exist yet
-            path = simp_zntz_dir + "/" + m_title + ".txt"
+        if simp_ztz_dir and not dag_dir: # dsg file doesn't exist yet
+            path = simp_ztz_dir + "/" + m_title + ".txt"
             with open(path, "r", encoding="utf-8") as f:
                 lines = [line for line in f]
             self.nodes = []
@@ -33,7 +33,7 @@ class Dag:
                     new_arrow = (prev_nd, node)
                     self.arrows.append(new_arrow)
                     self.arrow_to_reps[new_arrow] = 1
-        elif not simp_zntz_dir and dag_dir: # dag file already exists
+        elif not simp_ztz_dir and dag_dir: # dag file already exists
             path = dag_dir + "/" + m_title + ".skops"
             unknown_types = get_untrusted_types(file=path)
             # print("unknown types:", unknown_types)
@@ -58,38 +58,38 @@ class Dag:
                 self.arrows.remove(arrow)
                 del self.arrow_to_reps[arrow]
 
-    def get_node_to_prep_zntz_dict(self, remove_dialog=False):
+    def get_node_to_prep_ztz_dict(self, remove_dialog=False):
         prep_dir = PREP_DIR if not remove_dialog else PREP_RD_DIR
 
-        time_to_prep_zntz = {}
+        time_to_prep_ztz = {}
         with open(prep_dir, "r") as f:
             time = 0
             for line in f:
-                time_to_prep_zntz[time] = line
+                time_to_prep_ztz[time] = line
                 time += 1
 
-        nd_to_prep_zntz = {}
+        nd_to_prep_ztz = {}
         for nd in self.nodes:
-            nd_to_prep_zntz[nd] = time_to_prep_zntz[nd.time]
+            nd_to_prep_ztz[nd] = time_to_prep_ztz[nd.time]
 
-        return nd_to_prep_zntz
+        return nd_to_prep_ztz
 
-    def get_node_to_simple_zntz_dict(self, remove_dialog=False):
+    def get_node_to_simple_ztz_dict(self, remove_dialog=False):
         simp_dir = SIMP_DIR if not remove_dialog else SIMP_RD_DIR
 
-        time_to_simp_zntz_list = {}
+        time_to_simp_ztz_list = {}
         with open(simp_dir, "r") as f:
             time = 0
             for line in f:
-                time_to_simp_zntz_list[time] =\
+                time_to_simp_ztz_list[time] =\
                     line.split(ZNTZ_SEPARATOR)
                 time += 1
 
-        nd_to_simp_zntz = {}
+        nd_to_simp_ztz = {}
         for nd in self.nodes:
-            nd_to_simp_zntz[nd] =\
-                time_to_simp_zntz_list[nd.time][nd.place]
-        return nd_to_simp_zntz
+            nd_to_simp_ztz[nd] =\
+                time_to_simp_ztz_list[nd.time][nd.place]
+        return nd_to_simp_ztz
 
     def get_high_reps_arrows(self, reps_treshold):
         high_reps_arrows = []

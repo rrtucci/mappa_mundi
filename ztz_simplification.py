@@ -1,7 +1,7 @@
 from my_globals import *
 import os
 import importlib as imp
-zsimp = imp.import_module(ZNTZ_SIMPLIFIER)
+zsimp = imp.import_module(ZTZ_SIMPLIFIER)
 
 def simplify_one_m_script(
     in_dir, out_dir,
@@ -14,8 +14,8 @@ def simplify_one_m_script(
         count = 1
         for line in f:
             print(str(count) + ".")
-            simple_ztnz_list = zsimp.simplify_zntz(line, verbose)
-            new_lines.append(ZNTZ_SEPARATOR.join(simple_ztnz_list))
+            simple_ztz_list = zsimp.simplify_ztz(line, verbose)
+            new_lines.append(ZNTZ_SEPARATOR.join(simple_ztz_list))
             count += 1
     with open(outpath, "w", encoding="utf-8") as f:
         for line in new_lines:
@@ -35,17 +35,26 @@ def simplify_batch_of_m_scripts(
 
 
 if __name__ == "__main__":
+
     def main1():
-        print("************ simplifier:", ZNTZ_SIMPLIFIER)
+        print("************ simplifier:", ZTZ_SIMPLIFIER)
+        ztz = \
+        'The man, who had never liked the words "booby" and "boobyhatch,"' \
+        ' and who liked them even less on a shining morning when there' \
+        ' was a unicorn in the garden, thought for a moment.'
+        zsimp.simplify_ztz(ztz, verbose=True)
+
+    def main2():
+        print("************ simplifier:", ZTZ_SIMPLIFIER)
         path = "All_types_of_inputs.txt"
         with open(path, "r", encoding='utf-8') as f:
             count = 1
             for line in f:
                 print(str(count) + ".")
-                zsimp.simplify_zntz(line, verbose=True)
+                zsimp.simplify_ztz(line, verbose=True)
                 count += 1
-    def main2():
-        print("************ simplifier:", ZNTZ_SIMPLIFIER)
+    def main3():
+        print("************ simplifier:", ZTZ_SIMPLIFIER)
         in_dir = "short_stories_prep"
         out_dir = "short_stories_simp"
         batch_file_names = os.listdir(in_dir)[0:2]
@@ -54,16 +63,8 @@ if __name__ == "__main__":
             batch_file_names,
             verbose=True)
 
-    def main3():
-        print("************ simplifier:", ZNTZ_SIMPLIFIER)
-        zntz = \
-        'The man, who had never liked the words "booby" and "boobyhatch,"' \
-        ' and who liked them even less on a shining morning when there' \
-        ' was a unicorn in the garden, thought for a moment.'
-        zsimp.simplify_zntz(zntz, verbose=True)
-
     def main4():
-        print("************ simplifier:", ZNTZ_SIMPLIFIER)
+        print("************ simplifier:", ZTZ_SIMPLIFIER)
         remove_dialogs = False
         in_dir = PREP_DIR if not remove_dialogs else PREP_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
@@ -74,5 +75,5 @@ if __name__ == "__main__":
 
     # main1()
     # main2()
-    # main3()
-    main4()
+    main3()
+    # main4()

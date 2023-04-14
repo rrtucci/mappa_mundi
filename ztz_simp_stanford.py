@@ -1,6 +1,6 @@
 """
 https://github.com/garain/Sentence-Simplification
-zntz = sentence
+ztz = sentence
 
 """
 import nltk
@@ -21,8 +21,8 @@ print("JAVA_HOME=\t", os.environ['JAVA_HOME'])
 from nltk.parse.stanford import StanfordParser
 parser = StanfordParser()
 
-def simplify_zntz(sentence0, verbose=False):
-    simple_ztnz_list = []
+def simplify_ztz(sentence0, verbose=False):
+    simple_ztz_list = []
     success = False
 
     # split = []
@@ -506,12 +506,12 @@ def simplify_zntz(sentence0, verbose=False):
                 if (".") not in (i):
                     if verbose:
                         print("Simple sentence: " + "".join(i) + ".")
-                    simple_ztnz_list.append("".join(i) + ".")
+                    simple_ztz_list.append("".join(i) + ".")
                     success = True
                 else:
                     if verbose:
                         print("Simple sentence: " + "".join(i))
-                    simple_ztnz_list.append("".join(i))
+                    simple_ztz_list.append("".join(i))
                     success = True
             n = 0
             but = 0
@@ -564,12 +564,12 @@ def simplify_zntz(sentence0, verbose=False):
                     if (".") not in (i):
                         if verbose:
                             print("Simple sentence: " + " ".join(i) + ".")
-                        simple_ztnz_list.append(" ".join(i) + ".")
+                        simple_ztz_list.append(" ".join(i) + ".")
                         success = True
                     else:
                         if verbose:
                             print("Simple sentence: " + " ".join(i))
-                        simple_ztnz_list.append(" ".join(i))
+                        simple_ztz_list.append(" ".join(i))
                         success = True
                 # print("."),
             except:
@@ -592,16 +592,16 @@ def simplify_zntz(sentence0, verbose=False):
                     if (".") not in (i):
                         if verbose:
                             print("Simple sentence: " + i)
-                        simple_ztnz_list.append(i)
+                        simple_ztz_list.append(i)
                         success = True
                     else:
                         if verbose:
                             print("Simple sentence: " + i)
-                        simple_ztnz_list.append(i)
+                        simple_ztz_list.append(i)
                         success = True
                 # print("."),
             except:
                 continue
     if not success:
-        simple_ztnz_list.append(sentence0)
-    return [zntz for zntz in simple_ztnz_list if len(zntz)>2]
+        simple_ztz_list.append(sentence0)
+    return [ztz for ztz in simple_ztz_list if len(ztz)>2]

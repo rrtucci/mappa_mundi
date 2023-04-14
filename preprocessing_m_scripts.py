@@ -4,9 +4,14 @@ https://www.datacamp.com/tutorial/python-regular-expression-tutorial
 """
 import re
 import os
-from nltk import tokenize
+# sentence splitting with NLKT
+# from nltk.tokenize import sent_tokenize
 import collections as co
 from my_globals import *
+
+# sentence spliting with spacy
+import spacy
+nlp = spacy.load("en_core_web_sm")
 
 
 def preprocess_one_m_script(in_dir,
@@ -159,10 +164,15 @@ def preprocess_one_m_script(in_dir,
     script = ' '.join(lines)
 
     # split script into sentences
-    lines = tokenize.sent_tokenize(script)
+    # with NLKT
+    # lines = sent_tokenize(script)
+    # with spacy
+    lines = nlp(script).sents
+    # for line in lines:
+    #     print("zzzxc", line)
 
     # remove sentences that are a single character
-    lines = [line for line in lines if len(line)>1]
+    lines = [line.text for line in lines if len(line.text)>1]
 
     with open(outpath, "w", encoding="utf-8") as f:
         for line in lines:
@@ -188,10 +198,12 @@ if __name__ == "__main__":
     from my_globals import *
     def main1():
         remove_dialog = False
+        in_dir = "short_stories"
+        out_dir = "short_stories_prep"
+        batch_file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
-            in_dir=M_SCRIPTS_DIR,
-            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
-            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:10],
+            in_dir, out_dir,
+            batch_file_names,
             remove_dialog=remove_dialog)
 
     def main2():
@@ -201,14 +213,13 @@ if __name__ == "__main__":
             out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
             file_name = "x-men.txt",
             remove_dialog=remove_dialog)
+
     def main3():
         remove_dialog = False
-        in_dir = "short_stories"
-        out_dir = "short_stories_prep"
-        batch_file_names = os.listdir(in_dir)[0:2]
         preprocess_batch_of_m_scripts(
-            in_dir, out_dir,
-            batch_file_names,
+            in_dir=M_SCRIPTS_DIR,
+            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
+            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:10],
             remove_dialog=remove_dialog)
 
     main1()

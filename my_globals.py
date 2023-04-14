@@ -8,12 +8,14 @@ SIMP_RD_DIR = "m_scripts_simp_rd"
 DAG_DIR = "dag_atlas"
 DAG_RD_DIR = "dag_atlas_rd"
 
-# ZNTZ_SIMPLIFIER = "zntz_simp_stanford"
-# ZNTZ_SIMPLIFIER = "zntz_simp_spacy" # clausie
-# ZNTZ_SIMPLIFIER = "zntz_simp_spacy1"
-# ZNTZ_SIMPLIFIER = "zntz_simp_spacy2"
-ZNTZ_SIMPLIFIER = "zntz_simp_spacy3"
+# ZTZ_SIMPLIFIER = "ztz_simp_stanford"
+# ZTZ_SIMPLIFIER = "ztz_simp_spacy" # clausie
+# ZTZ_SIMPLIFIER = "ztz_simp_spacy1"
+# ZTZ_SIMPLIFIER = "ztz_simp_spacy2"
+ZTZ_SIMPLIFIER = "ztz_simp_spacy3"
+
+# SIMI_DEF = "similarity_nlkt"
+SIMI_DEF = "similarity_spacy"
 
 ZNTZ_SEPARATOR = "(^)"
-SIMI_THRESHOLD = .3
 PENALTY = 2/3  # PENALTY >= 2/3
