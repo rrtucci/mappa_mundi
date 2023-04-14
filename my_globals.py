@@ -14,8 +14,8 @@ DAG_RD_DIR = "dag_atlas_rd"
 # ZTZ_SIMPLIFIER = "ztz_simp_spacy2"
 ZTZ_SIMPLIFIER = "ztz_simp_spacy3"
 
-# SIMI_DEF = "similarity_nlkt"
-SIMI_DEF = "similarity_spacy"
+SIMI_DEF = "similarity_nlkt"
+# SIMI_DEF = "similarity_spacy"
 
 ZNTZ_SEPARATOR = "(^)"
 PENALTY = 2/3  # PENALTY >= 2/3

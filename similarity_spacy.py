@@ -6,8 +6,8 @@ nlp = spacy.load('en_core_web_lg')
 
 def ztz_similarity(ztz1, ztz2):
     def same_pos(token1, token2):
-        #return token1.pos_ == token2.pos_
-        return True
+        return token1.pos_ == token2.pos_
+        # return True
 
     special_pos = ['NOUN', 'ADJ', 'ADV', 'VERB']
     doc1 = nlp(ztz1)
@@ -19,7 +19,8 @@ def ztz_similarity(ztz1, ztz2):
     token_pair_to_simi = {}
     for token1, token2 in product(sp_tokens1, sp_tokens2):
         if same_pos(token1, token2):
-            simi = nlp(token1.text).similarity(nlp(token2.text))
+            simi = nlp(token1.text.lower()).\
+                similarity(nlp(token2.text.lower()))
             # print("llkj", token1.text, token2.text, token1.pos_, simi)
             if simi is not None:
                 token_pair_to_simi[(token1, token2)]= simi
@@ -57,18 +58,46 @@ def ztz_similarity(ztz1, ztz2):
         odds = 10e6
     return round(odds ,3)
 
-SIMI_THRESHOLD = 2
+SIMI_THRESHOLD = 2.69
 
 # ************ simi definition from: similarity_spacy
-# Similarity("Cats are beautiful animals.", "Dogs are awesome.") = 1.578
-# Similarity("Dogs are awesome.", "Cats are beautiful animals.") = 1.578
-# Similarity("Cats are beautiful animals.", "Some gorgeous creatures are felines.") = 2.184
-# Similarity("Some gorgeous creatures are felines.", "Cats are beautiful animals.") = 2.184
-# Similarity("Cats are beautiful animals.", "Dolphins are swimming mammals.") = 1.15
-# Similarity("Dolphins are swimming mammals.", "Cats are beautiful animals.") = 1.15
-# Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 10000000.0
-# Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 10000000.0
+# 1. Cats are beautiful animals.
+# 2. Dogs are awesome.
+# simi(1,2)= 2.578
+#
+# 1. Dogs are awesome.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 2.578
+#
+# 1. Cats are beautiful animals.
+# 2. Some gorgeous creatures are felines.
+# simi(1,2)= 2.697
+#
+# 1. Some gorgeous creatures are felines.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 2.697
+#
+# 1. Cats are beautiful animals.
+# 2. Dolphins are swimming mammals.
+# simi(1,2)= 2.535
+#
+# 1. Dolphins are swimming mammals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 2.535
+#
+# 1. Cats are beautiful animals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 10000000.0
+#
+# 1. Cats are beautiful animals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 10000000.0
+#
 # ************ simi definition from: similarity_spacy
 # apple-horse, horse-apple 0.247 0.247
 # Paul-John 0.0
-# Similarity between 2 ztzs:  1.678
+#
+# 1. The cat sat on the mat.
+# 2. The dog lay on the rug.
+# simi(1, 2)= 1.678
+# elapsed time= 0.08501148223876953

@@ -39,8 +39,8 @@ def tword_to_synset(word, tag):
 def ztz_similarity(ztz1, ztz2):
     """ compute the ztz similarity using Wordnet """
     # Tokenize and tag
-    ztz1 = pos_tag(word_tokenize(ztz1))
-    ztz2 = pos_tag(word_tokenize(ztz2))
+    ztz1 = pos_tag(word_tokenize(ztz1.lower()))
+    ztz2 = pos_tag(word_tokenize(ztz2.lower()))
 
     # Get the synsets for the tagged words (tword)
     all_ss1 = []
@@ -86,16 +86,44 @@ def ztz_similarity(ztz1, ztz2):
 SIMI_THRESHOLD = .7
 
 # ************ simi definition from: similarity_nlkt
-# Similarity("Cats are beautiful animals.", "Dogs are awesome.") = 0.511
-# Similarity("Dogs are awesome.", "Cats are beautiful animals.") = 0.511
-# Similarity("Cats are beautiful animals.", "Some gorgeous creatures are felines.") = 0.708
-# Similarity("Some gorgeous creatures are felines.", "Cats are beautiful animals.") = 0.708
-# Similarity("Cats are beautiful animals.", "Dolphins are swimming mammals.") = 0.423
-# Similarity("Dolphins are swimming mammals.", "Cats are beautiful animals.") = 0.423
-# Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 1.0
-# Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 1.0
+# 1. Cats are beautiful animals.
+# 2. Dogs are awesome.
+# simi(1,2)= 0.511
+#
+# 1. Dogs are awesome.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 0.511
+#
+# 1. Cats are beautiful animals.
+# 2. Some gorgeous creatures are felines.
+# simi(1,2)= 0.708
+#
+# 1. Some gorgeous creatures are felines.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 0.708
+#
+# 1. Cats are beautiful animals.
+# 2. Dolphins are swimming mammals.
+# simi(1,2)= 0.423
+#
+# 1. Dolphins are swimming mammals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 0.423
+#
+# 1. Cats are beautiful animals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 1.0
+#
+# 1. Cats are beautiful animals.
+# 2. Cats are beautiful animals.
+# simi(1,2)= 1.0
+#
 # ************ simi definition from: similarity_nlkt
 # apple-horse, horse-apple 0.053 0.053
 # Paul-John 0.077
-# Similarity between 2 ztzs:  0.261
+#
+# 1. The cat sat on the mat.
+# 2. The dog lay on the rug.
+# simi(1, 2)= 0.261
+# elapsed time= 0.006999492645263672
 

@@ -68,12 +68,12 @@ if __name__ == "__main__":
         remove_dialogs = False
         in_dir = PREP_DIR if not remove_dialogs else PREP_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
-        batch_file_names = os.listdir(in_dir)[0:3]
+        batch_file_names = os.listdir(in_dir)[0:10]
         simplify_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names)
 
     # main1()
     # main2()
-    main3()
-    # main4()
+    # main3()
+    main4()

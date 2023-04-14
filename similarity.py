@@ -1,6 +1,7 @@
 from my_globals import *
 import importlib as imp
 simi = imp.import_module(SIMI_DEF)
+from time import time
 
 if __name__ == "__main__":
     def main1():
@@ -15,14 +16,16 @@ if __name__ == "__main__":
 
         focus_ztz = "Cats are beautiful animals."
 
+
         for ztz in ztzs:
-            print("Similarity(\"%s\", \"%s\") = %s" % (
-            focus_ztz, ztz,
-            simi.ztz_similarity(focus_ztz, ztz)))
-            print(
-            "Similarity(\"%s\", \"%s\") = %s" % (
-            ztz, focus_ztz,
-            simi.ztz_similarity(ztz, focus_ztz)))
+            print("1.", focus_ztz)
+            print("2.", ztz)
+            print("simi(1,2)=", simi.ztz_similarity(focus_ztz, ztz))
+            print()
+            print("1.", ztz)
+            print("2.", focus_ztz)
+            print("simi(1,2)=", simi.ztz_similarity(ztz, focus_ztz))
+            print()
 
     def main2():
         print("************ simi definition from:", SIMI_DEF)
@@ -33,8 +36,16 @@ if __name__ == "__main__":
 
         ztz1 = "The cat sat on the mat."
         ztz2 = "The dog lay on the rug."
+
+        print()
+        print("1.", ztz1)
+        print("2.", ztz2)
+        start = time()
         similarity = simi.ztz_similarity(ztz1, ztz2)
-        print("Similarity between 2 ztzs: ", similarity)
+        end = time()
+        elapsed_time = end -start
+        print("simi(1, 2)=", str(similarity))
+        print("elapsed time=", str(elapsed_time))
 
     main1()
     main2()
