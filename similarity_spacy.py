@@ -51,26 +51,24 @@ def ztz_similarity(ztz1, ztz2):
     if count2:
         score2 /= count2
     prob = (score1 + score2) / 2
-    # return round(prob, 3)
-    tangent = np.tan(np.arccos(prob))
-    if tangent>0:
-        cotangent = 1/np.tan(np.arccos(prob))
+    if prob<1:
+        odds = prob/ (1 - prob)
     else:
-        cotangent = 10e6
-    return round(cotangent,3)
+        odds = 10e6
+    return round(odds ,3)
 
-SIMI_THRESHOLD = .9
+SIMI_THRESHOLD = 2
 
 # ************ simi definition from: similarity_spacy
-# Similarity("Cats are beautiful animals.", "Dogs are awesome.") = 0.774
-# Similarity("Dogs are awesome.", "Cats are beautiful animals.") = 0.774
-# Similarity("Cats are beautiful animals.", "Some gorgeous creatures are felines.") = 0.943
-# Similarity("Some gorgeous creatures are felines.", "Cats are beautiful animals.") = 0.943
-# Similarity("Cats are beautiful animals.", "Dolphins are swimming mammals.") = 0.633
-# Similarity("Dolphins are swimming mammals.", "Cats are beautiful animals.") = 0.633
+# Similarity("Cats are beautiful animals.", "Dogs are awesome.") = 1.578
+# Similarity("Dogs are awesome.", "Cats are beautiful animals.") = 1.578
+# Similarity("Cats are beautiful animals.", "Some gorgeous creatures are felines.") = 2.184
+# Similarity("Some gorgeous creatures are felines.", "Cats are beautiful animals.") = 2.184
+# Similarity("Cats are beautiful animals.", "Dolphins are swimming mammals.") = 1.15
+# Similarity("Dolphins are swimming mammals.", "Cats are beautiful animals.") = 1.15
 # Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 10000000.0
 # Similarity("Cats are beautiful animals.", "Cats are beautiful animals.") = 10000000.0
 # ************ simi definition from: similarity_spacy
-# apple-horse, horse-apple 0.202 0.202
+# apple-horse, horse-apple 0.247 0.247
 # Paul-John 0.0
-# Similarity between 2 ztzs:  0.804
+# Similarity between 2 ztzs:  1.678
