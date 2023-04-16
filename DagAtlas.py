@@ -50,7 +50,7 @@ class DagAtlas:
                     if nd2a.time < nd2b.time:
                         change = 1
                     elif nd2a.time > nd2b.time:
-                        change = -PENALTY
+                        change = -CAUSAL_MISMATCH_PENALTY
                     else:
                         change = 0
                     dag1.update_arrow((nd1a, nd1b), change)

@@ -17,11 +17,9 @@ This is a very conservative spell checker that doesn't know about context.
 
 5. It retains punctuation
 """
-
+from my_globals import *
 from spellchecker import SpellChecker
 import os
-import re
-
 import re
 
 def has_double_letter(word):
@@ -60,8 +58,10 @@ def get_word_to_reps(in_file_path):
     return word_to_reps, local_word_count
 
 def get_corrected_sentence(in_ztz, checker_global, 
-                           words_to_reps,
-                           local_word_count):
+                           word_to_reps=None,
+                           local_word_count=None):
+    if word_to_reps:
+        assert local_word_count
 
     def implies(x, y):
         return (not x) or y
@@ -74,47 +74,67 @@ def get_corrected_sentence(in_ztz, checker_global,
         capitalized = word[0].isupper()
         word = word.lower()
         p_global = checker_global.word_usage_frequency(word)
-        guess_local0 , p_guess_local0 = word, p_global
-        guess_global0, p_guess_global0 = word, p_global
-        use_local_guess = True
-        if p_global < 1e-5 and word.isalpha() and len(word)>=2:
+        if word_to_reps:
+            if word in word_to_reps:
+                p_local = word_to_reps[word]/local_word_count
+            else:
+                p_local = 0
+        else:
+            p_local = 0
+
+        guess_best, p_guess_best = word, 0
+            
+        if word.isalpha() and len(word)>=2:
             for guess in checker_global.edit_distance_1(word):
                 cond1 = (guess[0:2] == word[0:2])
-                guess_plural = (guess[-1] == "s")
                 cond2a = implies(word[-1] == "s", guess[-1] == "s")
                 cond2b = implies(word[-2:] == "ed", guess[-2:] == "ed")
-                cond3 = (has_double_letter(guess) or has_double_letter(word)) \
-                         and (len(guess)!=len(word)) and set(guess)==set(word)
-                # this fixes tt, ss, dd, ll, errors
-                if cond1 and cond2a and cond2b and cond3:
-                    p_guess_global = checker_global.word_usage_frequency(
-                         guess.lower())
-                    if p_guess_global > p_guess_global0:
-                        guess_global0, p_guess_global0 = guess, p_guess_global
-                        use_local_guess = False
-                # this fixes typos
-                # if cond1 and cond2a and cond2b and use_local_guess and \
-                #         words_to_reps:
-                #     if guess in words_to_reps:
-                #         p_guess_local = \
-                #             words_to_reps[guess]/local_word_count
-                #     else:
-                #         p_guess_local = 0
-                #     # print("gghj", guess, p_guess_local, p_guess_local0)
-                #     if p_guess_local > p_guess_local0:
-                #         guess_local0, p_guess_local0 = guess, p_guess_local
-                
-        if use_local_guess:
-            fin_guess = guess_local0
-        else:
-            fin_guess = guess_global0
+                if cond1 and cond2a and cond2b:
+                    if not word_to_reps:
+                        if p_global < SPELLING_CORRECTION_RISK:  # very high
+                            # prob that it's wrong
+                            best_dict = "global"
+                            # if word == "beautifull":
+                            #     print("erft", p_global)
+                            #     print("cvbft", checker_global.word_usage_frequency(
+                            #         "beautiful"))
+                        else:
+                            best_dict = None
+                    else:
+                        if p_global < RISK:
+                            if guess in word_to_reps:
+                                best_dict = "local"
+                            else:
+                                best_dict = "global"
+                        else:
+                            best_dict = None
+                    # this fixes tt, ss, dd, ll, errors
+                    if best_dict == "global":
+                        cond3 = (has_double_letter(guess) or has_double_letter(
+                            word)) and (len(guess) != len(word)) and set(
+                            guess) == set(word)
+                        if cond3:
+                            # print(".......global")
+                            p_guess = checker_global.word_usage_frequency(
+                                 guess.lower())
+                            if p_guess > p_guess_best:
+                                guess_best, p_guess_best = guess, p_guess
+                                use_local_dict = False
+
+                    elif best_dict == "local":
+                        # this fixes typos
+                       #  print("uuio-------local")
+                        p_guess = word_to_reps[guess]/local_word_count
+                        # print("gghj", guess, p_guess_local, p_guess_best)
+                        if p_guess > p_guess_best:
+                            guess_best, p_guess_best = guess, p_guess
         if capitalized:
-            fin_guess = fin_guess[0].upper() + fin_guess[1:]
+            guess_best = guess_best[0].upper() + guess_best[1:]
             word = word[0].upper() + word[1:]
 
-        corrected_words.append(fin_guess)
-        if word != fin_guess:
-            changes.append((word, fin_guess))
+        corrected_words.append(guess_best)
+        if word != guess_best:
+            changes.append((word, guess_best))
 
     return " ".join(corrected_words), changes
 
@@ -122,7 +142,8 @@ def get_corrected_sentence(in_ztz, checker_global,
 def correct_this_file(in_dir,
                       out_dir,
                       file_name,
-                      verbose=True):
+                      verbose=True,
+                      use_local_dict=False):
     """
     in_dir and out_dir can be the same, but this will overwrite the files
     """
@@ -130,7 +151,10 @@ def correct_this_file(in_dir,
     outpath = out_dir + "/" + file_name
 
     checker_global = SpellChecker(distance=1)
-    word_to_reps, local_word_count = get_word_to_reps(inpath)
+    if use_local_dict:
+        word_to_reps, local_word_count = get_word_to_reps(inpath)
+    else:
+        word_to_reps, local_word_count = None, None
     # print("nmjk", local_word_count, word_to_reps)
 
     # this didn't work. It merges TEMPO_DICT_FILE with global dict
@@ -159,35 +183,39 @@ def correct_this_file(in_dir,
 def correct_this_batch_of_files(in_dir,
                                 out_dir,
                                 batch_file_names,
-                                verbose=True):
+                                verbose=True,
+                                use_local_dict=False):
     all_file_names = os.listdir(in_dir)
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
         print('%i.' % (i + 1))
-        correct_this_file(in_dir, out_dir, file_name, verbose)
+        correct_this_file(in_dir, out_dir, file_name, verbose,
+                          use_local_dict)
 
 if __name__ == "__main__":
-    def main1():
+    def main1(use_local_dict):
         in_dir = "spell_checking_in_dir"
         out_dir = "spell_checking_out_dir"
         batch_file_names = os.listdir(in_dir)
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,
-                                    verbose=True)
+                                    verbose=True,
+                                    use_local_dict=use_local_dict)
 
-    def main2():
+    def main2(use_local_dict):
         in_dir = "short_stories_prep"
         out_dir = "spell_checking_out_dir"
         batch_file_names = os.listdir(in_dir)
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,
-                                    verbose=False)
+                                    verbose=False,
+                                    use_local_dict=use_local_dict)
 
 
-    # main1()
-    main2()
+    main1(use_local_dict=False)
+    main2(use_local_dict=False)
 
 

@@ -18,4 +18,6 @@ SIMI_DEF = "similarity_nlkt" # best
 # SIMI_DEF = "similarity_spacy"
 
 ZNTZ_SEPARATOR = " (^) "
-PENALTY = 2/3  # PENALTY >= 2/3
+CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
+
+SPELLING_CORRECTION_RISK = 1e-7  # should be >= 1e-7)
