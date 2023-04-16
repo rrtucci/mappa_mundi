@@ -7,6 +7,9 @@ def simplify_one_m_script(
     in_dir, out_dir,
     file_name,
     verbose=False):
+    """
+    in_dir and out_dir can be the same, but this will overwrite the files
+    """
     inpath = in_dir + "/" + file_name
     outpath = out_dir + "/" + file_name
     new_lines = []

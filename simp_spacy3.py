@@ -14,7 +14,6 @@ ADP: adposition, e.g. in, to, during
 
 import spacy
 import re
-from unidecode import unidecode
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -40,8 +39,6 @@ def simplify_ztz(sentence, verbose=False):
         prop = " ".join([token.text for token in clause\
                          if (not token.is_stop) or\
                         token.pos_=="ADP"])
-        # this replaces unicode curly quotes by ascii straight quotes
-        prop = unidecode(prop)
         # delete .?!";
         prop = re.sub(r'[.?!";]', '', prop)
         prop = prop.strip()

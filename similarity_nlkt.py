@@ -81,49 +81,52 @@ def ztz_similarity(ztz1, ztz2):
             count2 += 1
     if count2:
         score2 /= count2
-    return round((score1 + score2)/2, 3)
+    prob = (score1 + score2)/2
+    if prob<1:
+        odds = prob/ (1 - prob)
+    else:
+        odds = 1000
+    return round(odds ,3)
 
-SIMI_THRESHOLD = .7
+SIMI_THRESHOLD = 2.2
 
-# ************ simi definition from: similarity_nlkt
-# 1. Cats are beautiful animals.
-# 2. Dogs are awesome.
-# simi(1,2)= 0.511
-#
-# 1. Dogs are awesome.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 0.511
-#
-# 1. Cats are beautiful animals.
-# 2. Some gorgeous creatures are felines.
-# simi(1,2)= 0.708
-#
-# 1. Some gorgeous creatures are felines.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 0.708
-#
-# 1. Cats are beautiful animals.
-# 2. Dolphins are swimming mammals.
-# simi(1,2)= 0.423
-#
-# 1. Dolphins are swimming mammals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 0.423
-#
-# 1. Cats are beautiful animals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 1.0
-#
-# 1. Cats are beautiful animals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 1.0
-#
-# ************ simi definition from: similarity_nlkt
-# apple-horse, horse-apple 0.053 0.053
-# Paul-John 0.077
-#
-# 1. The cat sat on the mat.
-# 2. The dog lay on the rug.
-# simi(1, 2)= 0.261
-# elapsed time= 0.006999492645263672
+"""
+************ simi definition from: similarity_nlkt
+1. Cats are beautiful animals.
+2. Dogs are awesome.
+simi(1, 2)= 1.045
+simi(2, 1)= 1.045
 
+1. Cats are beautiful animals.
+2. Some gorgeous creatures are felines.
+simi(1, 2)= 2.429
+simi(2, 1)= 2.429
+
+1. Cats are beautiful animals.
+2. Dolphins are swimming mammals.
+simi(1, 2)= 0.733
+simi(2, 1)= 0.733
+
+1. Cats are beautiful animals.
+2. Cats are beautiful animals.
+simi(1, 2)= 1000
+simi(2, 1)= 1000
+
+************ simi definition from: similarity_nlkt
+1. apple
+2. horse
+simi(1, 2)= 0.056
+simi(2, 1)= 0.056
+
+1. Paul
+2. John
+simi(1, 2)= 0.083
+simi(2, 1)= 0.083
+
+1. The cat sat on the mat.
+2. The dog lay on the rug.
+simi(1, 2)= 0.353
+simi(2, 1)= 0.353
+elapsed time= 0.006499767303466797
+
+"""

@@ -6,6 +6,7 @@ nlp = spacy.load('en_core_web_lg')
 
 def ztz_similarity(ztz1, ztz2):
     def same_pos(token1, token2):
+        # this gives same simi but elapsed time is less
         return token1.pos_ == token2.pos_
         # return True
 
@@ -55,49 +56,53 @@ def ztz_similarity(ztz1, ztz2):
     if prob<1:
         odds = prob/ (1 - prob)
     else:
-        odds = 10e6
+        odds = 1000
     return round(odds ,3)
 
 SIMI_THRESHOLD = 2.69
 
-# ************ simi definition from: similarity_spacy
-# 1. Cats are beautiful animals.
-# 2. Dogs are awesome.
-# simi(1,2)= 2.578
-#
-# 1. Dogs are awesome.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 2.578
-#
-# 1. Cats are beautiful animals.
-# 2. Some gorgeous creatures are felines.
-# simi(1,2)= 2.697
-#
-# 1. Some gorgeous creatures are felines.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 2.697
-#
-# 1. Cats are beautiful animals.
-# 2. Dolphins are swimming mammals.
-# simi(1,2)= 2.535
-#
-# 1. Dolphins are swimming mammals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 2.535
-#
-# 1. Cats are beautiful animals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 10000000.0
-#
-# 1. Cats are beautiful animals.
-# 2. Cats are beautiful animals.
-# simi(1,2)= 10000000.0
-#
-# ************ simi definition from: similarity_spacy
-# apple-horse, horse-apple 0.247 0.247
-# Paul-John 0.0
-#
-# 1. The cat sat on the mat.
-# 2. The dog lay on the rug.
-# simi(1, 2)= 1.678
-# elapsed time= 0.08501148223876953
+"""
+************ simi definition from: similarity_spacy
+1. Cats are beautiful animals.
+2. Dogs are awesome.
+simi(1, 2)= 2.578
+simi(2, 1)= 2.578
+
+1. Cats are beautiful animals.
+2. Some gorgeous creatures are felines.
+simi(1, 2)= 2.697
+simi(2, 1)= 2.697
+
+1. Cats are beautiful animals.
+2. Dolphins are swimming mammals.
+simi(1, 2)= 2.535
+simi(2, 1)= 2.535
+
+1. Cats are beautiful animals.
+2. Cats are beautiful animals.
+simi(1, 2)= 1000
+simi(2, 1)= 1000
+
+1. Cats are beautiful animals.
+2. Cats are beauti animals.
+simi(1, 2)= 7.986
+simi(2, 1)= 7.986
+
+************ simi definition from: similarity_spacy
+1. apple
+2. horse
+simi(1, 2)= 0.247
+simi(2, 1)= 0.247
+
+1. Paul
+2. John
+simi(1, 2)= 0.0
+simi(2, 1)= 0.0
+
+1. The cat sat on the mat.
+2. The dog lay on the rug.
+simi(1, 2)= 1.678
+simi(2, 1)= 1.678
+elapsed time= 0.14391398429870605
+
+"""

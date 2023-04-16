@@ -8,16 +8,21 @@ import os
 # from nltk.tokenize import sent_tokenize
 import collections as co
 from my_globals import *
+import contractions
+from unidecode import unidecode
 
-# sentence spliting with spacy
+# sentence splitting with spacy
 import spacy
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load('en_core_web_sm')
 
 
 def preprocess_one_m_script(in_dir,
                             out_dir,
                             file_name,
                             remove_dialog=False):
+    """
+    in_dir and out_dir can be the same, but this will overwrite the files
+    """
     print('fetching %s' % file_name)
     def count_leading_wh_sp(str0):
         # wh_sp = white space
@@ -163,9 +168,18 @@ def preprocess_one_m_script(in_dir,
     lines = [line.strip() for line in lines if line]
     script = ' '.join(lines)
 
+    # Remove contractions and replace curly quotes by straight ones
+    expanded_words = []
+    for word in script.split():
+        word = unidecode(word)
+        expanded_words.append(contractions.fix(word))
+    script = ' '.join(expanded_words)
+
     # split script into sentences
+
     # with NLKT
     # lines = sent_tokenize(script)
+
     # with spacy
     lines = nlp(script).sents
     # for line in lines:
