@@ -2,6 +2,7 @@ from itertools import product
 import numpy as np
 import spacy
 nlp = spacy.load('en_core_web_lg')
+from my_globals import *
 
 
 def ztz_similarity(ztz1, ztz2):
@@ -10,13 +11,12 @@ def ztz_similarity(ztz1, ztz2):
         return token1.pos_ == token2.pos_
         # return True
 
-    special_pos = ['NOUN', 'ADJ', 'ADV', 'VERB']
     doc1 = nlp(ztz1)
     doc2 = nlp(ztz2)
     sp_tokens1 = [token1 for token1 in doc1 \
-                    if token1.pos_ in special_pos]
+                  if token1.pos_ in RETAINED_POS]
     sp_tokens2 = [token2 for token2 in doc2 \
-                    if token2.pos_ in special_pos]
+                  if token2.pos_ in RETAINED_POS]
     token_pair_to_simi = {}
     for token1, token2 in product(sp_tokens1, sp_tokens2):
         if same_pos(token1, token2):

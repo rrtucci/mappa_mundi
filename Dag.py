@@ -12,7 +12,7 @@ class Dag:
 
         if simp_ztz_dir and not dag_dir: # dsg file doesn't exist yet
             path = simp_ztz_dir + "/" + m_title + ".txt"
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, "r") as f:
                 lines = [line for line in f]
             self.nodes = []
             for time, line in enumerate(lines):
@@ -59,10 +59,10 @@ class Dag:
                 del self.arrow_to_reps[arrow]
 
     def get_node_to_prep_ztz_dict(self, remove_dialog=False):
-        prep_dir = PREP_DIR if not remove_dialog else PREP_RD_DIR
+        prep_dir = CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR
 
         time_to_prep_ztz = {}
-        with open(prep_dir, "r", encoding="utf-8") as f:
+        with open(prep_dir, "r") as f:
             time = 0
             for line in f:
                 time_to_prep_ztz[time] = line
@@ -78,7 +78,7 @@ class Dag:
         simp_dir = SIMP_DIR if not remove_dialog else SIMP_RD_DIR
 
         time_to_simp_ztz_list = {}
-        with open(simp_dir, "r", encoding="utf-8") as f:
+        with open(simp_dir, "r") as f:
             time = 0
             for line in f:
                 time_to_simp_ztz_list[time] =\

@@ -104,8 +104,7 @@ def get_batch_of_m_scripts(d1_urls, titles,
             len_script = len(m_script)
             print("m_script num of characters=", len_script)
             if len_script > 500:
-                with open(outpath, "w", encoding='utf-8',
-                          newline="\n") as f:
+                with open(outpath, "w", newline="\n") as f:
                     f.write(m_script)
                     written = True
             if not written:

@@ -8,7 +8,6 @@ import os
 # from nltk.tokenize import sent_tokenize
 import collections as co
 from my_globals import *
-import contractions
 from unidecode import unidecode
 
 # sentence splitting with spacy
@@ -16,7 +15,7 @@ import spacy
 nlp = spacy.load('en_core_web_sm')
 
 
-def preprocess_one_m_script(in_dir,
+def clean_one_m_script(in_dir,
                             out_dir,
                             file_name,
                             remove_dialog=False):
@@ -40,6 +39,11 @@ def preprocess_one_m_script(in_dir,
 
     with open(inpath, "r", encoding='utf-8') as f:
         lines = [line for line in f]
+
+    # Replace non-ascii unicode characters by ascii equivalents (e.g.,
+    # replace curly quotes by straight ones) so don't have to use
+    # encoding="utf-8" as a parameter in open() from here on.
+    lines = [unidecode(line) for line in lines]
 
     # strip trailing (i.e., right) white space and newline.
     # If this results in an empty line, remove it.
@@ -139,7 +143,7 @@ def preprocess_one_m_script(in_dir,
     print("\tnarration indents=", narr_indents)
 
     # keep only narration (less likely than narration) indentations. Also
-    # remove smallest indent.
+    # remove smallest indentation.
     new_lines = []
     for line in lines:
         indent = count_leading_wh_sp(line)
@@ -168,13 +172,6 @@ def preprocess_one_m_script(in_dir,
     lines = [line.strip() for line in lines if line]
     script = ' '.join(lines)
 
-    # Remove contractions and replace curly quotes by straight ones
-    expanded_words = []
-    for word in script.split():
-        word = unidecode(word)
-        expanded_words.append(contractions.fix(word))
-    script = ' '.join(expanded_words)
-
     # split script into sentences
 
     # with NLKT
@@ -188,11 +185,11 @@ def preprocess_one_m_script(in_dir,
     # remove sentences that are a single character
     lines = [line.text for line in lines if len(line.text)>1]
 
-    with open(outpath, "w", encoding="utf-8") as f:
+    with open(outpath, "w") as f:
         for line in lines:
             f.write(line + "\n")
 
-def preprocess_batch_of_m_scripts(
+def clean_batch_of_m_scripts(
         in_dir, out_dir,
         batch_file_names,
         remove_dialog=False):
@@ -202,7 +199,7 @@ def preprocess_batch_of_m_scripts(
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
         print('%i.' % (i + 1))
-        preprocess_one_m_script(in_dir,
+        clean_one_m_script(in_dir,
                                 out_dir,
                                 file_name,
                                 remove_dialog=remove_dialog)
@@ -213,26 +210,26 @@ if __name__ == "__main__":
     def main1():
         remove_dialog = False
         in_dir = "short_stories"
-        out_dir = "short_stories_prep"
+        out_dir = "short_stories_clean"
         batch_file_names = os.listdir(in_dir)[0:2]
-        preprocess_batch_of_m_scripts(
+        clean_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
             remove_dialog=remove_dialog)
 
     def main2():
         remove_dialog = True
-        preprocess_one_m_script(
+        clean_one_m_script(
             in_dir=M_SCRIPTS_DIR,
-            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
+            out_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
             file_name = "x-men.txt",
             remove_dialog=remove_dialog)
 
     def main3():
         remove_dialog = False
-        preprocess_batch_of_m_scripts(
+        clean_batch_of_m_scripts(
             in_dir=M_SCRIPTS_DIR,
-            out_dir=PREP_DIR if not remove_dialog else PREP_RD_DIR,
+            out_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
             batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:10],
             remove_dialog=remove_dialog)
 

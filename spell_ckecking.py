@@ -42,7 +42,7 @@ def fancy_split(in_ztz):
 def get_word_to_reps(in_file_path):
     # tempo dictionary words are lower case
     word_to_reps = {}
-    with open(in_file_path, "r", encoding="utf-8") as f:
+    with open(in_file_path, "r") as f:
         local_word_count = 0
         for line in f:
             words = fancy_split(line)
@@ -82,6 +82,26 @@ def get_corrected_sentence(in_ztz, checker_global,
         else:
             p_local = 0
 
+        if not word_to_reps:
+            if p_global < SPELLING_CORRECTION_RISK:  # very high
+                # prob that it's wrong
+                best_dict = "global"
+                # if word == "beautifull":
+                #     print("erft", p_global)
+                #     print("cvbft", checker_global.word_usage_frequency(
+                #         "beautiful"))
+            else:
+                best_dict = None
+        else:
+            if p_global < SPELLING_CORRECTION_RISK: # rare globally
+                if word in word_to_reps and word_to_reps[word]==1: # rare
+                    # locally too
+                    best_dict = "local"
+                else:
+                    best_dict = "global"
+            else:
+                best_dict = None
+
         guess_best, p_guess_best = word, 0
             
         if word.isalpha() and len(word)>=2:
@@ -89,31 +109,14 @@ def get_corrected_sentence(in_ztz, checker_global,
                 cond1 = (guess[0:2] == word[0:2])
                 cond2a = implies(word[-1] == "s", guess[-1] == "s")
                 cond2b = implies(word[-2:] == "ed", guess[-2:] == "ed")
+
                 if cond1 and cond2a and cond2b:
-                    if not word_to_reps:
-                        if p_global < SPELLING_CORRECTION_RISK:  # very high
-                            # prob that it's wrong
-                            best_dict = "global"
-                            # if word == "beautifull":
-                            #     print("erft", p_global)
-                            #     print("cvbft", checker_global.word_usage_frequency(
-                            #         "beautiful"))
-                        else:
-                            best_dict = None
-                    else:
-                        if p_global < RISK:
-                            if guess in word_to_reps:
-                                best_dict = "local"
-                            else:
-                                best_dict = "global"
-                        else:
-                            best_dict = None
                     # this fixes tt, ss, dd, ll, errors
                     if best_dict == "global":
-                        cond3 = (has_double_letter(guess) or has_double_letter(
+                        cond4 = (has_double_letter(guess) or has_double_letter(
                             word)) and (len(guess) != len(word)) and set(
                             guess) == set(word)
-                        if cond3:
+                        if cond4:
                             # print(".......global")
                             p_guess = checker_global.word_usage_frequency(
                                  guess.lower())
@@ -121,7 +124,7 @@ def get_corrected_sentence(in_ztz, checker_global,
                                 guess_best, p_guess_best = guess, p_guess
                                 use_local_dict = False
 
-                    elif best_dict == "local":
+                    elif best_dict == "local" and guess in word_to_reps:
                         # this fixes typos
                        #  print("uuio-------local")
                         p_guess = word_to_reps[guess]/local_word_count
@@ -163,7 +166,7 @@ def correct_this_file(in_dir,
 
     corrected_lines = []
     all_changes = []
-    with open(inpath, "r", encoding="utf-8") as f:
+    with open(inpath, "r") as f:
         for line in f:
             corr_line, changes = get_corrected_sentence(
                 line, checker_global, word_to_reps,
@@ -176,7 +179,7 @@ def correct_this_file(in_dir,
                 print()
         print("all changes:", all_changes)
 
-    with open(outpath, "w", encoding="utf-8") as f:
+    with open(outpath, "w") as f:
         for corr_line in corrected_lines:
             f.write(corr_line + "\n")
 
@@ -205,7 +208,7 @@ if __name__ == "__main__":
                                     use_local_dict=use_local_dict)
 
     def main2(use_local_dict):
-        in_dir = "short_stories_prep"
+        in_dir = "short_stories_clean"
         out_dir = "spell_checking_out_dir"
         batch_file_names = os.listdir(in_dir)
         correct_this_batch_of_files(in_dir,

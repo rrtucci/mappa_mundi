@@ -1,7 +1,15 @@
 from my_globals import *
 import os
+import re
 import importlib as imp
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
+import contractions
+
+def expand_contractions(line):
+    str_list = []
+    for word in line.split():
+        str_list.append(contractions.fix(word))
+    return ' '.join(str_list)
 
 def simplify_one_m_script(
     in_dir, out_dir,
@@ -13,14 +21,28 @@ def simplify_one_m_script(
     inpath = in_dir + "/" + file_name
     outpath = out_dir + "/" + file_name
     new_lines = []
-    with open(inpath, "r", encoding="utf-8") as f:
+    with open(inpath, "r") as f:
         count = 1
         for line in f:
             print(str(count) + ".")
+            line = expand_contractions(line)
             simple_ztz_list = zsimp.simplify_ztz(line, verbose)
-            new_lines.append(ZNTZ_SEPARATOR.join(simple_ztz_list))
+
+            # remove empty clauses
+            simple_ztz_list = [ztz for ztz in simple_ztz_list if ztz]
+
+            # replace multiple white spaces by single white space
+            simple_ztz_list = [re.sub('\s+', ' ',ztz) for ztz in
+                               simple_ztz_list]
+
+            # replace empty sentence by EMPTY_ZTZ
+            if not simple_ztz_list:
+                simple_ztz_list = [EMPTY_ZTZ]
+
+            if simple_ztz_list:
+                new_lines.append(ZNTZ_SEPARATOR.join(simple_ztz_list))
             count += 1
-    with open(outpath, "w", encoding="utf-8") as f:
+    with open(outpath, "w") as f:
         for line in new_lines:
             f.write(line + "\n")
 
@@ -50,7 +72,7 @@ if __name__ == "__main__":
     def main2():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         path = "All_types_of_inputs.txt"
-        with open(path, "r", encoding='utf-8') as f:
+        with open(path, "r") as f:
             count = 1
             for line in f:
                 print(str(count) + ".")
@@ -58,7 +80,7 @@ if __name__ == "__main__":
                 count += 1
     def main3():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
-        in_dir = "short_stories_prep"
+        in_dir = "short_stories_clean"
         out_dir = "short_stories_simp"
         batch_file_names = os.listdir(in_dir)[0:2]
         simplify_batch_of_m_scripts(
@@ -69,7 +91,7 @@ if __name__ == "__main__":
     def main4():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         remove_dialogs = False
-        in_dir = PREP_DIR if not remove_dialogs else PREP_RD_DIR
+        in_dir = CLEAN_DIR if not remove_dialogs else CLEAN_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
         batch_file_names = os.listdir(in_dir)[0:10]
         simplify_batch_of_m_scripts(
@@ -78,5 +100,5 @@ if __name__ == "__main__":
 
     # main1()
     # main2()
-    # main3()
-    main4()
+    main3()
+    # main4()

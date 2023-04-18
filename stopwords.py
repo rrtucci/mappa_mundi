@@ -3,7 +3,7 @@ from pprint import pprint
 
 nlp = spacy.load('en_core_web_sm')
 
-def print_stopwords():
+def get_stopwords_dict():
 
     stop_words = nlp.Defaults.stop_words
 
@@ -16,14 +16,32 @@ def print_stopwords():
         else:
             pos_to_stop_words[pos] = [word]
 
-    pprint(pos_to_stop_words)
+    return pos_to_stop_words
+
+
 
 if __name__ == "__main__":
     def main():
-        print_stopwords()
+        d = get_stopwords_dict()
+        print(sorted(d.keys()))
+        pprint(d)
     main()
 
 """
+['ADJ',
+ 'ADP',
+ 'ADV',
+ 'AUX',
+ 'CCONJ',
+ 'DET',
+ 'INTJ',
+ 'NOUN',
+ 'NUM',
+ 'PART',
+ 'PRON',
+ 'PUNCT',
+ 'SCONJ',
+ 'VERB']
 {'ADJ': ['same',
          'few',
          'former',
