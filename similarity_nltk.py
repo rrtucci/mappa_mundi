@@ -91,7 +91,7 @@ def ztz_similarity(ztz1, ztz2):
 SIMI_THRESHOLD = 2.2
 
 """
-************ simi definition from: similarity_nlkt
+************ simi definition from: similarity_nltk
 1. Cats are beautiful animals.
 2. Dogs are awesome.
 simi(1, 2)= 1.045
@@ -112,7 +112,7 @@ simi(2, 1)= 0.733
 simi(1, 2)= 1000
 simi(2, 1)= 1000
 
-************ simi definition from: similarity_nlkt
+************ simi definition from: similarity_nltk
 1. apple
 2. horse
 simi(1, 2)= 0.056

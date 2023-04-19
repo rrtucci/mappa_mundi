@@ -15,15 +15,15 @@ DAG_RD_DIR = "dag_atlas_rd"
 ZTZ_SIMPLIFIER = "simp_spacy3" # recommended
 
 # SIMI_DEF = "similarity_spacy"
-SIMI_DEF = "similarity_nlkt" # recommended
+SIMI_DEF = "similarity_nltk" # recommended
 
 
-ZNTZ_SEPARATOR = " * "
-EMPTY_ZTZ = "*"
+ZTZ_SEPARATOR = "*"
 
 CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 
-SPELLING_CORRECTION_RISK = 1e-7  # should be >= 1e-7)
+SPELLING_CORRECTION_RISK = 1e-6   # recommended for random error type
+# SPELLING_CORRECTION_RISK = 1e-5   # recommended for tt error type
 
 # pos (part of speech) in stopwords.py
 # ['ADJ', 'ADP', 'ADV', 'AUX', 'CCONJ', 'DET', 'INTJ',

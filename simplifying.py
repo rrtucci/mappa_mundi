@@ -35,12 +35,13 @@ def simplify_one_m_script(
             simple_ztz_list = [re.sub('\s+', ' ',ztz) for ztz in
                                simple_ztz_list]
 
-            # replace empty sentence by EMPTY_ZTZ
+            # replace empty sentence by ZTZ_SEPARATOR
             if not simple_ztz_list:
-                simple_ztz_list = [EMPTY_ZTZ]
+                simple_ztz_list = [ZTZ_SEPARATOR]
 
             if simple_ztz_list:
-                new_lines.append(ZNTZ_SEPARATOR.join(simple_ztz_list))
+                xx = " " + ZTZ_SEPARATOR + " "
+                new_lines.append(xx.join(simple_ztz_list))
             count += 1
     with open(outpath, "w") as f:
         for line in new_lines:
@@ -71,7 +72,7 @@ if __name__ == "__main__":
 
     def main2():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
-        path = "All_types_of_inputs.txt"
+        path = "simplifying_test.txt"
         with open(path, "r") as f:
             count = 1
             for line in f:

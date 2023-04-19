@@ -21,6 +21,8 @@ from my_globals import *
 from spellchecker import SpellChecker
 import os
 import re
+from WordGuesser import *
+from collections import defaultdict
 
 def has_double_letter(word):
     pattern = r'(\w)\1'
@@ -41,7 +43,7 @@ def fancy_split(in_ztz):
 
 def get_word_to_reps(in_file_path):
     # tempo dictionary words are lower case
-    word_to_reps = {}
+    word_to_reps = defaultdict(lambda: 0)
     with open(in_file_path, "r") as f:
         local_word_count = 0
         for line in f:
@@ -57,7 +59,9 @@ def get_word_to_reps(in_file_path):
             
     return word_to_reps, local_word_count
 
-def get_corrected_sentence(in_ztz, checker_global, 
+def get_corrected_sentence(in_ztz, 
+                           global_checker,
+                           error_type,
                            word_to_reps=None,
                            local_word_count=None):
     if word_to_reps:
@@ -68,92 +72,61 @@ def get_corrected_sentence(in_ztz, checker_global,
 
     words = fancy_split(in_ztz)
     # print("dfgh", words)
-    corrected_words = []
+    best_guesses = []
     changes = []
     for word in words:
         capitalized = word[0].isupper()
         word = word.lower()
-        p_global = checker_global.word_usage_frequency(word)
-        if word_to_reps:
-            if word in word_to_reps:
-                p_local = word_to_reps[word]/local_word_count
-            else:
-                p_local = 0
-        else:
-            p_local = 0
-
-        if not word_to_reps:
-            if p_global < SPELLING_CORRECTION_RISK:  # very high
-                # prob that it's wrong
-                best_dict = "global"
-                # if word == "beautifull":
-                #     print("erft", p_global)
-                #     print("cvbft", checker_global.word_usage_frequency(
-                #         "beautiful"))
-            else:
-                best_dict = None
-        else:
-            if p_global < SPELLING_CORRECTION_RISK: # rare globally
-                if word in word_to_reps and word_to_reps[word]==1: # rare
-                    # locally too
-                    best_dict = "local"
-                else:
-                    best_dict = "global"
-            else:
-                best_dict = None
-
-        guess_best, p_guess_best = word, 0
-            
-        if word.isalpha() and len(word)>=2:
-            for guess in checker_global.edit_distance_1(word):
+        best_guess = word
+        prob_global_for_word = global_checker.word_usage_frequency(word)
+        if word.isalpha() and len(word)>=2 and\
+                prob_global_for_word < SPELLING_CORRECTION_RISK:
+            word_guesser = WordGuesser(word, global_checker,
+                                       word_to_reps, local_word_count)
+            for guess in global_checker.edit_distance_1(word):
                 cond1 = (guess[0:2] == word[0:2])
                 cond2a = implies(word[-1] == "s", guess[-1] == "s")
                 cond2b = implies(word[-2:] == "ed", guess[-2:] == "ed")
 
                 if cond1 and cond2a and cond2b:
                     # this fixes tt, ss, dd, ll, errors
-                    if best_dict == "global":
+                    if error_type == "tt":
                         cond4 = (has_double_letter(guess) or has_double_letter(
                             word)) and (len(guess) != len(word)) and set(
                             guess) == set(word)
                         if cond4:
-                            # print(".......global")
-                            p_guess = checker_global.word_usage_frequency(
-                                 guess.lower())
-                            if p_guess > p_guess_best:
-                                guess_best, p_guess_best = guess, p_guess
-                                use_local_dict = False
-
-                    elif best_dict == "local" and guess in word_to_reps:
-                        # this fixes typos
-                       #  print("uuio-------local")
-                        p_guess = word_to_reps[guess]/local_word_count
-                        # print("gghj", guess, p_guess_local, p_guess_best)
-                        if p_guess > p_guess_best:
-                            guess_best, p_guess_best = guess, p_guess
+                            word_guesser.do_update(guess)
+                    elif error_type == "random":
+                        word_guesser.do_update(guess)
+                    else:
+                        assert False
+            best_guess = word_guesser.best_guess
         if capitalized:
-            guess_best = guess_best[0].upper() + guess_best[1:]
             word = word[0].upper() + word[1:]
+            best_guess = best_guess[0].upper() + best_guess[1:]
+        best_guesses.append(best_guess)
+        if word != best_guess:
+            changes.append((word, best_guess))
 
-        corrected_words.append(guess_best)
-        if word != guess_best:
-            changes.append((word, guess_best))
-
-    return " ".join(corrected_words), changes
+    return " ".join(best_guesses), changes
 
 
 def correct_this_file(in_dir,
                       out_dir,
                       file_name,
+                      error_type,
                       verbose=True,
                       use_local_dict=False):
     """
     in_dir and out_dir can be the same, but this will overwrite the files
     """
     inpath = in_dir + "/" + file_name
-    outpath = out_dir + "/" + file_name
+    if out_dir:
+        outpath = out_dir + "/" + file_name
+    else:
+        outpath = None
 
-    checker_global = SpellChecker(distance=1)
+    global_checker = SpellChecker(distance=1)
     if use_local_dict:
         word_to_reps, local_word_count = get_word_to_reps(inpath)
     else:
@@ -164,13 +137,31 @@ def correct_this_file(in_dir,
     # instead of producing a dict solely from TEMP0_DICT_FILE
     # checker_local.word_frequency.load_dictionary("./" + TEMPO_DICT_FILE)
 
+    if verbose:
+        def print_probs(word1, word2):
+            print()
+            print("global probs:")
+            print(word1, global_checker.word_usage_frequency(word1))
+            print(word2, global_checker.word_usage_frequency(word2))
+            print("local_probs:")
+            if word_to_reps:
+                print(word1, word_to_reps[word1])
+                print(word2, word_to_reps[word2])
+            else:
+                print("N/A")
+            print()
+
+        print_probs("beautifull", "beautiful")
+        print_probs("tomatos", "tomatoes")
+        print_probs("mitty", "misty")
+
     corrected_lines = []
     all_changes = []
     with open(inpath, "r") as f:
         for line in f:
             corr_line, changes = get_corrected_sentence(
-                line, checker_global, word_to_reps,
-                    local_word_count)
+                line, global_checker, error_type,
+                word_to_reps, local_word_count)
             corrected_lines.append(corr_line)
             all_changes += changes
             if verbose:
@@ -179,13 +170,15 @@ def correct_this_file(in_dir,
                 print()
         print("all changes:", all_changes)
 
-    with open(outpath, "w") as f:
-        for corr_line in corrected_lines:
-            f.write(corr_line + "\n")
+    if outpath:
+        with open(outpath, "w") as f:
+            for corr_line in corrected_lines:
+                f.write(corr_line + "\n")
 
 def correct_this_batch_of_files(in_dir,
                                 out_dir,
                                 batch_file_names,
+                                error_type,
                                 verbose=True,
                                 use_local_dict=False):
     all_file_names = os.listdir(in_dir)
@@ -193,32 +186,45 @@ def correct_this_batch_of_files(in_dir,
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
         print('%i.' % (i + 1))
-        correct_this_file(in_dir, out_dir, file_name, verbose,
+        correct_this_file(in_dir, out_dir, file_name,
+                          error_type,
+                          verbose,
                           use_local_dict)
 
 if __name__ == "__main__":
-    def main1(use_local_dict):
-        in_dir = "spell_checking_in_dir"
-        out_dir = "spell_checking_out_dir"
-        batch_file_names = os.listdir(in_dir)
-        correct_this_batch_of_files(in_dir,
-                                    out_dir,
-                                    batch_file_names,
-                                    verbose=True,
-                                    use_local_dict=use_local_dict)
+    def main1(use_local_dict, error_type):
+        print("**************************")
+        print("use_local_dict=", use_local_dict)
+        print("error_type=", error_type)
+        print()
 
-    def main2(use_local_dict):
+        in_dir = "."
+        out_dir = "" # if empty out_dir, won't write to a file
+        file_name = "spell_checking_test.txt"
+
+        correct_this_file(in_dir,
+                        out_dir,
+                        file_name,
+                        error_type,
+                        verbose=True,
+                        use_local_dict=use_local_dict)
+
+
+    def main2(use_local_dict, error_type):
+        print("**************************")
+        print("use_local_dict=", use_local_dict)
+        print("error_type=", error_type)
+        print()
+
         in_dir = "short_stories_clean"
-        out_dir = "spell_checking_out_dir"
+        out_dir = "short_stories_spell"
         batch_file_names = os.listdir(in_dir)
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,
+                                    error_type= error_type,
                                     verbose=False,
                                     use_local_dict=use_local_dict)
 
-
-    main1(use_local_dict=False)
-    main2(use_local_dict=False)
-
-
+    main1(use_local_dict=True, error_type="random")
+    main2(use_local_dict=True, error_type="random")

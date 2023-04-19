@@ -4,7 +4,7 @@ https://www.datacamp.com/tutorial/python-regular-expression-tutorial
 """
 import re
 import os
-# sentence splitting with NLKT
+# sentence splitting with NLTK
 # from nltk.tokenize import sent_tokenize
 import collections as co
 from my_globals import *
@@ -174,7 +174,7 @@ def clean_one_m_script(in_dir,
 
     # split script into sentences
 
-    # with NLKT
+    # with NLTK
     # lines = sent_tokenize(script)
 
     # with spacy

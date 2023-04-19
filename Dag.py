@@ -16,7 +16,7 @@ class Dag:
                 lines = [line for line in f]
             self.nodes = []
             for time, line in enumerate(lines):
-                num_places = len(line.split(ZNTZ_SEPARATOR))
+                num_places = len(line.split(ZTZ_SEPARATOR))
                 for place in range(num_places):
                     self.nodes.append(Node(time, place))
             self.arrows = []
@@ -82,7 +82,7 @@ class Dag:
             time = 0
             for line in f:
                 time_to_simp_ztz_list[time] =\
-                    line.split(ZNTZ_SEPARATOR)
+                    line.split(ZTZ_SEPARATOR)
                 time += 1
 
         nd_to_simp_ztz = {}
