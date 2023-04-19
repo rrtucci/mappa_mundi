@@ -196,6 +196,7 @@ if __name__ == "__main__":
         print("**************************")
         print("use_local_dict=", use_local_dict)
         print("error_type=", error_type)
+        print("SPELLING_CORRECTION_RISK=", SPELLING_CORRECTION_RISK)
         print()
 
         in_dir = "."
@@ -214,6 +215,7 @@ if __name__ == "__main__":
         print("**************************")
         print("use_local_dict=", use_local_dict)
         print("error_type=", error_type)
+        print("SPELLING_CORRECTION_RISK=", SPELLING_CORRECTION_RISK)
         print()
 
         in_dir = "short_stories_clean"
@@ -226,5 +228,5 @@ if __name__ == "__main__":
                                     verbose=False,
                                     use_local_dict=use_local_dict)
 
-    main1(use_local_dict=True, error_type="random")
-    main2(use_local_dict=True, error_type="random")
+    main1(use_local_dict=True, error_type="tt")
+    main2(use_local_dict=True, error_type="tt")
