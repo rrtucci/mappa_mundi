@@ -22,7 +22,10 @@ ZTZ_SEPARATOR = "*"
 
 CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 
-SPELLING_CORRECTION_RISK = 1e-6 # 1e-7  for random, 1e-6 for tt
+# good good results with:
+# 1e-7 for error_type=random
+# 1e-6 for error_type=tt
+SPELLING_CORRECTION_RISK = 1e-6
 
 # pos (part of speech) in stopwords.py
 # ['ADJ', 'ADP', 'ADV', 'AUX', 'CCONJ', 'DET', 'INTJ',

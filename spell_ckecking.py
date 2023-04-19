@@ -185,7 +185,7 @@ def correct_this_batch_of_files(in_dir,
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
-        print('%i.' % (i + 1))
+        print('%i.' % (i + 1), file_name)
         correct_this_file(in_dir, out_dir, file_name,
                           error_type,
                           verbose,
@@ -228,5 +228,24 @@ if __name__ == "__main__":
                                     verbose=False,
                                     use_local_dict=use_local_dict)
 
-    main1(use_local_dict=True, error_type="tt")
-    main2(use_local_dict=True, error_type="tt")
+    def main3(use_local_dict, error_type):
+        print("**************************")
+        print("use_local_dict=", use_local_dict)
+        print("error_type=", error_type)
+        print("SPELLING_CORRECTION_RISK=", SPELLING_CORRECTION_RISK)
+        print()
+
+        in_dir = "m_scripts_clean"
+        out_dir = "m_scripts_spell"
+        batch_file_names = os.listdir(in_dir)[3:4]
+        correct_this_batch_of_files(in_dir,
+                                    out_dir,
+                                    batch_file_names,
+                                    error_type= error_type,
+                                    verbose=False,
+                                    use_local_dict=use_local_dict)
+
+
+    # main1(use_local_dict=True, error_type="random")
+    # main2(use_local_dict=True, error_type="random")
+    main3(use_local_dict=True, error_type="tt")

@@ -145,6 +145,7 @@ def clean_one_m_script(in_dir,
     # keep only narration (less likely than narration) indentations. Also
     # remove smallest indentation.
     new_lines = []
+    rare_sentence = "He paid $109835843 for that painting."
     for line in lines:
         indent = count_leading_wh_sp(line)
         if indent in dial_indents +  narr_indents:
@@ -182,7 +183,7 @@ def clean_one_m_script(in_dir,
     # for line in lines:
     #     print("zzzxc", line)
 
-    # remove sentences that are a single character
+    # remove single character sentences
     lines = [line.text for line in lines if len(line.text)>1]
 
     with open(outpath, "w") as f:
@@ -226,13 +227,13 @@ if __name__ == "__main__":
             remove_dialog=remove_dialog)
 
     def main3():
-        remove_dialog = False
+        remove_dialog = True
         clean_batch_of_m_scripts(
             in_dir=M_SCRIPTS_DIR,
             out_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
-            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:10],
+            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:3],
             remove_dialog=remove_dialog)
 
-    main1()
+    # main1()
     # main2()
-    # main3()
+    main3()
