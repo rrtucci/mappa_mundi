@@ -3,6 +3,8 @@ BASE_URL = "https://imsdb.com"
 M_SCRIPTS_DIR = "m_scripts"
 CLEAN_DIR = "m_scripts_clean"
 CLEAN_RD_DIR = "m_scripts_clean_rd"
+SPELL_DIR = "m_scripts_spell"
+SPELL_RD_DIR = "m_scripts_spell_rd"
 SIMP_DIR = "m_scripts_simp"
 SIMP_RD_DIR = "m_scripts_simp_rd"
 DAG_DIR = "dag_atlas"
@@ -22,10 +24,7 @@ ZTZ_SEPARATOR = "*"
 
 CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 
-# good good results with:
-# 1e-7 for error_type=random
-# 1e-6 for error_type=tt
-SPELLING_CORRECTION_RISK = 1e-6
+SPELLING_CORRECTION_RISK = 1e-8
 
 # pos (part of speech) in stopwords.py
 # ['ADJ', 'ADP', 'ADV', 'AUX', 'CCONJ', 'DET', 'INTJ',

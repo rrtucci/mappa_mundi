@@ -85,7 +85,7 @@ if __name__ == "__main__":
                 count += 1
     def main3():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
-        in_dir = "short_stories_clean"
+        in_dir = "short_stories_spell"
         out_dir = "short_stories_simp"
         batch_file_names = os.listdir(in_dir)[0:2]
         simplify_batch_of_m_scripts(
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     def main4():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         remove_dialogs = True
-        in_dir = CLEAN_DIR if not remove_dialogs else CLEAN_RD_DIR
+        in_dir = SPELL_DIR if not remove_dialogs else SPELL_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
         batch_file_names = os.listdir(in_dir)[0:3]
         simplify_batch_of_m_scripts(

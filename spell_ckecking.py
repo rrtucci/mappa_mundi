@@ -80,9 +80,21 @@ def get_corrected_sentence(in_ztz,
         best_guess = word
         prob_global_for_word = global_checker.word_usage_frequency(word)
         if word.isalpha() and len(word)>=2 and\
-                prob_global_for_word < SPELLING_CORRECTION_RISK:
-            word_guesser = WordGuesser(word, global_checker,
-                                       word_to_reps, local_word_count)
+                prob_global_for_word < SPELLING_CORRECTION_RISK\
+                and not capitalized:
+            word_guessers = {}
+            simple_error_types = ["tt", "random"]
+            if error_type in simple_error_types:
+                word_guessers[error_type]=\
+                    WordGuesser(word, global_checker,
+                                word_to_reps, local_word_count)
+            if error_type == "all":
+                for err in simple_error_types:
+                    word_guessers[err] = \
+                        WordGuesser(word, global_checker,
+                                    word_to_reps, local_word_count)
+            assert word_guessers
+
             for guess in global_checker.edit_distance_1(word):
                 cond1 = (guess[0:2] == word[0:2])
                 cond2a = implies(word[-1] == "s", guess[-1] == "s")
@@ -90,17 +102,22 @@ def get_corrected_sentence(in_ztz,
 
                 if cond1 and cond2a and cond2b:
                     # this fixes tt, ss, dd, ll, errors
-                    if error_type == "tt":
+                    if error_type in ["tt", "all"]:
                         cond4 = (has_double_letter(guess) or has_double_letter(
                             word)) and (len(guess) != len(word)) and set(
                             guess) == set(word)
                         if cond4:
-                            word_guesser.do_update(guess)
-                    elif error_type == "random":
-                        word_guesser.do_update(guess)
-                    else:
-                        assert False
-            best_guess = word_guesser.best_guess
+                            word_guessers['tt'].do_update(guess)
+                    if error_type in ["random", "all"]:
+                        word_guessers["random"].do_update(guess)
+            guesser0 = None
+            prob0 = -1
+            for guesser in word_guessers.values():
+                # print("fgyt", guesser)
+                if guesser.prob_for_best_guess> prob0:
+                    guesser0 = guesser
+                    prob0 = guesser.prob_for_best_guess
+            best_guess = guesser0.best_guess
         if capitalized:
             word = word[0].upper() + word[1:]
             best_guess = best_guess[0].upper() + best_guess[1:]
@@ -235,9 +252,10 @@ if __name__ == "__main__":
         print("SPELLING_CORRECTION_RISK=", SPELLING_CORRECTION_RISK)
         print()
 
-        in_dir = "m_scripts_clean"
-        out_dir = "m_scripts_spell"
-        batch_file_names = os.listdir(in_dir)[3:4]
+        remove_dialogs = False
+        in_dir = CLEAN_DIR if not remove_dialogs else CLEAN_RD_DIR
+        out_dir = SPELL_DIR if not remove_dialogs else SPELL_RD_DIR
+        batch_file_names = os.listdir(in_dir)[0:3]
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,
@@ -246,6 +264,6 @@ if __name__ == "__main__":
                                     use_local_dict=use_local_dict)
 
 
-    # main1(use_local_dict=True, error_type="random")
-    # main2(use_local_dict=True, error_type="random")
-    main3(use_local_dict=True, error_type="tt")
+    # main1(use_local_dict=True, error_type="all")
+    # main2(use_local_dict=True, error_type="all")
+    main3(use_local_dict=True, error_type="all")
