@@ -7,6 +7,8 @@ ztz = sentence
 from nltk import word_tokenize, pos_tag
 from nltk.corpus import wordnet as wn
 from itertools import product
+from collections import defaultdict
+
 
 def penn_to_wn(tag):
     """ Convert between a Penn Treebank tag to a simplified Wordnet tag """
@@ -40,22 +42,22 @@ def tgd_word_to_synset(tgd_word):
 def ztz_similarity(ztz1, ztz2):
     """ compute the ztz similarity using Wordnet """
     # Tokenize and tag
-    ztz1 = pos_tag(word_tokenize(ztz1.lower()))
-    ztz2 = pos_tag(word_tokenize(ztz2.lower()))
+    tgd_ztz1 = pos_tag(word_tokenize(ztz1.lower()))
+    tgd_ztz2 = pos_tag(word_tokenize(ztz2.lower()))
 
     # Get the synsets for the tagged words (tgd_word)
     all_ss1 = []
-    for tgd_word in ztz1:
+    for tgd_word in tgd_ztz1:
         ss1 = tgd_word_to_synset(tgd_word)
         if ss1:
             all_ss1.append(ss1)
     all_ss2 = []
-    for tgd_word in ztz2:
+    for tgd_word in tgd_ztz2:
         ss2 = tgd_word_to_synset(tgd_word)
         if ss2:
             all_ss2.append(ss2)
 
-    ss_pair_to_simi = {}
+    ss_pair_to_simi = defaultdict(lambda: 0)
     for ss1, ss2 in product(all_ss1, all_ss2):
         simi = ss1.path_similarity(ss2)
         if simi is not None:

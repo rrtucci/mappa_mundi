@@ -17,21 +17,13 @@ DAG_RD_DIR = "m_script_dag_atlas_rd"
 ZTZ_SIMPLIFIER = "simp_spacy3" # recommended
 
 # SIMI_DEF = "similarity_spacy"
+# SIMI_DEF = "similarity_spacy2"
 SIMI_DEF = "similarity_nltk" # recommended
 
 # good thresholds from similarity.py examples
-# SIMI_THRESHOLD_NLTK = 2.2
-# SIMI_THRESHOLD_SPACY = 2.69
-
-SIMI_THRESHOLD_NLTK = 3
-
-
-if SIMI_DEF == "similarity_nltk":
-    SIMI_THRESHOLD = SIMI_THRESHOLD_NLTK
-elif SIMI_DEF == "similarity_spacy":
-    SIMI_THRESHOLD = SIMI_THRESHOLD_SPACY
-else:
-    assert False
+# SIMI_THRESHOLD = 2.2 for NLTK
+# SIMI_THRESHOLD = 2.69 for SpaCy
+SIMI_THRESHOLD = 3
 
 ZTZ_SEPARATOR = "*"
 
