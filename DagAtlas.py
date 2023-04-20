@@ -5,43 +5,53 @@ from itertools import product
 from my_globals import *
 import importlib as imp
 simi = imp.import_module(SIMI_DEF)
-from pickle import load, dump
+import pickle as pik
+from time import time
 
 class DagAtlas:
     def __init__(self, simp_dir, dag_dir,
-                 preconnected=False):
+                 preconnected=False,
+                 overwrite=True):
+        print("starting to fill atlas", time())
         self.simp_dir = simp_dir
         self.dag_dir = dag_dir
         self.preconnected = preconnected
         all_simp_titles = [file_name[:-len(".txt")] for\
             file_name in os.listdir(self.simp_dir)]
-        self.title_to_fresh = {}
+        self.title_to_w_permission = {}
         for title in all_simp_titles:
-            self.title_to_fresh[title] = True
+            self.title_to_w_permission[title] = True
+        if not overwrite:
+            all_dag_titles = [file_name[:-len(".txt")] for \
+                               file_name in os.listdir(self.dag_dir)]
+            for title in all_dag_titles:
+                assert title in all_simp_titles
+                self.title_to_w_permission[title] = False
+
 
     def update_arrows_for_two_m_titles(self, title1, title2):
-        if self.title_to_fresh[title1]:
+        if self.title_to_w_permission[title1]:
             dag1 = Dag(title1, simp_dir=self.simp_dir,
                        preconnected=self.preconnected)
-            self.title_to_fresh[title1] = False
+            self.title_to_w_permission[title1] = False
         else:
             path1 = self.dag_dir + "/" + title1 + ".pkl"
             try:
                 with open(path1, "rb") as f:
-                    dag1 = load(f)
+                    dag1 = pik.load(f)
             except OSError:
                 print("This file is probably missing:", path1)
                 sys.exit()
 
-        if self.title_to_fresh[title2]:
+        if self.title_to_w_permission[title2]:
             dag2 = Dag(title2, simp_dir=self.simp_dir,
                        preconnected=self.preconnected)
-            self.title_to_fresh[title2] = False
+            self.title_to_w_permission[title2] = False
         else:
             path2 = self.dag_dir + "/" + title2 + ".pkl"
             try:
                 with open(path2, "rb") as f:
-                    dag2 = load(f)
+                    dag2 = pik.load(f)
             except OSError:
                 print("This file is probably missing:", path2)
                 sys.exit()
@@ -50,37 +60,39 @@ class DagAtlas:
         node_to_simple_ztz2 = \
             dag2.build_node_to_simple_ztz_dict(self.simp_dir)
 
+        print("before bridges", time())
+
         nd1_nd2_bridges = []
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
             ztz1 = node_to_simple_ztz1[nd1]
             ztz2 = node_to_simple_ztz2[nd2]
             if simi.ztz_similarity(ztz1, ztz2) > SIMI_THRESHOLD:
                 nd1_nd2_bridges.append((nd1, nd2))
-        print("qwede*****************", len(nd1_nd2_bridges))
-        if nd1_nd2_bridges:
-            nodes1, nodes2 = list(zip(*nd1_nd2_bridges))
-        else:
-            nodes1, nodes2 = [], []
-        # remove repeats
-        nodes1 = list(set(nodes1))
-        nodes2 = list(set(nodes2))
-
-        for nd1a, nd1b in product(nodes1, nodes1):
-            if nd1a.time < nd1b.time:
-                nd1a_dag2_matches = set([nd2 for (nd1a, nd2) in nd1_nd2_bridges])
-                nd1b_dag2_matches = set([nd2 for (nd1b, nd2) in nd1_nd2_bridges])
-                for nd2a, nd2b in product(nd1a_dag2_matches, nd1b_dag2_matches):
-                    if nd2a.time < nd2b.time:
-                        change = 1
-                    elif nd2a.time > nd2b.time:
-                        change = -CAUSAL_MISMATCH_PENALTY
+        print("after bridges", time())
+        print("number of bridges=", len(nd1_nd2_bridges))
+        ran = range(len(nd1_nd2_bridges))
+        for i,j in product(ran, ran):
+            if i<j:
+                bridge_a = nd1_nd2_bridges[i]
+                bridge_b = nd1_nd2_bridges[j]
+                time_gap1 = bridge_a[0].time - bridge_b[0].time
+                time_gap2 = bridge_a[1].time - bridge_b[1].time
+                bridges_do_not_cross = (time_gap1*time_gap2 >0)
+                if bridges_do_not_cross:
+                    if time_gap1>0:
+                        arrow1 = (bridge_b[0], bridge_a[0])
+                        arrow2 = (bridge_b[1], bridge_a[1])
                     else:
-                        change = 0
-                    dag1.update_arrow((nd1a, nd1b), change)
-                    dag2.update_arrow((nd2a, nd2b), change)
-
+                        arrow1 = (bridge_a[0], bridge_b[0])
+                        arrow2 = (bridge_a[1], bridge_b[1])
+                    assert arrow1[0].time < arrow1[1].time
+                    assert arrow2[0].time < arrow2[1].time
+                    dag1.update_arrow(arrow1, change=1)
+                    dag2.update_arrow(arrow2, change=1)
+        print("before save", time())
         dag1.save_self(self.dag_dir)
         dag2.save_self(self.dag_dir)
+        print("after save", time())
             
     def update_arrows_in_batch_of_m_scripts(self, batch_titles=None):
         all_simp_titles = [file_name[:-len(".txt")] for\
@@ -101,7 +113,8 @@ if __name__ == "__main__":
         remove_dialog = False
         simp_dir = "short_stories_simp"
         dag_dir = "short_stories_dag_atlas"
-        atlas = DagAtlas(simp_dir, dag_dir, preconnected=False)
+        atlas = DagAtlas(simp_dir, dag_dir, preconnected=False,
+                         overwrite=False)
         all_titles = [file_name[:-len(".txt")] \
                       for file_name in os.listdir(simp_dir)]
         # print("asdre", all_titles)

@@ -25,7 +25,8 @@ def penn_to_wn(tag):
     return None
 
 
-def tword_to_synset(word, tag):
+def tgd_word_to_synset(tgd_word):
+    word, tag = tgd_word
     wn_tag = penn_to_wn(tag)
     if wn_tag is None:
         return None
@@ -42,15 +43,15 @@ def ztz_similarity(ztz1, ztz2):
     ztz1 = pos_tag(word_tokenize(ztz1.lower()))
     ztz2 = pos_tag(word_tokenize(ztz2.lower()))
 
-    # Get the synsets for the tagged words (tword)
+    # Get the synsets for the tagged words (tgd_word)
     all_ss1 = []
-    for tword in ztz1:
-        ss1 = tword_to_synset(*tword)
+    for tgd_word in ztz1:
+        ss1 = tgd_word_to_synset(tgd_word)
         if ss1:
             all_ss1.append(ss1)
     all_ss2 = []
-    for tword in ztz2:
-        ss2 = tword_to_synset(*tword)
+    for tgd_word in ztz2:
+        ss2 = tgd_word_to_synset(tgd_word)
         if ss2:
             all_ss2.append(ss2)
 
