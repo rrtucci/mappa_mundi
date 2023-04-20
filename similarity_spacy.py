@@ -59,8 +59,6 @@ def ztz_similarity(ztz1, ztz2):
         odds = 1000
     return round(odds ,3)
 
-SIMI_THRESHOLD = 2.69
-
 """
 ************ simi definition from: similarity_spacy
 1. Cats are beautiful animals.

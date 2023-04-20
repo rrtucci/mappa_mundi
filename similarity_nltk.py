@@ -88,7 +88,6 @@ def ztz_similarity(ztz1, ztz2):
         odds = 1000
     return round(odds ,3)
 
-SIMI_THRESHOLD = 2.2
 
 """
 ************ simi definition from: similarity_nltk

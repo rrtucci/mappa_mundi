@@ -7,8 +7,8 @@ SPELL_DIR = "m_scripts_spell"
 SPELL_RD_DIR = "m_scripts_spell_rd"
 SIMP_DIR = "m_scripts_simp"
 SIMP_RD_DIR = "m_scripts_simp_rd"
-DAG_DIR = "dag_atlas"
-DAG_RD_DIR = "dag_atlas_rd"
+DAG_DIR = "m_script_dag_atlas"
+DAG_RD_DIR = "m_script_dag_atlas_rd"
 
 # ZTZ_SIMPLIFIER = "simp_stanford"
 # ZTZ_SIMPLIFIER = "simp_spacy_claucy"
@@ -19,6 +19,19 @@ ZTZ_SIMPLIFIER = "simp_spacy3" # recommended
 # SIMI_DEF = "similarity_spacy"
 SIMI_DEF = "similarity_nltk" # recommended
 
+# good thresholds from similarity.py examples
+# SIMI_THRESHOLD_NLTK = 2.2
+# SIMI_THRESHOLD_SPACY = 2.69
+
+SIMI_THRESHOLD_NLTK = 3
+
+
+if SIMI_DEF == "similarity_nltk":
+    SIMI_THRESHOLD = SIMI_THRESHOLD_NLTK
+elif SIMI_DEF == "similarity_spacy":
+    SIMI_THRESHOLD = SIMI_THRESHOLD_SPACY
+else:
+    assert False
 
 ZTZ_SEPARATOR = "*"
 
