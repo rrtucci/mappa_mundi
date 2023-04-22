@@ -8,6 +8,7 @@ from nltk import word_tokenize, pos_tag
 from nltk.corpus import wordnet as wn
 from itertools import product
 from collections import defaultdict
+from time import time
 
 
 def penn_to_wn(tag):
@@ -41,6 +42,10 @@ def tgd_word_to_synset(tgd_word):
 
 def ztz_similarity(ztz1, ztz2):
     """ compute the ztz similarity using Wordnet """
+
+    do_time = False
+    if do_time:
+        print("similarity start", time())
     # Tokenize and tag
     tgd_ztz1 = pos_tag(word_tokenize(ztz1.lower()))
     tgd_ztz2 = pos_tag(word_tokenize(ztz2.lower()))
@@ -58,6 +63,8 @@ def ztz_similarity(ztz1, ztz2):
             all_ss2.append(ss2)
 
     ss_pair_to_simi = defaultdict(lambda: 0)
+    if do_time:
+        print("similarity begin path_similarity()", time())
     for ss1, ss2 in product(all_ss1, all_ss2):
         simi = ss1.path_similarity(ss2)
         if simi is not None:
@@ -89,6 +96,8 @@ def ztz_similarity(ztz1, ztz2):
         odds = prob/ (1 - prob)
     else:
         odds = 1000
+    if do_time:
+        print("similarity ends", time())
     return round(odds ,3)
 
 

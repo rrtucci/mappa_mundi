@@ -9,7 +9,6 @@ def ztz_similarity(ztz1, ztz2):
     def same_pos(token1, token2):
         # this gives same simi but elapsed time is less
         return token1.pos_ == token2.pos_
-        # return True
 
     doc1 = nlp(ztz1)
     doc2 = nlp(ztz2)

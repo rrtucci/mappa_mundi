@@ -9,10 +9,17 @@ import os
 import collections as co
 from my_globals import *
 from unidecode import unidecode
+import contractions
 
 # sentence splitting with spacy
 import spacy
 nlp = spacy.load('en_core_web_sm')
+
+def expand_contractions(line):
+    str_list = []
+    for word in line.split():
+        str_list.append(contractions.fix(word))
+    return ' '.join(str_list)
 
 
 def clean_one_m_script(in_dir,
@@ -45,6 +52,9 @@ def clean_one_m_script(in_dir,
     # encoding="utf-8" as a parameter in open() from here on.
     lines = [unidecode(line) for line in lines]
 
+    # expand contractions
+    lines = [expand_contractions(line) for line in lines]
+
     # strip trailing (i.e., right) white space and newline.
     # If this results in an empty line, remove it.
     new_lines =[]
@@ -75,6 +85,9 @@ def clean_one_m_script(in_dir,
         # print("ssdf", line)
         # remove parenthetical remarks
         line = re.sub(pattern_paren, "", line)
+        # remove the underscore, which is not
+        # considered a punctuation mark.
+        line = re.sub(r'[_]', '', line)
         # Replace tabs by 12 blank spaces
         line = re.sub(r"\t", " "*12, line)
         # replace period by dash if period followed by number
@@ -212,7 +225,7 @@ if __name__ == "__main__":
         remove_dialog = False
         in_dir = "short_stories"
         out_dir = "short_stories_clean"
-        batch_file_names = os.listdir(in_dir)[0:2]
+        batch_file_names = os.listdir(in_dir)[0:3]
         clean_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
@@ -234,6 +247,6 @@ if __name__ == "__main__":
             batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:3],
             remove_dialog=remove_dialog)
 
-    # main1()
+    main1()
     # main2()
-    main3()
+    #main3()

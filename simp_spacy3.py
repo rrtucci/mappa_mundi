@@ -44,39 +44,46 @@ def simplify_ztz(sentence, verbose=False):
         # that doesn't have a noun/pronoun and a verb
         clause_has_noun_or_pronoun = False
         clause_has_verb = False
+        token_str_list = []
         for token in tokenized_clause:
-            if token.pos_ in ["NOUN", "PRON", "PROPN"]:
+            x = get_simplified_token_txt(token)
+            if x:
+                token_str_list.append(x)
+            if token.pos_ in ["NOUN", "PRON", "PROPN"] and x:
                 clause_has_noun_or_pronoun = True
                 # print("NOUN or PRONOUN", token.text)
-            if token.pos_ in ["VERB", "AUX"]:
+            if token.pos_ in ["VERB", "AUX"] and x:
                 clause_has_verb = True
                 # print("VERB", token.text)
         if not (clause_has_noun_or_pronoun and clause_has_verb):
-            tokenized_clause = []
+            clause_str = []
+        else:
+            clause_str = " ".join(token_str_list)
 
-        str_list = []
-        for token in tokenized_clause:
-            x = token.text
-            if token.ent_type_:
-                # replace named entities by their labels
-                # x = token.ent_type_
-                # remove named entities
-                x = ""
-            if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
-                x =""
-            if token.pos_ not in RETAINED_POS:
-                # remove stop words, except RETAINED_POS
-                x =""
-            str_list.append(x)
-        #print("mxml", str_list)
-        ztz = " ".join(str_list)
-        # remove all remaining punctuation marks
-        ztz = re.sub(r'[^\w\s]', '', ztz).strip()
-        # if ztz is just one word, replace it by ""
-        if ztz.isalpha():
-            ztz = ''
-        ztz_list.append(ztz)
+        if clause_str:
+            ztz_list.append(clause_str)
+
     if verbose:
         print(sentence.strip())
         print(ztz_list)
     return ztz_list
+
+def get_simplified_token_txt(token):
+    x = token.text
+    # remove all punctuation marks
+    x = re.sub(r'[^\w\s]', '', x)
+    if token.ent_type_:
+        # replace named entities by their labels
+        # x = token.ent_type_
+        # remove named entities
+        x = ""
+    if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
+        x = ""
+    if token.pos_ not in RETAINED_POS:
+        # remove stop words, except RETAINED_POS
+        x = ""
+    # remove single character tokens
+    if len(x.strip())==1:
+        x = ""
+    x = x.strip()
+    return x

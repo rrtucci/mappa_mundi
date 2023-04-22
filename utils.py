@@ -10,6 +10,10 @@ def m_title_from_zero_based_position(pos):
 def argmax_of_list(l):
     return max(range(len(l)), key=(lambda i: l[i]))
 
+def print_welcome_message():
+    print("Welcome Causal Navigator. We have been waiting for you for "
+          "millenia. Where would you like us to go next?")
+
 
 
 

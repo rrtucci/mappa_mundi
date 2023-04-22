@@ -17,11 +17,7 @@ class Dag:
             lines = [line for line in f]
         self.nodes = []
         for time, line in enumerate(lines):
-            if line[0] == ZTZ_SEPARATOR:
-                line = line[1:]
-            if line and line[-1] == ZTZ_SEPARATOR:
-                line = line[:-1]
-            if line:
+            if line.strip() not in [ZTZ_SEPARATOR, ""]:
                 ztz_list = line.split(ZTZ_SEPARATOR)
                 for place in range(len(ztz_list)):
                     self.nodes.append(Node(time, place))
@@ -40,8 +36,6 @@ class Dag:
                     new_arrow = (prev_nd, node)
                     self.arrows.append(new_arrow)
                     self.arrow_to_reps[new_arrow] = 1
-
-
 
     def save_self(self, dag_dir):
         path = dag_dir + "/" + self.m_title + ".pkl"
@@ -66,10 +60,10 @@ class Dag:
 
         time_to_clean_ztz = {}
         with open(path, "r") as f:
-            time = 0
+            time = -1
             for line in f:
-                time_to_clean_ztz[time] = line
                 time += 1
+                time_to_clean_ztz[time] = line.strip()
 
         nd_to_clean_ztz = {}
         for nd in self.nodes:
@@ -82,16 +76,18 @@ class Dag:
 
         time_to_simp_ztz_list = {}
         with open(path, "r") as f:
-            time = 0
+            time = -1
             for line in f:
-                time_to_simp_ztz_list[time] =\
-                    line.split(ZTZ_SEPARATOR)
                 time += 1
+                if line.strip() != ZTZ_SEPARATOR:
+                    time_to_simp_ztz_list[time] =\
+                        line.split(ZTZ_SEPARATOR)
 
         nd_to_simp_ztz = {}
         for nd in self.nodes:
             nd_to_simp_ztz[nd] =\
-                time_to_simp_ztz_list[nd.time][nd.place]
+                time_to_simp_ztz_list[nd.time][nd.place].strip()
+
         return nd_to_simp_ztz
 
     def build_high_reps_arrows(self, reps_treshold):
@@ -106,7 +102,7 @@ class Dag:
         hr_arrows = self.build_high_reps_arrows(reps_threshold)
         print("MAP LEGEND")
         print("title:", self.m_title)
-        print("high-repetition-arrows threshold:", reps_threshold)
+        print("arrow repetitions threshold:", reps_threshold)
         print("number of arrows shown:", len(hr_arrows))
         print("number of arrows dropped:", len(self.arrows)-len(hr_arrows))
 
@@ -118,35 +114,13 @@ class Dag:
                 hr_nodes.append(arrow[1])
 
         hr_nodes = sorted(hr_nodes, key=lambda x: x.time)
-        hr_time_place_pairs = [(nd.time, nd.place) for nd in hr_nodes]
-        hr_times, hr_places = list(zip(*hr_time_place_pairs))
+        nd_to_clean_ztz = self.build_node_to_clean_ztz_dict(clean_dir)
+        nd_to_simple_ztz = self.build_node_to_simple_ztz_dict(simp_dir)
 
-        node_to_clean_ztz = {}
-        clean_path = clean_dir + "/" + self.m_title + ".txt"
-        with open(clean_path, "r") as f:
-            line_time=0
-            for line in f:
-                if line_time in hr_times:
-                    i = hr_times.index(line_time)
-                    node_to_clean_ztz[hr_nodes[i]] = line.strip()
-                line_time += 1
-        
-        node_to_simp_ztz = {}
-        simp_path = simp_dir + "/" + self.m_title + ".txt"
-        with open(simp_path, "r") as f:
-            line_time=0
-            for line in f:
-                if line_time in hr_times:
-                    i = hr_times.index(line_time)
-                    line_parts = line.split(ZTZ_SEPARATOR)
-                    node_to_simp_ztz[hr_nodes[i]] =\
-                        line_parts[hr_places[i]].strip()
-                line_time += 1
-                
-        for node in hr_nodes:
-            print(node_str(node) + ":")
-            print("(FULL)", node_to_clean_ztz[node])
-            print("(PART)", node_to_simp_ztz[node])
+        for nd in hr_nodes:
+            print(node_str(nd) + ":")
+            print("(FULL)", nd_to_clean_ztz[nd])
+            print("(PART)", nd_to_simple_ztz[nd])
 
     @staticmethod
     def draw_dot(s, j_embed):
@@ -193,7 +167,8 @@ if __name__ == "__main__":
         simp_dir = "short_stories_simp"
         clean_dir = "short_stories_clean"
         file_names = [file_name for
-                      file_name in os.listdir(dag_dir)]
+                      file_name in os.listdir(dag_dir)
+                      [0:3]]
         dags = []
         for fname in file_names:
             path = dag_dir + "/" + fname
@@ -202,6 +177,7 @@ if __name__ == "__main__":
                 dag = pik.load(f)
                 dags.append(dag)
         for dag in dags:
+            print("-------------------------")
             print(dag.m_title)
             hreps_arrows = dag.build_high_reps_arrows(
                 reps_threshold)
@@ -212,7 +188,7 @@ if __name__ == "__main__":
                 dag.draw(reps_threshold)
                 dag.print_map_legend(clean_dir, simp_dir, reps_threshold)
 
-    main1(reps_threshold=3, draw=True)
+    main1(reps_threshold=4, draw=True)
 
 
 

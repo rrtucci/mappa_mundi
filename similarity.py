@@ -3,22 +3,13 @@ import importlib as imp
 simi = imp.import_module(SIMI_DEF)
 from time import time
 
-def print_simi_12(str1, str2, timeit=False):
+def print_simi_12(str1, str2):
     print("1.", str1)
     print("2.", str2)
-    if timeit:
-        start = time()
-        simi12 = simi.ztz_similarity(str1, str2)
-        simi21 = simi.ztz_similarity(str2, str1)
-        end = time()
-    else:
-        simi12 = simi.ztz_similarity(str1, str2)
-        simi21 = simi.ztz_similarity(str2, str1)
+    simi12 = simi.ztz_similarity(str1, str2)
+    simi21 = simi.ztz_similarity(str2, str1)
     print("simi(1, 2)=", str(simi12))
     print("simi(2, 1)=", str(simi21))
-    if timeit:
-        print("elapsed time=", str((end-start)/2))
-    print()
 
 
 if __name__ == "__main__":
@@ -46,7 +37,7 @@ if __name__ == "__main__":
 
         ztz1 = "The cat sat on the mat."
         ztz2 = "The dog lay on the rug."
-        print_simi_12(ztz1, ztz2, timeit=True)
+        print_simi_12(ztz1, ztz2)
 
     main1()
     main2()

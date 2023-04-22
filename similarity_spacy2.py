@@ -4,9 +4,13 @@ from nltk.corpus import wordnet as wn
 from my_globals import *
 from itertools import product
 from collections import defaultdict
+from time import time
 nlp = spacy.load("en_core_web_sm")
 
 def ztz_similarity(ztz1, ztz2):
+    do_time = False
+    if do_time:
+        print("similarity begins", time())
     doc1 = nlp(ztz1)
     doc2 = nlp(ztz2)
     sp_tokens1 = [token1 for token1 in doc1 \
@@ -25,6 +29,8 @@ def ztz_similarity(ztz1, ztz2):
             ss2 = wn.synsets(token2.text)[0]
             all_ss2.append(ss2)
     ss_pair_to_simi = defaultdict(lambda: 0)
+    if do_time:
+        print("beginning of path_similarity()", time())
     for ss1, ss2 in product(all_ss1, all_ss2):
         simi = ss1.path_similarity(ss2)
         if simi is not None:
@@ -57,6 +63,8 @@ def ztz_similarity(ztz1, ztz2):
         odds = prob/ (1 - prob)
     else:
         odds = 1000
+    if do_time:
+        print("similarity ends", time())
     return round(odds ,3)
 
     

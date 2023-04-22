@@ -3,13 +3,7 @@ import os
 import re
 import importlib as imp
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
-import contractions
 
-def expand_contractions(line):
-    str_list = []
-    for word in line.split():
-        str_list.append(contractions.fix(word))
-    return ' '.join(str_list)
 
 def simplify_one_m_script(
     in_dir, out_dir,
@@ -24,8 +18,8 @@ def simplify_one_m_script(
     with open(inpath, "r") as f:
         count = 1
         for line in f:
-            print(str(count) + ".")
-            line = expand_contractions(line)
+            if verbose:
+                print(str(count) + ".")
             simple_ztz_list = zsimp.simplify_ztz(line, verbose)
 
             # remove empty clauses
@@ -87,11 +81,11 @@ if __name__ == "__main__":
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         in_dir = "short_stories_spell"
         out_dir = "short_stories_simp"
-        batch_file_names = os.listdir(in_dir)[0:2]
+        batch_file_names = os.listdir(in_dir)[0:3]
         simplify_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
-            verbose=True)
+            verbose=False)
 
     def main4():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
@@ -105,5 +99,5 @@ if __name__ == "__main__":
 
     # main1()
     # main2()
-    # main3()
-    main4()
+    main3()
+    # main4()

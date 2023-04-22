@@ -10,9 +10,11 @@ from time import time
 
 class DagAtlas:
     def __init__(self, simp_dir, dag_dir,
-                 preconnected=False,
-                 overwrite=True):
-        print("starting to fill atlas", time())
+                 preconnected=False, fresh_start=True):
+        self.start_time = time()
+        time_now = (time() - self.start_time) / 60
+        print(f"Initiating DagAtlas object: {time_now:.2f} minutes\n")
+
         self.simp_dir = simp_dir
         self.dag_dir = dag_dir
         self.preconnected = preconnected
@@ -21,7 +23,7 @@ class DagAtlas:
         self.title_to_w_permission = {}
         for title in all_simp_titles:
             self.title_to_w_permission[title] = True
-        if not overwrite:
+        if not fresh_start:
             all_dag_titles = [file_name[:-len(".txt")] for \
                                file_name in os.listdir(self.dag_dir)]
             for title in all_dag_titles:
@@ -30,10 +32,12 @@ class DagAtlas:
 
 
     def update_arrows_for_two_m_titles(self, title1, title2):
+        time_now = (time() - self.start_time) / 60
+        print(f"Starting comparison of 2 titles: {time_now:.2f} minutes")
+
         if self.title_to_w_permission[title1]:
             dag1 = Dag(title1, simp_dir=self.simp_dir,
                        preconnected=self.preconnected)
-            self.title_to_w_permission[title1] = False
         else:
             path1 = self.dag_dir + "/" + title1 + ".pkl"
             try:
@@ -46,7 +50,6 @@ class DagAtlas:
         if self.title_to_w_permission[title2]:
             dag2 = Dag(title2, simp_dir=self.simp_dir,
                        preconnected=self.preconnected)
-            self.title_to_w_permission[title2] = False
         else:
             path2 = self.dag_dir + "/" + title2 + ".pkl"
             try:
@@ -60,16 +63,23 @@ class DagAtlas:
         node_to_simple_ztz2 = \
             dag2.build_node_to_simple_ztz_dict(self.simp_dir)
 
-        print("before bridges", time())
+        print("title1 and its num of nodes:", title1, len(dag1.nodes))
+        print("title2 and its num of nodes:", title2, len(dag2.nodes))
+        print("product of numbers of nodes=",
+              len(dag1.nodes) * len(dag2.nodes))
+
+        time_now = (time()-self.start_time)/60
+        print(f"Starting bridges: {time_now:.2f} minutes")
 
         nd1_nd2_bridges = []
+        bridge_count=0
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
             ztz1 = node_to_simple_ztz1[nd1]
             ztz2 = node_to_simple_ztz2[nd2]
             if simi.ztz_similarity(ztz1, ztz2) > SIMI_THRESHOLD:
                 nd1_nd2_bridges.append((nd1, nd2))
-        print("after bridges", time())
-        print("number of bridges=", len(nd1_nd2_bridges))
+                bridge_count += 1
+                print(bridge_count, "bridges")
         ran = range(len(nd1_nd2_bridges))
         for i,j in product(ran, ran):
             if i<j:
@@ -89,10 +99,15 @@ class DagAtlas:
                     assert arrow2[0].time < arrow2[1].time
                     dag1.update_arrow(arrow1, change=1)
                     dag2.update_arrow(arrow2, change=1)
-        print("before save", time())
+        time_now = (time()-self.start_time)/60
+        print(f"Before saving 2 dags: {time_now:.2f} minutes")
         dag1.save_self(self.dag_dir)
+        self.title_to_w_permission[title1] = False
         dag2.save_self(self.dag_dir)
-        print("after save", time())
+        self.title_to_w_permission[title2] = False
+
+        time_now = (time()-self.start_time)/60
+        print(f"Exiting 2 titles comparison: {time_now:.2f} minutes\n")
             
     def update_arrows_in_batch_of_m_scripts(self, batch_titles=None):
         all_simp_titles = [file_name[:-len(".txt")] for\
@@ -113,13 +128,12 @@ if __name__ == "__main__":
         remove_dialog = False
         simp_dir = "short_stories_simp"
         dag_dir = "short_stories_dag_atlas"
-        atlas = DagAtlas(simp_dir, dag_dir, preconnected=False,
-                         overwrite=False)
+        atlas = DagAtlas(simp_dir, dag_dir)
         all_titles = [file_name[:-len(".txt")] \
                       for file_name in os.listdir(simp_dir)]
         # print("asdre", all_titles)
         atlas.update_arrows_in_batch_of_m_scripts(
-            batch_titles=all_titles)
+            batch_titles=all_titles[0:3])
     def main2():
         remove_dialog = True
         atlas = DagAtlas(

@@ -4,6 +4,7 @@ from spell_checking import *
 import importlib as imp
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
 from DagAtlas import *
+from utils import *
 
 remove_dialog = True
 num_movies = 2
@@ -53,5 +54,4 @@ if "cartography" in steps_to_perform:
         all_titles[0:num_movies])
 
 # greetings
-print("Welcome Causal Navigator. We have been waiting for you for "
-      "millenia. Where would you like us to go next?")
+print_welcome_message()

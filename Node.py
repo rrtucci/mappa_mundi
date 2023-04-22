@@ -4,6 +4,10 @@ class Node:
         self.place = place
         assert time >=0 and place >= 0
 
+    def coords(self):
+        # coordinates
+        return (self.time, self.place)
+
 def node_str(node):
     return "(" + str(node.time) + "," + str(node.place) + ")"
 
