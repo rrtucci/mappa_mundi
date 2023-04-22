@@ -235,17 +235,19 @@ if __name__ == "__main__":
         clean_one_m_script(
             in_dir=M_SCRIPTS_DIR,
             out_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
-            file_name = "x-men.txt",
+            file_name = "up.txt",
             remove_dialog=remove_dialog)
 
     def main3():
-        remove_dialog = True
+        remove_dialog = False
+        # batch_file_names=os.listdir(M_SCRIPTS_DIR)
+        batch_file_names = ["toy-story.txt", "up.txt", "wall-e.txt"]
         clean_batch_of_m_scripts(
             in_dir=M_SCRIPTS_DIR,
             out_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
-            batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:3],
+            batch_file_names=batch_file_names,
             remove_dialog=remove_dialog)
 
-    main1()
+    # main1()
     # main2()
-    #main3()
+    main3()

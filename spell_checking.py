@@ -266,5 +266,5 @@ if __name__ == "__main__":
 
 
     # main1(use_local_dict=True, error_type="all")
-    main2(use_local_dict=True, error_type="all")
-    # main3(use_local_dict=True, error_type="all")
+    # main2(use_local_dict=True, error_type="all")
+    main3(use_local_dict=True, error_type="all")

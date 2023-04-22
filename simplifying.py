@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     def main4():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
-        remove_dialogs = True
+        remove_dialogs = False
         in_dir = SPELL_DIR if not remove_dialogs else SPELL_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
         batch_file_names = os.listdir(in_dir)[0:3]
@@ -99,5 +99,5 @@ if __name__ == "__main__":
 
     # main1()
     # main2()
-    main3()
-    # main4()
+    # main3()
+    main4()
