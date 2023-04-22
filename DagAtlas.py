@@ -125,13 +125,11 @@ class DagAtlas:
                                                     batch_titles[j])
 if __name__ == "__main__":
     def main1():
-        remove_dialog = False
         simp_dir = "short_stories_simp"
         dag_dir = "short_stories_dag_atlas"
         atlas = DagAtlas(simp_dir, dag_dir)
         all_titles = [file_name[:-len(".txt")] \
                       for file_name in os.listdir(simp_dir)]
-        # print("asdre", all_titles)
         atlas.update_arrows_in_batch_of_m_scripts(
             batch_titles=all_titles[0:3])
     def main2():

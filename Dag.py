@@ -167,8 +167,7 @@ if __name__ == "__main__":
         simp_dir = "short_stories_simp"
         clean_dir = "short_stories_clean"
         file_names = [file_name for
-                      file_name in os.listdir(dag_dir)
-                      [0:3]]
+                      file_name in os.listdir(dag_dir)[0:3]]
         dags = []
         for fname in file_names:
             path = dag_dir + "/" + fname
@@ -177,7 +176,7 @@ if __name__ == "__main__":
                 dag = pik.load(f)
                 dags.append(dag)
         for dag in dags:
-            print("-------------------------")
+            print("==================================")
             print(dag.m_title)
             hreps_arrows = dag.build_high_reps_arrows(
                 reps_threshold)

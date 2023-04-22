@@ -202,7 +202,8 @@ def correct_this_batch_of_files(in_dir,
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
-        print('%i.' % (i + 1), file_name)
+        print(str(i + 1) + ".")
+        print(file_name)
         correct_this_file(in_dir, out_dir, file_name,
                           error_type,
                           verbose,

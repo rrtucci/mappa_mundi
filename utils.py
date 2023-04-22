@@ -11,7 +11,7 @@ def argmax_of_list(l):
     return max(range(len(l)), key=(lambda i: l[i]))
 
 def print_welcome_message():
-    print("Welcome Causal Navigator. We have been waiting for you for "
+    print("Welcome Causal AI Navigator. We have been waiting for you for "
           "millenia. Where would you like us to go next?")
 
 

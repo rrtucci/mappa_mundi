@@ -135,7 +135,7 @@ def clean_one_m_script(in_dir,
         indents.append(indent)
     # print("ddfg", indents)
     # print("ddfg", indent_prob_dist)
-    print("\tindent prob dist =", [(indent, indent_prob_dist[indent]) \
+    print("indent prob dist =", [(indent, indent_prob_dist[indent]) \
                                   for indent in indents[0:4]])
 
     # likely dialog indents
@@ -152,8 +152,8 @@ def clean_one_m_script(in_dir,
                     # indents[0] - indent>=4 and\
                     indent_prob_dist[indent]>= .01]
 
-    print("\tdialog indents=", dial_indents)
-    print("\tnarration indents=", narr_indents)
+    print("dialog indents=", dial_indents)
+    print("narration indents=", narr_indents)
 
     # keep only narration (less likely than narration) indentations. Also
     # remove smallest indentation.
@@ -222,14 +222,13 @@ def clean_batch_of_m_scripts(
 if __name__ == "__main__":
     from my_globals import *
     def main1():
-        remove_dialog = False
         in_dir = "short_stories"
         out_dir = "short_stories_clean"
         batch_file_names = os.listdir(in_dir)[0:3]
         clean_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
-            remove_dialog=remove_dialog)
+            remove_dialog=False)
 
     def main2():
         remove_dialog = True
