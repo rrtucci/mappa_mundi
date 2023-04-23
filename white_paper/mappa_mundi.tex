@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+\input{bayesuvius.sty}
+
+
+\begin{document}
+\title{Causal DAG Extraction from 3 Short Stories  \\
+and 3 Movie Scripts}
+\date{ \today}
+\author{Robert R. Tucci\\
+        tucci@ar-tiste.com}
+\maketitle
+\vskip2cm
+\section*{Abstract}
+We improve a previously proposed algorithm
+for doing causal DEFT (DAG Extraction from Text), and then we apply the new algorithm to 2 usecases:
+3 short stories by P.G. Wodehouse and 3 movie scripts by Pixar/Disney. The software  used to accomplish this 
+endeavor is called ``Mappa Mundi" and is available as open source at GitHub. 
+\newpage
+
+In this paper, I improve an algorithm
+for doing causal DEFT (DAG Extraction from Text)
+that was
+first proposed in Ref.\cite{deft1}
+I then apply the new algorithm to 2 usecases:
+\begin{enumerate}
+
+\item 3 short stories by P.G. Wodehouse
+(the text from these was obtained from the
+Project Gutenberg website \cite{project-gutenberg}) 
+
+\begin{itemize}
+\item  Bill the Bloodhound
+\item  Extricating Young Gussie
+\item Wilton's Holiday
+\end{itemize}
+
+\item 3 movie scripts by Pixar/Disney.
+(the text for these was obtained from the IMSDb website Ref.\cite{imsdb})\footnote{The Mappa Mundi repo at GitHub
+contains a Python script called {\tt downloading.py}
+that uses the BeautifulSoup 
+package to scrape all the $1100+$ movie
+scripts available at the IMSDb website.
+My original intention
+was to apply my algorithm to 
+all of those movie scripts.
+However, due to lack of
+hardware resources, I had to 
+settle for just 3 movie scripts.}
+
+\begin{itemize}
+\item Toy Story 
+\item Up
+\item WALL-E
+\end{itemize}
+\end{enumerate}
+
+The Python script
+software that was used to 
+accomplish this endeavor is open source and available
+at Github (see Ref.\cite{github-mappa-mundi})
+
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

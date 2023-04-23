@@ -1,0 +1,725 @@
+\usepackage{graphicx}     %standard package. Note graphics<graphicx<epsfig
+\usepackage{color}     %standard package
+\usepackage{hyperref} %standard package written by Sebastian Rahtz
+%\usepackage{subeqn}    %allows equations 1a, 1b
+%\usepackage{subfig}    %allows figures 1a, 1b
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xurl}
+\usepackage{bbm}%for indicator function
+%\bibliographystyle{alpha}
+\usepackage{floatrow}
+
+
+\usepackage[toc,page]{appendix}
+\usepackage[nottoc]{tocbibind}
+
+\usepackage[color,matrix,frame,arrow,curve]{xy}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage[shortlabels]{enumitem}
+\usepackage{array}
+\usepackage{pdflscape}
+\usepackage{multicol, multirow}
+\usepackage{ctable}
+\usepackage{dirtree}
+\usepackage{subfig}
+\usepackage{longtable}
+
+%\usepackage{fdsymbol}
+%\usepackage{animate}% play animation
+
+\usepackage[vlined,ruled]{algorithm2e}
+\newcommand{\mycommfont}[1]{\small\ttfamily\textcolor{blue}{#1}}
+\SetCommentSty{mycommfont}
+
+%highlighting
+\usepackage{mdframed}
+
+\usepackage[makeroom]{cancel}
+
+\usepackage{pdfpages}
+\usepackage{hyperxmp}
+
+\paperheight=11in
+\topmargin=0in
+\headheight=0in
+\headsep=0in
+\topskip=0in
+\textheight=8.5in
+\footskip=.5in
+
+
+\paperwidth=8.5in
+\oddsidemargin=.25in
+\evensidemargin=.25in
+\textwidth=6.0in
+\parindent=.5in
+
+\newcommand{\chapquote}[3]{\begin{quotation} \textit{#1} \end{quotation} \begin{flushright} - #2, \textit{#3}\end{flushright} }
+
+\newtheorem{claim}{Claim}
+\newcommand{\proof}[0]{{\bf proof:} }
+\newcommand{\qed}[0]{\quad\newline \noindent{\bf QED }}
+
+
+\newcommand{\bra}[1]{\langle#1|}
+\newcommand{\ket}[1]{|#1\rangle}
+\newcommand{\av}[1]{\left\langle#1\right\rangle}
+\newcommand{\pder}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\der}[2]{\frac{d#1}{d#2}}
+\newcommand{\tr}[0]{{\rm tr }}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+\newcommand{\bsub}{\begin{subequations}}
+	\newcommand{\esub}{\end{subequations}}
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}}
+\newcommand{\rarrow}[0]{\rightarrow}
+\newcommand{\larrow}[0]{\leftarrow}
+\newcommand{\uarrow}[0]{\uparrow}
+\newcommand{\darrow}[0]{\downarrow}
+\newcommand{\Rarrow}[0]{\Rightarrow}
+\newcommand{\nRarrow}[0]{\nRightarrow}
+\newcommand{\Larrow}[0]{\Leftarrow}
+\newcommand{\nLarrow}[0]{\nLeftarrow}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\ZZ}[0]{ {\mathbb{Z}}}
+\newcommand{\RR}[0]{{ \mathbb{R}} }
+\newcommand{\CC}[0]{{ \mathbb{C}} }
+\newcommand{\XX}[0]{{ \mathbb{X}} }
+\newcommand{\ground}{{}_{\stackrel{\stackrel{\displaystyle{\bot}}{-}}{.}}}
+\newcommand{\norm}[1]{\parallel#1\parallel}
+\newcommand{\eqdef}[0]{\;\;\stackrel{\text{def}}{=}\;\;}
+
+\newcommand{\heavy}[0]{\mathbf{H}}
+
+\newcommand{\rva}[0]{{\ul{a}}}
+\newcommand{\rvb}[0]{{\ul{b}}}
+\newcommand{\rvc}[0]{{\ul{c}}}
+\newcommand{\rvd}[0]{{\ul{d}}}
+\newcommand{\rve}[0]{{\ul{e}}}
+\newcommand{\rvf}[0]{{\ul{f}}}
+\newcommand{\rvg}[0]{{\ul{g}}}
+\newcommand{\rvh}[0]{{\ul{h}}}
+\newcommand{\rvi}[0]{{\ul{i}}}
+\newcommand{\rvj}[0]{{\ul{j}}}
+\newcommand{\rvk}[0]{{\ul{k}}}
+\newcommand{\rvl}[0]{{\ul{l}}}
+\newcommand{\rvll}[0]{{\ul{\ell}}}
+\newcommand{\rvm}[0]{{\ul{m}}}
+\newcommand{\rvn}[0]{{\ul{n}}}
+\newcommand{\rvo}[0]{{\ul{o}}}
+\newcommand{\rvp}[0]{{\ul{p}}}
+\newcommand{\rvq}[0]{{\ul{q}}}
+\newcommand{\rvr}[0]{{\ul{r}}}
+\newcommand{\rvs}[0]{{\ul{s}}}
+\newcommand{\rvt}[0]{{\ul{t}}}
+\newcommand{\rvu}[0]{{\ul{u}}}
+\newcommand{\rvv}[0]{{\ul{v}}}
+\newcommand{\rvw}[0]{{\ul{w}}}
+\newcommand{\rvx}[0]{{\ul{x}}}
+\newcommand{\rvy}[0]{{\ul{y}}}
+\newcommand{\rvz}[0]{{\ul{z}}}
+
+
+\newcommand{\rvA}[0]{{\ul{A}}}
+\newcommand{\rvB}[0]{{\ul{B}}}
+\newcommand{\rvC}[0]{{\ul{C}}}
+\newcommand{\rvD}[0]{{\ul{D}}}
+\newcommand{\rvE}[0]{{\ul{E}}}
+\newcommand{\rvF}[0]{{\ul{F}}}
+\newcommand{\rvH}[0]{{\ul{H}}}
+\newcommand{\rvK}[0]{{\ul{K}}}
+\newcommand{\rvL}[0]{{\ul{L}}}
+\newcommand{\rvN}[0]{{\ul{N}}}
+\newcommand{\rvQ}[0]{{\ul{Q}}}
+\newcommand{\rvR}[0]{{\ul{R}}}
+\newcommand{\rvT}[0]{{\ul{T}}}
+\newcommand{\rvU}[0]{{\ul{U}}}
+\newcommand{\rvV}[0]{{\ul{V}}}
+\newcommand{\rvW}[0]{{\ul{W}}}
+\newcommand{\rvX}[0]{{\ul{X}}}
+\newcommand{\rvY}[0]{{\ul{Y}}}
+\newcommand{\rvZ}[0]{{\ul{Z}}}
+
+\newcommand{\rvxi}[0]{{\ul{\xi}}}
+\newcommand{\rvzeta}[0]{{\ul{\zeta}}}
+\newcommand{\rvtheta}[0]{{\ul{\theta}}}
+\newcommand{\rvmu}[0]{{\ul{\mu}}}
+\newcommand{\rvsig}[0]{{\ul{\sigma}}}
+\newcommand{\rvDel}[0]{{\ul{\Delta}}}
+\newcommand{\rvtau}[0]{{\ul{\tau}}}
+
+\newcommand{\cala}[0]{{\cal A}}
+\newcommand{\calb}[0]{{\cal B}}
+\newcommand{\calc}[0]{{\cal C}}
+\newcommand{\cald}[0]{{\cal D}}
+\newcommand{\cale}[0]{{\cal E}}
+\newcommand{\calf}[0]{{\cal F}}
+\newcommand{\calg}[0]{{\cal G}}
+\newcommand{\calh}[0]{{\cal H}}
+\newcommand{\cali}[0]{{\cal I}}
+\newcommand{\calk}[0]{{\cal K}}
+\newcommand{\call}[0]{{\cal L}}
+\newcommand{\calm}[0]{{\cal M}}
+\newcommand{\caln}[0]{{\cal N}}
+\newcommand{\calo}[0]{{\cal O}}
+\newcommand{\calp}[0]{{\cal P}}
+\newcommand{\calq}[0]{{\cal Q}}
+\newcommand{\calr}[0]{{\cal R}}
+\newcommand{\cals}[0]{{\cal S}}
+\newcommand{\calt}[0]{{\cal T}}
+\newcommand{\calu}[0]{{\cal U}}
+\newcommand{\calv}[0]{{\cal V}}
+\newcommand{\calw}[0]{{\cal W}}
+\newcommand{\calx}[0]{{\cal X}}
+\newcommand{\caly}[0]{{\cal Y}}
+\newcommand{\calz}[0]{{\cal Z}}
+
+\newcommand{\Pmat}[4]{\calp\left[
+\begin{array}{cc}#1&#2\\#3&#4
+\end{array}\right]}
+
+%\newcommand{\PN}[0]{PN^{0,0}_{1,1}}
+%\newcommand{\PS}[0]{PS^{1,1}_{0,0}}
+\newcommand{\PN}[0]{PN}
+\newcommand{\PS}[0]{PS}
+
+\newcommand{\lam}[0]{\lambda}
+\newcommand{\Lam}[0]{\Lambda}
+\newcommand{\alp}[0]{\alpha}
+\newcommand{\eps}[0]{\epsilon}
+\newcommand{\s}[0]{\sigma}
+\newcommand{\su}[0]{{\Sigma}}
+
+\newcommand{\pp}[0]{\mathbb{P}}
+\newcommand{\dbm}[0]{{
+		[1,\partial_{b},\partial_{m}]
+}}
+
+\newcommand{\dg}[0]{{[1, \partial_{\theta_G}]}}
+\newcommand{\dd}[0]{{[1, \partial_{\theta_D}]}}
+\newcommand{\dgd}[0]{{[1, \partial_{\theta_G}, \partial_{\theta_D}]}}
+
+\newcommand{\veca}[0]{{\vec{a}}}
+\newcommand{\vecb}[0]{{\vec{b}}}
+\newcommand{\vecc}[0]{{\vec{c}}}
+\newcommand{\vecd}[0]{{\vec{d}}}
+\newcommand{\vecf}[0]{{\vec{f}}}
+\newcommand{\vech}[0]{{\vec{h}}}
+\newcommand{\vecr}[0]{{\vec{r}}}
+\newcommand{\vecs}[0]{{\vec{s}}}
+\newcommand{\vecu}[0]{{\vec{u}}}
+\newcommand{\vecx}[0]{{\vec{x}}}
+\newcommand{\vecy}[0]{{\vec{y}}}
+\newcommand{\vechy}[0]{{\vec{\haty}}}
+\newcommand{\vtheta}[0]{{\vec{\theta}}}
+
+\newcommand{\haty}[0]{{\widehat{y}}}
+\newcommand{\hatx}[0]{{\widehat{x}}}
+\newcommand{\hata}[0]{{\widehat{a}}}
+\newcommand{\hatr}[0]{{\widehat{r}}}
+
+
+\newcommand{\cond}[0]{{\:\mathbf{|}\:}}
+\newcommand{\mymathbf}[1]{#1}
+
+\newcommand{\ranvec}[1]{\ul{\vec{#1}}}
+\newcommand{\indi}[0]{\mathbbm{1}}
+\newcommand{\smoid}[0]{{\rm smoid}}
+\newcommand{\lodds}[0]{{\rm lodds}}
+\newcommand{\expit}[0]{{\rm expit}}
+\newcommand{\logit}[0]{{\rm logit}}
+\newcommand{\sign}[0]{{\rm sign}}
+
+\renewcommand{\labelitemii}{$\bullet$}
+
+\newcommand{\HAT}[1]{{\widehat{#1}}}
+\newcommand{\TIL}[1]{{\widetilde{#1}}}
+\newcommand{\tild}[0]{{\TIL{d}}}
+\newcommand{\tile}[0]{{\TIL{e}}}
+\newcommand{\tilg}[0]{{\TIL{g}}}
+\newcommand{\tilu}[0]{{\TIL{u}}}
+\newcommand{\tilx}[0]{{\TIL{x}}}
+\newcommand{\tilP}[0]{{\TIL{P}}}
+\newcommand{\tilPT}[0]{{\TIL{P}_\theta}}
+
+\newcommand{\maparrow}[1]
+{\xymatrix{\ar[r]_{#1}&}}
+
+
+\newcommand{\ucalm}[0]{\ul{\calm}}
+
+\newcommand{\bool}[0]{\{0,1\}}
+
+\newcommand{\argmin}{\mathop{\mathrm{argmin}}\limits}
+\newcommand{\argmax}{\mathop{\mathrm{argmax}}\limits}
+
+\newcommand{\softmax}[0]{{\rm softmax}}
+
+\newcommand{\A}[0]{\wedge}
+\newcommand{\V}[0]{\vee}
+\newcommand{\xor}{\oplus}
+\newcommand{\bigA}[0]{\bigwedge}
+\newcommand{\bigV}[0]{\bigvee}
+\newcommand{\bigxor}{\bigoplus}
+
+
+\newcommand{\rdart}[0]{\Rightarrow}
+\newcommand{\ldart}[0]{\Leftarrow}
+\newcommand{\rveps}[0]{\ul{\eps}}
+
+\newcommand{\hatvar}[0]{\widehat{\sigma^2}}
+\newcommand{\ptp}[0]{{(t)}}
+
+\newcommand{\tseries}[1]{{\{#1\}_{\forall t}}}
+
+\newcommand{\xbeta}[0]{X_\s^T\beta}
+\newcommand{\xtau}[0]{X_\s^T\tau}
+
+%arguments phi1, phi2, phi3, e
+\newcommand{\rbd}[4]{
+\xymatrix@-1.3pc{
+&#1\ar[d]&&#2\ar[d]
+\\
+&\rvx_1\ar[rr]
+&&
+\rvx_2
+\ar `r[rd][rd]
+\\
+0\ar`u[u][ru]
+\ar`d[dr][rrd]
+&&&&\rvA\ar[r]&#4
+\\
+&&
+\rvx_3
+\ar `r[rru][rru]
+\\
+&&#3\ar[u]
+}
+}
+
+\newcommand{\rulezeroif}[0]{
+If $(\rvb. \perp \rva.
+|\rvr., \rvs.)$
+in $G$, then}
+
+\newcommand{\rulezerothen}[0]{
+$\rva.=a. \leftrightarrow 1$}
+
+\newcommand{\rulezeroP}[0]{
+P(b.|a.,r.,s.)=P(b.|r., s.)}
+
+\newcommand{\rulezeroH}[0]{
+H(\rvb.:\rva.|\rvr.,\rvs.)=0}
+
+\newcommand{\rulezeropic}[0]{
+\xymatrix@C=1pc@R=1pc{
+&r.\ar[dr]
+&s.\ar[d]
+\\
+a.\ar[rr]
+&&b.
+&=
+}
+\xymatrix@C=1pc@R=1pc{
+&r.\ar[dr]&s.\ar[d]
+\\
+a.\ar[rr]|0
+&&b.
+}}
+
+\newcommand{\ruleoneif}[0]{
+If $(\rvb. \perp \rva.
+|\rvr., \rvs.)$
+in $\cald_{\rvr.} G$, then}
+
+\newcommand{\ruleonethen}[0]{
+$\rva.=a. \leftrightarrow 1$}
+
+\newcommand{\ruleoneP}[0]{
+P(b.|a., \cald\rvr.=r.,s.)=
+P(b.|\cald\rvr.=r., s.)}
+
+\newcommand{\ruleoneH}[0]{
+H(\rvb.:\rva.|\cald\rvr.,\rvs.)=0}
+
+\newcommand{\ruleonepic}[0]{
+\xymatrix@C=1pc@R=1pc{
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+a.\ar[rr]
+&&b.
+&=
+}
+\xymatrix@C=1pc@R=1pc{
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+a.\ar[rr]|0
+&&b.
+}}
+
+\newcommand{\ruletwoif}[0]{
+If $(\rvb.\perp \rva. |
+ \rvr., \rvs.)$
+in $\call_{\rva.}\cald_{\rvr.} G$,
+ then}
+
+\newcommand{\ruletwothen}[0]{
+$\cald \rva.=a. \leftrightarrow \rva.=a.$}
+
+\newcommand{\ruletwoP}[0]{
+P(b.|\cald\rva.=a., \cald\rvr.=r., s.)=
+P(b.|a., \cald\rvr.=r.,  s.)}
+
+\newcommand{\ruletwoH}[0]{
+H(\rvb.:\cald\rva.|\cald\rvr.,  \rvs.)
+=
+H(\rvb.:\rva.|\cald\rvr.,  \rvs.)}
+
+\newcommand{\ruletwopicA}[0]{
+\xymatrix@C=1pc@R=1pc{
+\;\ar[d]_0
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+\cald\rva.=a.\ar[rr]\ar[d]
+&&b.
+&=\quad\quad
+\\
+&
+}
+\xymatrix@C=1pc@R=1pc{
+\;\ar[d]_0
+&&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+\cald\rva.=a.\ar[d]
+&a.\ar[rr]
+&&b.
+\\
+&
+}}
+\newcommand{\ruletwopicB}[0]{
+\xymatrix@C=1pc@R=1pc{
+\;\ar[d]
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+a.\ar[rr]\ar[d]
+&&b.
+&=\quad\quad
+\\
+&
+}
+\xymatrix@C=1pc@R=1pc{
+\;\ar[d]
+&&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+a.\ar[d]
+&\cald\rva.=a.\ar[rr]
+&&b.
+\\
+&
+}}
+
+\newcommand{\rulethreeif}[0]{
+If $
+(\rvb. \perp \rva.
+| \rvr., \rvs.)$
+in $\cald_{\rva.-an(\rvs.)}
+\cald_{\rvr.}G$,
+ then}
+
+\newcommand{\rulethreethen}[0]{
+$\cald \rva.=a. \leftrightarrow 1$}
+
+\newcommand{\rulethreeP}[0]{
+P(b.|\cald\rva.=a.,\cald\rvr.=r.,  s.)=
+P(b.|\cald\rvr.=r., s.)}
+
+\newcommand{\rulethreeH}[0]{
+H(\rvb.:\cald\rva.|\cald\rvr., \rvs.)=0}
+
+\newcommand{\rulethreepic}[0]{
+\xymatrix@C=1pc@R=1pc{
+&
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+&\cald\rva.=a.\ar[rr]
+&&b.
+&=
+}
+\xymatrix@C=1pc@R=1pc{
+&
+&\cald\rvr.=r.\ar[dr]
+&s.\ar[d]
+\\
+&\cald\rva.=a.\ar[rr]|0
+&&b.
+}}
+
+\newcommand{\bdoordef}[0]{
+Suppose that we have access to data
+that allows us to
+estimate a probability
+distribution
+ $P(x., y., z.)$.
+Hence, the variables
+$\rvx., \rvy., \rvz.$ are
+ALL observed (i.e, not hidden).
+Then we say that the
+backdoor $\rvz.$
+satisfies the
+{\bf backdoor adjustment criterion}
+relative to $(\rvx., \rvy.)$
+if
+\begin{enumerate}
+\item
+All backdoor paths from $\rvx.$
+to $\rvy.$
+ are blocked by  conditioning on
+ $\rvz.$.
+\item
+$\rvz. \cap de(\rvx.)=\emptyset$.
+\end{enumerate}
+}
+
+\newcommand{\bdoorclaim}[0]{
+If $\rvz.$ satisfies the
+backdoor criterion relative to
+ $(\rvx., \rvy.)$, then
+
+\beqa
+P(y. | \cald \rvx.=x.)&=&
+\sum_{z.} P(y.|x., z.)P(z.)
+\\
+&=&
+\begin{array}{l}
+\\
+\\
+\end{array}
+\xymatrix{
+\sum z.\ar[dr]
+\\
+x.\ar[r]
+&y.
+}
+\eeqa
+where $\sum z.$ means node
+$\rvz.$ is summed over.
+}
+
+\newcommand{\fdoordef}[0]{
+Suppose that we have access to data
+that allows us to
+estimate a probability
+distribution
+ $P(x., m., y.)$.
+Hence, the variables
+$\rvx., \rvm., \rvy.$ are
+ALL observed (i.e, not hidden).
+Then we say that
+the frontdoor $\rvm.$
+satisfies the
+{\bf frontdoor adjustment criterion}
+relative to $(\rvx., \rvy.)$
+if
+\begin{enumerate}
+\item
+All directed paths from
+$\rvx.$ to $\rvy.$ are intercepted by
+(i.e., have a node in) $\rvm.$.
+\item
+All backdoor paths from $\rvx.$ to
+$\rvm.$ are blocked.
+\item
+All backdoor paths from
+on $\rvm.$ to $\rvy.$
+are blocked by conditioning
+on  $\rvx.$.
+\end{enumerate}
+}
+
+\newcommand{\fdoorclaim}[0]{
+If $\rvm.$ satisfies the
+frontdoor criterion
+relative to $(\rvx., \rvy.)$,
+and $P(x.,m.)>0$, then
+
+\beqa
+P(y. | \cald \rvx.=x.)&=&\sum_{m.}
+\underbrace{\left[\sum_{x'.}
+P(y.|x'., m.)P(x'.)\right]}_
+{P(y.|\cald \rvm.=m.)}
+\underbrace{P(m.|x.)}_
+{P(m.|\cald \rvx.=x.)}
+\\
+&=&
+\xymatrix{
+&\sum x'.\ar[dr]
+\\
+x.´\ar[r]
+&\sum m.\ar[r]&y.
+}
+\eeqa
+where $\sum x'.$ and
+$\sum m.$
+means nodes
+$\rvx'.$ and $\rvm.$
+are summed over.
+}
+
+
+%Symmetry
+\newcommand{\symrule}[0]{
+$\rva\perp_P\rvb\implies \rvb\perp_P\rva$}
+
+\newcommand{\symruleH}[0]{
+$H(\rva:\rvb)=0\implies H(\rvb:\rva)=0$}
+
+%Decomposition
+\newcommand{\decrule}[0]{
+$\rva\perp_P\rvb, \rvc\implies
+\rva\perp_P\rvb \text{ and } \rva\perp_P\rvc$}
+
+\newcommand{\decruleH}[0]{
+$H(\rva:\rvb, \rvc)=0\implies
+H(\rva:\rvb)=0 \text{ and } H(\rva:\rvc)=0$}
+
+%Weak Union
+\newcommand{\wearule}[0]{
+$\rva\perp_P \rvb, \rvc \implies
+\rva\perp_P\rvb|\rvc\text{ and }\rva\perp_P\rvc|\rvb$}
+
+\newcommand{\wearuleH}[0]{
+$H(\rva:\rvb, \rvc)=0 \implies
+H(\rva:\rvb|\rvc)=0\text{ and }H(\rva:\rvc|\rvb)=0$}
+
+%Contraction
+\newcommand{\conrule}[0]{
+$\rva\perp_P\rvb|\rvc\text{ and }\rva\perp_P \rvc
+\implies \rva\perp_P \rvb, \rvc$}
+
+\newcommand{\conruleH}[0]{
+$H(\rva:\rvb|\rvc)=0\text{ and }H(\rva:\rvc)=0
+\implies H(\rva:\rvb, \rvc)=0$}
+
+%Intersection
+\newcommand{\intrule}[0]{
+$\rva\perp_P\rvb|\rvc, \rvd\text{ and }
+\rva\perp_P \rvd|\rvc, \rvb\implies
+\rva\perp_P \rvb,\rvd|\rvc$}
+
+\newcommand{\intruleH}[0]{
+$H(\rva:\rvb|\rvc, \rvd)=0\text{ and }
+H(\rva:\rvd|\rvc, \rvb)=0\implies
+H(\rva:\rvb,\rvd|\rvc)=0$}
+
+\newcommand{\dotbarmu}[0]{{\cdot|\mu}}
+\newcommand{\dotmu}[0]{{\cdot, \mu}}
+\newcommand{\kbarmu}[0]{{k|\mu}}
+\newcommand{\kmu}[0]{{k,\mu}}
+\newcommand{\plusbarmu}[0]{{+|\mu}}
+\newcommand{\plusmu}[0]{{+,\mu}}
+
+\newcommand{\bnlearn}[0]{{\tt bnlearn\;}}
+
+\newcommand{\sqsig}[0]{{[\sigma]}}
+
+\newcommand{\misscellone}[0]{
+\begin{array}{c}
+\frac{1}{nsam}
+P(x_0=0, x_2=0\cond x_1=1, \theta)
+\\
+\frac{1}{nsam}
+P(x_0=0, x_2=1\cond x_1=1, \theta)
+\\
+\frac{1}{nsam}
+P(x_0=1, x_2=0\cond x_1=1, \theta)
+\\
+\frac{1}{nsam}
+P(x_0=1, x_2=1\cond x_1=1, \theta)
+\end{array}
+}
+
+\newcommand{\misscelltwo}[0]{
+\begin{array}{c}
+\frac{1}{nsam}
+P(x_1=0\cond x_0=0,x_2=1, \theta)
+\\
+\frac{1}{nsam}
+P(x_1=1\cond x_0=0,x_2=1,  \theta)
+\end{array}
+}
+
+
+\newcommand{\td}[0]{{\TIL{d}}}
+\newcommand{\rvtd}[0]{{\ul{\TIL{d}}}}
+\newcommand{\tx}[0]{{\TIL{x}}}
+\newcommand{\tmu}[0]{{\TIL{\mu}}}
+\newcommand{\rvtx}[0]{{\ul{\TIL{x}}}}
+
+\newcommand{\mlarr}[0]{\xrightarrow{\rm ML-fit}}
+\newcommand{\lrarr}[0]{\xrightarrow{\rm LR-fit}}
+
+\newcommand{\setprob}[3]
+{{\begin{array}{c}S=\{#1\}
+\\P(S)=#2\\ \haty(x^\s_S)=\$#3 K
+\end{array}}}
+
+\newcommand{\Gno}[0]{\xymatrix{\;\ar[r]|\parallel_G&}}
+\newcommand{\Gyes}[0]{\xymatrix{\;\ar[r]_G&}}
+
+\newcommand{\calypso}[0]{\ol{\caly}}
+
+\newcommand{\SeqBdoorDef}[0]{
+Suppose that we have access to data
+that allows us to
+estimate a probability
+distribution
+ $P(x^n, y, z^n)$.
+Hence, the variables
+$\rvx^n, \rvy, \rvz^n$ are
+ALL observed (i.e, not hidden).
+Then we say that the
+the multinode
+of ``covariates" $\rvz^n$
+satisfies the
+{\bf sequential backdoor (SBD) adjustment criterion}
+relative to $(\rvx^n, \rvy)$
+if for all $t\in\{0,1, \ldots, n-1\}$,
+
+\begin{enumerate}
+\item
+$\rvy\perp\rvx_t|
+\underbrace{(\rvx_0, \rvx_1, \ldots,\rvx_{t-1},
+\rvz_0, \rvz_1, \ldots, \rvz_t)}
+_{\text{Past of $\rvx_t$}}$
+in $\call_{\rvx_{t}}
+\cald_{\rvx_{t+1},\rvx_{t+2}
+,\ldots, \rvx_{n-1}}G$.
+\item
+$\rvz_t \cap de(\rvx_t)=\emptyset$.
+\end{enumerate}
+}
+
+\newcommand{\SeqBdoorClaim}[0]{
+If $\rvz^n$ satisfies the
+sequential backdoor criterion relative to
+ $(\rvx^n, \rvy)$, then
+
+\beq
+P(y | \cald \rvx^n=x^n)=
+\calq(y|x^n)
+\;,
+\eeq
+where $\calq(y|x^n)$
+is defined by
+Eq.(\ref{def-q-y-xn-seqbdoor}).
+}
