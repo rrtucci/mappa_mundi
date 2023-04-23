@@ -1,5 +1,5 @@
 from Dag import *
-import os
+from utils import *
 import sys
 from itertools import product
 from my_globals import *
@@ -19,13 +19,13 @@ class DagAtlas:
         self.dag_dir = dag_dir
         self.preconnected = preconnected
         all_simp_titles = [file_name[:-len(".txt")] for\
-            file_name in os.listdir(self.simp_dir)]
+            file_name in my_listdir(self.simp_dir)]
         self.title_to_w_permission = {}
         for title in all_simp_titles:
             self.title_to_w_permission[title] = True
         if not fresh_start:
             all_dag_titles = [file_name[:-len(".txt")] for \
-                               file_name in os.listdir(self.dag_dir)]
+                               file_name in my_listdir(self.dag_dir)]
             for title in all_dag_titles:
                 assert title in all_simp_titles
                 self.title_to_w_permission[title] = False
@@ -111,7 +111,7 @@ class DagAtlas:
             
     def update_arrows_in_batch_of_m_scripts(self, batch_titles=None):
         all_simp_titles = [file_name[:-len(".txt")] for\
-                      file_name in os.listdir(self.simp_dir)]
+                      file_name in my_listdir(self.simp_dir)]
 
         if batch_titles is None:
             batch_titles = all_simp_titles
@@ -129,16 +129,17 @@ if __name__ == "__main__":
         dag_dir = "short_stories_dag_atlas"
         atlas = DagAtlas(simp_dir, dag_dir)
         all_titles = [file_name[:-len(".txt")] \
-                      for file_name in os.listdir(simp_dir)]
+                      for file_name in my_listdir(simp_dir)]
         atlas.update_arrows_in_batch_of_m_scripts(
             batch_titles=all_titles[0:3])
     def main2():
-        remove_dialog = True
+        remove_dialog = False
         atlas = DagAtlas(
             simp_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,
             dag_dir= DAG_DIR)
         all_titles = [file_name[:-len(".txt")] \
-                      for file_name in os.listdir(M_SCRIPTS_DIR)]
+                      for file_name in my_listdir(SIMP_DIR)]
         atlas.update_arrows_in_batch_of_m_scripts(
-            batch_titles=all_titles[0:2])
-    main1()
+            batch_titles=all_titles[0:3])
+    # main1()
+    main2()

@@ -30,7 +30,7 @@ if "cleaning" in steps_to_perform:
     clean_batch_of_m_scripts(
         in_dir = M_SCRIPTS_DIR,
         out_dir = CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
-        batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:num_movies],
+        batch_file_names=my_listdir(M_SCRIPTS_DIR)[0:num_movies],
         remove_dialog=remove_dialog)
 
 # spell-checking
@@ -41,7 +41,7 @@ if "simplifying" in steps_to_perform:
     simplify_batch_of_m_scripts(
         in_dir=CLEAN_DIR if not remove_dialog else CLEAN_RD_DIR,
         out_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,
-        batch_file_names=os.listdir(M_SCRIPTS_DIR)[0:num_movies])
+        batch_file_names=my_listdir(M_SCRIPTS_DIR)[0:num_movies])
 
 # cartography
 if "cartography" in steps_to_perform:
@@ -49,7 +49,7 @@ if "cartography" in steps_to_perform:
         txt_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,
         dag_dir=DAG_DIR)
     all_titles = [file_name[:-len(".txt")] \
-                  for file_name in os.listdir(M_SCRIPTS_DIR)]
+                  for file_name in my_listdir(M_SCRIPTS_DIR)]
     atlas.update_arrows_in_batch_of_m_scripts(batch_titles=\
         all_titles[0:num_movies])
 

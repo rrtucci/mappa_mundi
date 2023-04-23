@@ -10,6 +10,7 @@ import collections as co
 from my_globals import *
 from unidecode import unidecode
 import contractions
+from utils import*
 
 # sentence splitting with spacy
 import spacy
@@ -208,7 +209,7 @@ def clean_batch_of_m_scripts(
         batch_file_names,
         remove_dialog=False):
 
-    all_file_names = os.listdir(in_dir)
+    all_file_names = my_listdir(in_dir)
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
@@ -224,7 +225,7 @@ if __name__ == "__main__":
     def main1():
         in_dir = "short_stories"
         out_dir = "short_stories_clean"
-        batch_file_names = os.listdir(in_dir)[0:3]
+        batch_file_names = my_listdir(in_dir)[0:3]
         clean_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
@@ -240,7 +241,7 @@ if __name__ == "__main__":
 
     def main3():
         remove_dialog = False
-        # batch_file_names=os.listdir(M_SCRIPTS_DIR)
+        # batch_file_names=my_listdir(M_SCRIPTS_DIR)
         batch_file_names = ["toy-story.txt", "up.txt", "wall-e.txt"]
         clean_batch_of_m_scripts(
             in_dir=M_SCRIPTS_DIR,

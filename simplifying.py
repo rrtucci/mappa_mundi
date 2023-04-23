@@ -3,6 +3,7 @@ import os
 import re
 import importlib as imp
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
+from utils import *
 
 
 def simplify_one_m_script(
@@ -50,7 +51,7 @@ def simplify_batch_of_m_scripts(
         in_dir, out_dir,
         batch_file_names,
         verbose=False):
-    all_file_names = os.listdir(in_dir)
+    all_file_names = my_listdir(in_dir)
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
@@ -81,7 +82,7 @@ if __name__ == "__main__":
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         in_dir = "short_stories_spell"
         out_dir = "short_stories_simp"
-        batch_file_names = os.listdir(in_dir)[0:3]
+        batch_file_names = my_listdir(in_dir)[0:3]
         simplify_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names,
@@ -92,7 +93,7 @@ if __name__ == "__main__":
         remove_dialogs = False
         in_dir = SPELL_DIR if not remove_dialogs else SPELL_RD_DIR
         out_dir = SIMP_DIR if not remove_dialogs else SIMP_RD_DIR
-        batch_file_names = os.listdir(in_dir)[0:3]
+        batch_file_names = my_listdir(in_dir)[0:3]
         simplify_batch_of_m_scripts(
             in_dir, out_dir,
             batch_file_names)

@@ -23,6 +23,7 @@ import os
 import re
 from WordGuesser import *
 from collections import defaultdict
+from utils import *
 
 def has_double_letter(word):
     pattern = r'(\w)\1'
@@ -198,7 +199,7 @@ def correct_this_batch_of_files(in_dir,
                                 error_type,
                                 verbose=True,
                                 use_local_dict=False):
-    all_file_names = os.listdir(in_dir)
+    all_file_names = my_listdir(in_dir)
     assert set(batch_file_names).issubset(set(all_file_names))
     for file_name in batch_file_names:
         i = all_file_names.index(file_name)
@@ -238,7 +239,7 @@ if __name__ == "__main__":
 
         in_dir = "short_stories_clean"
         out_dir = "short_stories_spell"
-        batch_file_names = os.listdir(in_dir)
+        batch_file_names = my_listdir(in_dir)
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,
@@ -256,7 +257,7 @@ if __name__ == "__main__":
         remove_dialogs = False
         in_dir = CLEAN_DIR if not remove_dialogs else CLEAN_RD_DIR
         out_dir = SPELL_DIR if not remove_dialogs else SPELL_RD_DIR
-        batch_file_names = os.listdir(in_dir)[0:3]
+        batch_file_names = my_listdir(in_dir)[0:3]
         correct_this_batch_of_files(in_dir,
                                     out_dir,
                                     batch_file_names,

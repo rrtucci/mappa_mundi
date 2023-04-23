@@ -4,6 +4,7 @@ from Node import *
 # https://skops.readthedocs.io/en/stable/
 import pickle as pik
 from my_globals import *
+from utils import *
 
 import graphviz as gv
 from IPython.display import display, Image
@@ -167,7 +168,7 @@ if __name__ == "__main__":
         simp_dir = "short_stories_simp"
         clean_dir = "short_stories_clean"
         file_names = [file_name for
-                      file_name in os.listdir(dag_dir)[0:3]]
+                      file_name in my_listdir(dag_dir)[0:3]]
         dags = []
         for fname in file_names:
             path = dag_dir + "/" + fname
