@@ -96,9 +96,13 @@ DEFT provides DAG hypotheses.
 For example,
 DEFT could be used to discover causal DAGs that indicate pathways to diseases.
 
-At the end of this paper, I describe possible ways of improving Mappa Mundi
+At the end of this paper, I describe possible ways of improving the Mappa Mundi algorithm 
 using LLMs (Large
 Language Models such as ChatGPT).
+I also discuss the opposite
+road,
+possible ways of improving
+LLMs using the Mappa Mundi algorithm.
 
 
 \section{Algorithm Overview}
@@ -422,7 +426,8 @@ Everything up to this point has just been
 pre-processing of the data. 
 Here, I finally implement the algorithm described
 in Section \ref{sec-algo-overview}.
-The bottleneck and rate-determining-step for full process is
+The bottleneck and rate-determining-step for
+the full process is
 calculating the similarity between 2 nodes.
 If the DAG1 for movie script (or short story) 1 has $k_1$ 
 nodes, and DAG2 has $k_2$ nodes,
@@ -457,13 +462,19 @@ This part is easy. I use $\tt graphviz$ to do it.
 \end{enumerate}
 
 \section{Possible Improvements
+of the Mappa Mundi algorithm
 using LLMs}
 
+This study did not use LLMs at all,
+because I don't have the necessary
+funding or
+access to those tools.
+However,
 I believe the results
 of this study would improve
-dramatically if this were done with LLMs.
+dramatically if they were redone with LLMs.
 LLMs could perform better
-the 3 data preprocessing steps
+the 3 data pre-processing steps
 (2-cleaning, 3-spell-checking and 4-simplifying).
 Cleaning and spell-checking
 could be done by the LLM
@@ -491,18 +502,20 @@ Here is the result:
 \noindent {\bf PROMPT:} 
 
 Consider the following quote:
-"A range of mountains takes form in the haze.
+\begin{quote}
+``A range of mountains takes form in the haze.
 Moving closer.
 The mountains are piles of TRASH.
 The entire surface is nothing but waste.
 
-'..We're gonna find adventure in the evening air...'
+``..We're gonna find adventure in the evening air...''
 
 A silhouetted city in the distance.
 What looks like skyscrapers turns into trash.
 Thousands of neatly stacked CUBES OF TRASH, stories high.
 Rows and rows of stacked cubes, like city avenues.
 They go on for miles."
+\end{quote}
 
 Give an enumerated list summarizing this quote.
 Each list item must be a simple declarative sentence
@@ -531,10 +544,44 @@ a superb node in a causal DAG. With nodes defined
 with such clarity, 
 one could avoid much noise in the calculation of the similarity
 of 2 nodes.
+
+A few years ago, AI would have been
+incapable of such precise and exquisite curve-fitting.
+ChatGPT and 
+comparable LLMs 
+have finally reached the point where they 
+can greatly aid
+in practice of Pearl CI.
+
+
+\section{Possible Improvements
+of LLMs 
+using the Mappa Mundi algorithm}
  
+LLM models
+are very good at what they do,
+but ultimately, they are just curve fitters
+that cannot perform the scientific method (SM)
+and causal inference (CI)
+in a deliberate way. At best, they can 
+perform SM in a trial an error way, as in 
+Fig.\ref{fig-harris-e-mc2}.
+
+This weakness of LLMs can be overcome
+by adding to them
+a DAG atlas and an explicit (not an implicit or emergent) CI engine.
 
 
-
+\begin{figure}[h!]
+\centering
+\includegraphics[width=4in]
+{harris-e-mc2.jpg}
+\caption{Cartoon 
+by S.Harris
+about $E=mc^2$.
+}
+\label{fig-harris-e-mc2}
+\end{figure}
 
 
 \bibliographystyle{plain}
