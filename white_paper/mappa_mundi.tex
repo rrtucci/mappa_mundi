@@ -11,10 +11,16 @@ and 3 Movie Scripts}
 \maketitle
 \vskip2cm
 \section*{Abstract}
-We improve a previously proposed algorithm
-for doing causal DEFT (DAG Extraction from Text), and then we apply the new algorithm to 2 usecases:
+I improve an algorithm previously
+proposed my me 
+for doing causal DEFT (DAG Extraction from Text), and then I apply the new algorithm to 2 usecases:
 3 short stories by P.G. Wodehouse and 3 movie scripts by Pixar/Disney. The software  used to accomplish this 
 endeavor is called ``Mappa Mundi" and is available as open source at GitHub. 
+I discuss possible ways of improving the Mappa Mundi algorithm 
+using LLMs (Large
+Language Models such as ChatGPT).
+I also travel this road in the opposite direction---I discuss possible ways of improving
+LLMs using the Mappa Mundi algorithm.
 \newpage
 
 \chapquote{``If humans were so good at causal inference, religion would not exist."}
@@ -28,12 +34,12 @@ endeavor is called ``Mappa Mundi" and is available as open source at GitHub.
 In this paper, I improve an algorithm
 for doing causal DEFT (DAG Extraction from Text)
 that was
-first proposed in Ref.\cite{deft1}
+first proposed by me in Ref.\cite{deft1}
 I then apply the new algorithm to 2 usecases:
 \begin{enumerate}
 
 \item 3 short stories by P.G. Wodehouse
-(the text from these was obtained from the
+(the text for these was obtained from the
 Project Gutenberg website \cite{project-gutenberg}) 
 
 \begin{itemize}
@@ -65,70 +71,73 @@ settle for just 3 movie scripts.}
 The Python 
 software that was used to 
 accomplish this endeavor is 
-called Mappa Mundi. It is open source and available
+called Mappa Mundi (MM). It is open source and available
 at Github (Ref.\cite{github-mappa-mundi}).
 
 
 
-So what is Mappa Mundi good for? The goal of DEFT in general and Mappa Mundi in particular is to create a directory 
+So what is MM good for? The goal of DEFT in general and MM in particular, is to create a directory 
 of DAGs (``DAG atlas").
 Conjecturing
 a DAG is always the first step
-in doing Judea Pearl's causal inference (CI).\footnote{Pearlian CI is described
+in doing Judea Pearl's causal inference (CI).\footnote{Judea Pearl's CI is described
 in detail in Pearl's {\it The Book of Why}
 (Ref.\cite{book-of-why})
 and in my free, open source book {\it Bayesuvius} (Ref. \cite{bayesuvius}).}
 Once a DAG is available,
 one can use it to 
-do Pearl's 3 rungs of CI.
-For example, my free open source software SCuMpy (Ref.\cite{scumpy})
+do Pearl's 3 rungs of CI,
+using tools such as SCuMpy.\footnote{DAG = Directed Acyclic Graph, SCM = Structural Causal Model, a type of DAG}\footnote{Shameless plug: my free, open source software
+SCuMpy (Ref.\cite{scumpy})
 can be used to do all 3 rungs
-of CI with linear SCM (Structural Causal Model, a type of DAG)\footnote{DAG = Directed Acyclic Graph, SCM = Structural Causal Model}, 
-including
-SCM with feedback loops and hidden variables. 
+of CI. 
+It can handle all types of linear SCM, including
+SCM with feedback loops and hidden variables.} 
 
 As I explained in my previous paper Ref.\cite{deft1}, the scientific method (SM) looks for causation, not correlation. Pearl CI is the gold standard theory for distinguishing
 between correlation and causation.
-Hence, the SM and CI are closely related.
-CI can be viewed as an application of SM wherein the DAG is the hypothesis part of the SM, what we want to  
+Hence, the SM and Pearl CI are closely related.
+Pearl CI can be viewed as an application of the SM, wherein the DAG is the hypothesis part of the SM---what we want to  
 prove or disprove.
 DEFT provides DAG hypotheses.
 For example,
 DEFT could be used to discover causal DAGs that indicate pathways to diseases.
 
-At the end of this paper, I describe possible ways of improving the Mappa Mundi algorithm 
+At the end of this paper, I discuss possible ways of improving the MM algorithm 
 using LLMs (Large
 Language Models such as ChatGPT).
-I also discuss the opposite
-road,
+I also travel this road in the opposite direction---
+I discuss
 possible ways of improving
-LLMs using the Mappa Mundi algorithm.
+LLMs using the MM algorithm.
 
 
-\section{Algorithm Overview}
+\section{MM Algorithm Overview}
 \label{sec-algo-overview}
-The algorithm proposed in this
+The MM algorithm proposed in this
 paper can be applied to a broad range of texts. The only constraint is that those texts 
 do ``story-telling" in a chronological order.
 That is why I decided to use movie scripts,
 because movie-scripts usually do story-telling in a chronological order (except when they do 
-flashbacks or time travel, but that is fairly
-uncommon in movies.)
+flashbacks or time travel, but that isn't very
+common in movies.)
 
-For example, algorithm would not work well
-if applied the corpus of science papers at arXiv,
-because those don't do chronological story-telling. On the other hand,
-it might work well if applied to a corpus of (time stamped) lab notebooks by one or more experimental scientists.
-It might also work well on a corpus of time-stamped logs maintained by an individual
+The MM algorithm would not work well
+if applied to the corpus of science papers at arXiv,
+because scientific papers normally don't do chronological story-telling. 
+On the other hand,
+it might work well if applied to a corpus of (time stamped) lab notebooks maintained by one or more experimental scientists.
+It might also work well on a corpus of time-stamped logs maintained by a person
 trying to figure out the cause of a disease 
 that ails him/her.
 
-Note also that this algorithm would
+The MM algorithm would also
 work well on a corpus of videos or movies that
-do chronological story telling. This
+do chronological story telling,
+even if the movie scripts were unavailable. This
 would require that  
 some human or AI
-narrated the movie/video as the action happens. Such ``in-time" movie and video narration,
+narrated the movie/video as the action happened. Such ``in-time" movie and video narration,
 often referred to as AD (audio description)
 (Ref.\cite{audio-description}),
 and also closed captioning, are becoming 
@@ -140,20 +149,19 @@ address the needs of the visually impaired.
 
 
 
-The essence of my algorithm is simple
-to describe.
+The essence of the MM algorithm can be described as follows.
+
 Given a set of $N$ movie scripts (or short stories),
-it compares all possible pairs movies.
+the algorithm compares all possible pairs of movies.
 Hence, it makes $(N^2-N)/2$
- comparisons between 2 movies.
+ comparisons of 2 movies.
 
 Before comparing movies, each movie script is simplified as follows.
 Each sentence is divided into clauses,
 and each clause is simplified by removing
 ``stop-words" and other excess baggage from it.
-Then we define a node of a DAG for each 
-of the simplified clauses. We define
-a DAG, possibly not connected, for each movie.
+Then we define a DAG for each movie, and a node of that DAG for each
+simplified clause. 
 
 To compare two movies 1 and 2,
 we compare every node $\tt node1$
@@ -188,7 +196,7 @@ Next we consider every  pair $\{a,b\}$
 of bridges. Suppose bridge  $a$ 
 connects node $\tt node1a$ in movie 1
 to node $\tt node2a$ in movie 2.
-Likewise, let bridge $b$ connect
+Likewise, suppose bridge $b$ connects
 $\tt node1b$ in movie 1 to
 node $\tt node2b$ in movie 2.
 Let $\tt node1a.time$ be the time at which 
@@ -212,7 +220,7 @@ If bridges $a$ and $b$ cross,
 we do nothing.\footnote{It's also 
 possible to assign a penalty
 when the bridges cross,
-but we don't explore that option in this paper} If they don't cross,
+but we don't explore that option in this paper.} If they don't cross,
 we do the following for both DAG1 and DAG2.
 If an arrow between the earlier and latter of the two nodes doesn't already
 exist, we add one with $N_{rep}=1$.
@@ -223,7 +231,7 @@ That's basically the whole algorithm.
 At the end of it, we will have
 generated DAG1 for movie 1 and DAG2 for movie 2.
 
-When drawing one of those DAGs with Mappa Mundi,
+When drawing one of those DAGs with MM,
 one specifies a number $\tt reps\_threshold$.
 Only the arrows with $N_{reps}$
 larger than $\tt reps\_threshold$
@@ -313,10 +321,11 @@ would grow linearly in time.
 At some point, it would take more than a day
 of dream time to
 compare today's movie to all movies in its past.
-To keep his dream time constant, at 8 hours each day,
+To keep his dream time constant, at 8 hours a day,
 the robot
 would have to compare today's movie
-to a fixed number, say the most recent 365, in its past.
+to a fixed number, say the most recent 365 movies 
+viewed previously.
 
 
 
@@ -324,26 +333,26 @@ to a fixed number, say the most recent 365, in its past.
 
 \section{Software Description}
 
-The full process for the 3 short stories
+The full MM process applied to the 3 short stories,
 is documented in the jupyter notebook
 
 $$\tt jupyter\_notebooks/navigating\_short\_stories.ipynb$$
 
-The full process for the 3 movie scripts
+The full MM process applied to the 3 movie scripts,
 is documented in the jupyter notebook
 
 $$\tt jupyter\_notebooks/navigating\_m\_scripts.ipynb$$
 
 For a detailed description, encompassing 
 every method and variable used in the
-Mappa Mundi software,
+MM software,
 please consult the software's Python ``docstrings".
 This section of the paper merely
 presents a brief overview of what you
 will find in those jupyter notebooks and docstrings.
 
 The full process from raw data to DAG atlas
-is broken down in Mappa Mundi to
+is broken down in MM to
 performing the following steps. 
 Most of my time programming
 was spent on the scripts that do
@@ -369,22 +378,23 @@ website using the Python Package Beautiful Soup.
 \item Cleaning using methods in $\tt cleaning.py$
 
 Here I remove contractions like ``didn't",
-and replace unicode only symbols like
-curly quotes by straight ascii quotes, their closest ascii approximation.
+and replace exclusively unicode symbols like
+curly quotes by straight ascii quotes, their closest ascii analogue.
 
 For the case of movie scripts (but not for short 
 stories), I also try to distinguish between 
-dialog lines, and narration lines.
-The dialog lines are often indented with 
-respect to the narration lines, but not always.
+dialog lines and narration lines.
+In many but not all movie scripts, the dialog lines are indented with 
+respect to the narration lines.
 In the case of Pixar/Disney, they don't indent dialog. In cases where the movie script indents,
-the software gives the option to throw away all the dialog and keep only the narration.
+the MM software gives the option of throwing away all the dialog lines and keeping only the narration
+ones.
 
 Here I also use the software SpaCy\footnote{In the Python
 world, there are 2 general, dominant
-NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). Mappa Mundi uses both. There is much overlap
-between the 2. In case of overlap, I tried to use the one that was fastest.} to separate 
-the sentences and return a file with only
+NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). MM uses both. There is much overlap
+between the 2. In case of overlap, I tried to use the one that was fastest.} to break up the movie script into 
+separate sentences, and return a file with only
 one sentence per line.
 
 \item Spell-checking using methods in $\tt spell\_checking.py$
@@ -420,16 +430,16 @@ the simplification.
 Those sentences are replaced by a single asterisk.
 
 \item Creating DAG atlas using methods in
-class $\tt DagAtlas$
+$\tt DagAtlas.py$
 
 Everything up to this point has just been
 pre-processing of the data. 
 Here, I finally implement the algorithm described
 in Section \ref{sec-algo-overview}.
 The bottleneck and rate-determining-step for
-the full process is
+the full MM process is
 calculating the similarity between 2 nodes.
-If the DAG1 for movie script (or short story) 1 has $k_1$ 
+If DAG1 for movie script (or short story) 1 has $k_1$ 
 nodes, and DAG2 has $k_2$ nodes,
 then $k_1 k_2$ similarity calculations have to be made.
 For the short stories I considered, $k_1k_2$
@@ -437,11 +447,11 @@ is typically on the order of $0.1M$.
 For the movies, it is typically $1.5M$.
 My computer is slow and old (I refuse
 to give specs so as not to embarrass myself).
-It can do about a million similarity calculations per hour. It can compare the 3 short stories in 20 minutes. I have't tried it, but I calculate that the
+It can do about a million similarity calculations per hour. It can compare the 3 short stories in 20 minutes. I haven't tried it, but I calculate that the
 3 movie comparison would take $15(\frac{1}{3})=5$ hours.
 
-For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+Wordnet,
-and another method that uses SpaCy+WordVec.
+For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+WordNet,
+and another method that uses SpaCy  +WordVec.
 The NLTK+WordNet method is, in my
 opinion,  more logical, and it gives more reasonable distances. I also found it
 to be faster than the SpaCy+WordVec method.\footnote{The NLKT+WordNet method 
@@ -449,20 +459,22 @@ calculates the distance between synsets  of nouns
 in node1 and node2.  It also calculates the distance between synsets of verbs, adjectives and adverbs. (Synsets, i.e., synonym sets,
 are a sort of equivalence class of words.)
 Then it calculates from all those synset distances,
-a distance between the two nodes (i.e., clauses or sentences). The SpaCy+WordVec approach  turns 
-each word for the clause in node1 into a vector and then calculates the center of mass (CM) of those word vectors.
+a distance between the two nodes (i.e., clauses or sentences). On the other hand, the
+ SpaCy+WordVec method turns 
+each word of the clause of node1 into a vector, and then it calculates the center of mass (CM) of those word vectors.
 It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I personally don't think
 a CM vector is a good representation of
 a list of words. }
 
-\item Visualizing DAGs using methods in class $\tt Dag$.
+\item Visualizing DAGs using methods in $\tt Dag.py$.
 
-This part is easy. I use $\tt graphviz$ to do it.
+This step is easy. I use $\tt graphviz$ to 
+accomplish it.
 
 \end{enumerate}
 
 \section{Possible Improvements
-of the Mappa Mundi algorithm
+of the MM algorithm
 using LLMs}
 
 This study did not use LLMs at all,
@@ -486,15 +498,15 @@ As to step 4-simplifying,
 rather than using the crude method
 of breaking each sentence into clauses
 and calling each clause a node,
-one could, for exampe,
+one could, for example,
 ask the LLM to summarize each sentence (or a few 
 consecutive sentences) as a list of simple
 declarative sentences.
-to demonstate that LLMs can 
-already performed this task admirably,
+To demonstrate that current LLMs can 
+do a superb job performing this task, I
 did the following test. I gave ChatGPT the
 beginning narrative paragraph of the movie 
-WALL-E, and I asked ChatGPT to summarize the
+WALL-E, and I asked her to summarize the
 paragraph as a list of simple declarative sentences.
 Here is the result:
 
@@ -522,6 +534,7 @@ Each list item must be a simple declarative sentence
 consisting of a subject phrase and a verb phrase.
 The list items must be in chronological order of occurrence
 in the quote.
+\\
 \hrule
 \noindent {\bf REPLY:}
 
@@ -538,7 +551,7 @@ in the quote.
 \item The expanse of trash goes on for miles.
 \end{enumerate}
 \hrule
-
+.\\
 Each of these 10 sentences would make
 a superb node in a causal DAG. With nodes defined
 with such clarity, 
@@ -546,17 +559,17 @@ one could avoid much noise in the calculation of the similarity
 of 2 nodes.
 
 A few years ago, AI would have been
-incapable of such precise and exquisite curve-fitting.
+incapable of such precise and exquisite summarizing.
 ChatGPT and 
 comparable LLMs 
 have finally reached the point where they 
 can greatly aid
-in practice of Pearl CI.
+in the practice of Pearl CI.
 
 
 \section{Possible Improvements
 of LLMs 
-using the Mappa Mundi algorithm}
+using the MM algorithm}
  
 LLM models
 are very good at what they do,
@@ -566,7 +579,6 @@ and causal inference (CI)
 in a deliberate way. At best, they can 
 perform SM in a trial an error way, as in 
 Fig.\ref{fig-harris-e-mc2}.
-
 This weakness of LLMs can be overcome
 by adding to them
 a DAG atlas and an explicit (not an implicit or emergent) CI engine.
@@ -574,7 +586,7 @@ a DAG atlas and an explicit (not an implicit or emergent) CI engine.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=4in]
+\includegraphics[width=3in]
 {harris-e-mc2.jpg}
 \caption{Cartoon 
 by S.Harris
