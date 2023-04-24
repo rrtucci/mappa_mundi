@@ -127,9 +127,8 @@ if applied to the corpus of science papers at arXiv,
 because scientific papers normally don't do chronological story-telling. 
 On the other hand,
 it might work well if applied to a corpus of (time stamped) lab notebooks maintained by one or more experimental scientists.
-It might also work well on a corpus of time-stamped logs maintained by a person
-trying to figure out the cause of a disease 
-that ails him/her.
+It might also work well on a corpus of time-stamped logs maintained by one or more person
+trying to figure out the cause of a disease.
 
 The MM algorithm would also
 work well on a corpus of videos or movies that
@@ -159,7 +158,7 @@ Hence, it makes $(N^2-N)/2$
 Before comparing movies, each movie script is simplified as follows.
 Each sentence is divided into clauses,
 and each clause is simplified by removing
-``stop-words" and other excess baggage from it.
+``stop-words", punctuation,  and other excess baggage from it.
 Then we define a DAG for each movie, and a node of that DAG for each
 simplified clause. 
 
@@ -168,7 +167,7 @@ we compare every node $\tt node1$
 in movie 1 with every node $\tt node2$ in movie 2.
 To compare two nodes $\tt (node1, node2)$,
 we use what is called, in the NLP (Natural Language Processing)
-community, a {\bf similarity between two sentences}. 
+field, a {\bf similarity between two sentences}. 
 If the similarity
 between $\tt node1$ and $\tt node2$ exceeds a certain threshold
 that we call $\tt SIMI\_THRESHOLD$,
@@ -284,7 +283,8 @@ and half of the time it will happen after.
 Hence, $N_{reps}=\frac{N}{2}$ for the
 arrow $Sh\rarrow IC$.
 If, when we draw this DAG, we set $\tt reps\_threshold$ to be 
-greater than $\frac{N}{2}$,
+greater than $\frac{N}{2}$
+but smaller than $N$,
 then only the two causal arrows will be visible. The difference  between
  $N_{reps}$ for the causal and non-causal
  arrows (call it the {\bf causal-noncausal repetition gap}) will grow \footnote{This gap
@@ -309,14 +309,14 @@ then only the two causal arrows will be visible. The difference  between
  revelations from this paper.
 
 It's also important to point out
-that every time a new movie script is added
+that every time a new movie script is added to
 the list of the $N$ already
 analyzed movie scripts,
 that new movie script must be compared to the
 preceding $N$ movie scripts.
 If we imagine a robot watching a movie daily,
 then his daily dream time, if used solely
-for movie-DAG comparison, 
+for movie comparison, 
 would grow linearly in time.
 At some point, it would take more than a day
 of dream time to
@@ -423,7 +423,7 @@ break each sentence into clauses.
 Then I simplify the clauses by removing
 stop-words, punctuation marks and other extra baggage.
 Then I replace each clause by its simplified version.
-Different clauses from the same sentence
+Different simplified clauses from the same sentence
 are put in the same line, separated by an asterisk.
 Some sentences are diminished to nothing after
 the simplification.
@@ -503,13 +503,13 @@ ask the LLM to summarize each sentence (or a few
 consecutive sentences) as a list of simple
 declarative sentences.
 To demonstrate that current LLMs can 
-do a superb job performing this task, I
+performing this task superbly, I
 did the following test. I gave ChatGPT the
 beginning narrative paragraph of the movie 
 WALL-E, and I asked her to summarize the
 paragraph as a list of simple declarative sentences.
 Here is the result:
-
+\\
 \hrule
 \noindent {\bf PROMPT:} 
 
@@ -571,13 +571,13 @@ in the practice of Pearl CI.
 of LLMs 
 using the MM algorithm}
  
-LLM models
+LLMs
 are very good at what they do,
 but ultimately, they are just curve fitters
 that cannot perform the scientific method (SM)
 and causal inference (CI)
 in a deliberate way. At best, they can 
-perform SM in a trial an error way, as in 
+perform the SM in a trial an error way, as in 
 Fig.\ref{fig-harris-e-mc2}.
 This weakness of LLMs can be overcome
 by adding to them
