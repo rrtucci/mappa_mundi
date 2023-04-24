@@ -452,19 +452,25 @@ It can do about a million similarity calculations per hour. It can compare the 3
 
 For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+WordNet,
 and another method that uses SpaCy  +WordVec.
-The NLTK+WordNet method is, in my
-opinion,  more logical, and it gives more reasonable distances. I also found it
-to be faster than the SpaCy+WordVec method.\footnote{The NLKT+WordNet method 
+The NLTK+WordNet method\footnote{The NLKT+WordNet method 
 calculates the distance between synsets  of nouns
 in node1 and node2.  It also calculates the distance between synsets of verbs, adjectives and adverbs. (Synsets, i.e., synonym sets,
 are a sort of equivalence class of words.)
 Then it calculates from all those synset distances,
-a distance between the two nodes (i.e., clauses or sentences). On the other hand, the
+a distance between the two nodes (i.e., clauses or sentences).} is, in my
+opinion,  more logical, and it gives more reasonable distances. I also found it
+to be faster than the SpaCy+WordVec method.\footnote{The
  SpaCy+WordVec method turns 
 each word of the clause of node1 into a vector, and then it calculates the center of mass (CM) of those word vectors.
-It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I personally don't think
-a CM vector is a good representation of
-a list of words. }
+It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I dislike this method because I don't believe that
+a CM vector is a good representation of the
+meaning of
+a list of words. There's a huge number
+of sentences, some
+of them with quite different meanings, 
+that have the same CM vector.
+A blue whale and an ant can have the same CM vector.
+}
 
 \item Visualizing DAGs using methods in $\tt Dag.py$.
 
