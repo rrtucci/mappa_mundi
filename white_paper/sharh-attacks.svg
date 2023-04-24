@@ -211,7 +211,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -240,7 +240,7 @@
            y="103.74555"
            x="104.06607"
            id="tspan1674"
-           sodipodi:role="line"></tspan><tspan
+           sodipodi:role="line" /><tspan
            id="tspan1678"
            style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
            y="113.44694"
@@ -328,7 +328,7 @@
          id="tspan1692"
          x="185.09378"
          y="153.22607"
-         style="stroke-width:0.26458332"></tspan></text>
+         style="stroke-width:0.26458332" /></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.565;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
        d="m 104.09235,92.84704 c -14.294126,16.49322 -28.5885,32.98673 -42.883116,49.48052"
@@ -352,7 +352,7 @@
        inkscape:original-d="m 82.834053,158.08802 c 21.380737,-0.12244 42.761207,-0.24461 64.141417,-0.36652" />
     <g
        id="lx-text2710"
-       transform="matrix(1.7412655,0,0,1.5163678,65.942689,113.95781)">
+       transform="matrix(1.7412655,0,0,1.5163678,65.942689,116.07449)">
       <defs
          id="defs2759">
         <g

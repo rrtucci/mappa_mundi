@@ -102,6 +102,7 @@ Language Models such as ChatGPT).
 
 
 \section{Algorithm Overview}
+\label{sec-algo-overview}
 The algorithm proposed in this
 paper can be applied to a broad range of texts. The only constraint is that those texts 
 do ``story-telling" in a chronological order.
@@ -154,7 +155,7 @@ To compare two movies 1 and 2,
 we compare every node $\tt node1$
 in movie 1 with every node $\tt node2$ in movie 2.
 To compare two nodes $\tt (node1, node2)$,
-we use what is called, in the NLP (Natural Language Programming)
+we use what is called, in the NLP (Natural Language Processing)
 community, a {\bf similarity between two sentences}. 
 If the similarity
 between $\tt node1$ and $\tt node2$ exceeds a certain threshold
@@ -272,21 +273,265 @@ Hence, $N_{reps}=\frac{N}{2}$ for the
 arrow $Sh\rarrow IC$.
 If, when we draw this DAG, we set $\tt reps\_threshold$ to be 
 greater than $\frac{N}{2}$,
-then only the two causal arrows will be visible. The difference (i.e., gap) between
+then only the two causal arrows will be visible. The difference  between
  $N_{reps}$ for the causal and non-causal
- arrows will grow \footnote{This gap
+ arrows (call it the {\bf causal-noncausal repetition gap}) will grow \footnote{This gap
   can probably be made to increase
   even faster if we penalize crossing
   bridges, but 
   we won't consider that in this paper.}
    as $\frac{N}{2}$.
+   
+   
+ It's important to point out
+ that I expect this algorithm
+ to produce good DAGs only
+ after a large number $N$ of DAGs (i.e.,
+ movie scripts or short stories)
+ are compared. That's because the repetition gap
+ grows relatively slowly, just linearly in $N$. Since,
+ due to lack of hardware resources,
+ this paper
+ only compares a minuscule $N=3$,
+ one can't expect very dramatic causal
+ revelations from this paper.
+
+It's also important to point out
+that every time a new movie script is added
+the list of the $N$ already
+analyzed movie scripts,
+that new movie script must be compared to the
+preceding $N$ movie scripts.
+If we imagine a robot watching a movie daily,
+then his daily dream time, if used solely
+for movie-DAG comparison, 
+would grow linearly in time.
+At some point, it would take more than a day
+of dream time to
+compare today's movie to all movies in its past.
+To keep his dream time constant, at 8 hours each day,
+the robot
+would have to compare today's movie
+to a fixed number, say the most recent 365, in its past.
+
+
 
  
 
 \section{Software Description}
 
+The full process for the 3 short stories
+is documented in the jupyter notebook
+
+$$\tt jupyter\_notebooks/navigating\_short\_stories.ipynb$$
+
+The full process for the 3 movie scripts
+is documented in the jupyter notebook
+
+$$\tt jupyter\_notebooks/navigating\_m\_scripts.ipynb$$
+
+For a detailed description, encompassing 
+every method and variable used in the
+Mappa Mundi software,
+please consult the software's Python ``docstrings".
+This section of the paper merely
+presents a brief overview of what you
+will find in those jupyter notebooks and docstrings.
+
+The full process from raw data to DAG atlas
+is broken down in Mappa Mundi to
+performing the following steps. 
+Most of my time programming
+was spent on the scripts that do
+pre-processing of the data (
+i.e., steps 2, 3 and 4 below).
+Pre-processing data is hard!,
+and not doing it is fatal
+to this algorithm. When 
+evaluating the similarity between
+two clauses,
+even small misspellings can 
+change that value substantially.
+ 
+
+\begin{enumerate}
+\item Data scraping using methods in $\tt downloading\_imsdb.py$.
+
+This python script was only used for the movie
+scripts, not for the short stories. It 
+scrapes all the movie scripts from the IMSDb
+website using the Python Package Beautiful Soup.
+
+\item Cleaning using methods in $\tt cleaning.py$
+
+Here I remove contractions like ``didn't",
+and replace unicode only symbols like
+curly quotes by straight ascii quotes, their closest ascii approximation.
+
+For the case of movie scripts (but not for short 
+stories), I also try to distinguish between 
+dialog lines, and narration lines.
+The dialog lines are often indented with 
+respect to the narration lines, but not always.
+In the case of Pixar/Disney, they don't indent dialog. In cases where the movie script indents,
+the software gives the option to throw away all the dialog and keep only the narration.
+
+Here I also use the software SpaCy\footnote{In the Python
+world, there are 2 general, dominant
+NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). Mappa Mundi uses both. There is much overlap
+between the 2. In case of overlap, I tried to use the one that was fastest.} to separate 
+the sentences and return a file with only
+one sentence per line.
+
+\item Spell-checking using methods in $\tt spell\_checking.py$
+
+I discovered, to my chagrin, that spell-checking
+without any input from a human user,
+is very error prone, unless one takes context into consideration. LLMs can do contextual spell-checking, but this project did not use LLMs,
+since I don't have access to them.
+Instead of a contextual spell-checker,
+I used the non-contextual
+spell-checker $\tt pyspellchecker$
+that tries to replace infrequent words by
+more frequent ones (a very risky
+and error prone approach). To 
+diminish the risk, I
+ constrained it in various ways so
+that it only makes very conservative corrections.
+
+\item Simplifying using methods in $\tt simplifying.py$
+
+At this point, the file
+has only one
+sentence per line.
+Here, I  use SpaCy to
+break each sentence into clauses.
+Then I simplify the clauses by removing
+stop-words, punctuation marks and other extra baggage.
+Then I replace each clause by its simplified version.
+Different clauses from the same sentence
+are put in the same line, separated by an asterisk.
+Some sentences are diminished to nothing after
+the simplification.
+Those sentences are replaced by a single asterisk.
+
+\item Creating DAG atlas using methods in
+class $\tt DagAtlas$
+
+Everything up to this point has just been
+pre-processing of the data. 
+Here, I finally implement the algorithm described
+in Section \ref{sec-algo-overview}.
+The bottleneck and rate-determining-step for full process is
+calculating the similarity between 2 nodes.
+If the DAG1 for movie script (or short story) 1 has $k_1$ 
+nodes, and DAG2 has $k_2$ nodes,
+then $k_1 k_2$ similarity calculations have to be made.
+For the short stories I considered, $k_1k_2$
+is typically on the order of $0.1M$.
+For the movies, it is typically $1.5M$.
+My computer is slow and old (I refuse
+to give specs so as not to embarrass myself).
+It can do about a million similarity calculations per hour. It can compare the 3 short stories in 20 minutes. I have't tried it, but I calculate that the
+3 movie comparison would take $15(\frac{1}{3})=5$ hours.
+
+For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+Wordnet,
+and another method that uses SpaCy+WordVec.
+The NLTK+WordNet method is, in my
+opinion,  more logical, and it gives more reasonable distances. I also found it
+to be faster than the SpaCy+WordVec method.\footnote{The NLKT+WordNet method 
+calculates the distance between synsets  of nouns
+in node1 and node2.  It also calculates the distance between synsets of verbs, adjectives and adverbs. (Synsets, i.e., synonym sets,
+are a sort of equivalence class of words.)
+Then it calculates from all those synset distances,
+a distance between the two nodes (i.e., clauses or sentences). The SpaCy+WordVec approach  turns 
+each word for the clause in node1 into a vector and then calculates the center of mass (CM) of those word vectors.
+It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I personally don't think
+a CM vector is a good representation of
+a list of words. }
+
+\item Visualizing DAGs using methods in class $\tt Dag$.
+
+This part is easy. I use $\tt graphviz$ to do it.
+
+\end{enumerate}
+
 \section{Possible Improvements
 using LLMs}
+
+I believe the results
+of this study would improve
+dramatically if this were done with LLMs.
+LLMs could perform better
+the 3 data preprocessing steps
+(2-cleaning, 3-spell-checking and 4-simplifying).
+Cleaning and spell-checking
+could be done by the LLM
+taking context into consideration,
+and the output would be in the 
+flawless English that ChatGPT
+answers questions with.
+As to step 4-simplifying,
+rather than using the crude method
+of breaking each sentence into clauses
+and calling each clause a node,
+one could, for exampe,
+ask the LLM to summarize each sentence (or a few 
+consecutive sentences) as a list of simple
+declarative sentences.
+to demonstate that LLMs can 
+already performed this task admirably,
+did the following test. I gave ChatGPT the
+beginning narrative paragraph of the movie 
+WALL-E, and I asked ChatGPT to summarize the
+paragraph as a list of simple declarative sentences.
+Here is the result:
+
+\hrule
+\noindent {\bf PROMPT:} 
+
+Consider the following quote:
+"A range of mountains takes form in the haze.
+Moving closer.
+The mountains are piles of TRASH.
+The entire surface is nothing but waste.
+
+'..We're gonna find adventure in the evening air...'
+
+A silhouetted city in the distance.
+What looks like skyscrapers turns into trash.
+Thousands of neatly stacked CUBES OF TRASH, stories high.
+Rows and rows of stacked cubes, like city avenues.
+They go on for miles."
+
+Give an enumerated list summarizing this quote.
+Each list item must be a simple declarative sentence
+consisting of a subject phrase and a verb phrase.
+The list items must be in chronological order of occurrence
+in the quote.
+\hrule
+\noindent {\bf REPLY:}
+
+\begin{enumerate}
+\item A range of mountains appears in the haze.
+\item The narrator moves closer.
+\item The mountains are revealed to be piles of trash.
+\item The entire surface is described as nothing but waste.
+\item The narrator speaks of finding adventure in the evening air.
+\item A silhouetted city appears in the distance.
+\item The skyscrapers turn out to be made of trash.
+\item Thousands of neatly stacked cubes of trash are seen, stories high.
+\item Rows and rows of stacked cubes are seen, resembling city avenues.
+\item The expanse of trash goes on for miles.
+\end{enumerate}
+\hrule
+
+Each of these 10 sentences would make
+a superb node in a causal DAG. With nodes defined
+with such clarity, 
+one could avoid much noise in the calculation of the similarity
+of 2 nodes.
+ 
 
 
 

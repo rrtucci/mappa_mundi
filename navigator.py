@@ -1,5 +1,5 @@
 from downloading_imsdb import *
-from cleaning_m_scripts import *
+from cleaning import *
 from spell_checking import *
 import importlib as imp
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
@@ -25,7 +25,7 @@ if "downloading" in steps_to_perform:
     get_batch_of_m_scripts(d1_urls, titles,
                            first=1, last=2000, stub_only=False)
 
-# cleaning_m_scripts
+# cleaning
 if "cleaning" in steps_to_perform:
     clean_batch_of_m_scripts(
         in_dir = M_SCRIPTS_DIR,
