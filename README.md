@@ -1,6 +1,6 @@
 # Mappa_Mundi
 
-Welcome to Mappa_Mundi.
+Welcome to Mappa_Mundi!
 
 The purpose of this software is to do causal DEFT 
 (causal DAG Extraction From Text).
