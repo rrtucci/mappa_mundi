@@ -162,6 +162,20 @@ and each clause is simplified by removing
 Then we define a DAG for each movie, and a node of that DAG for each
 simplified clause. 
 
+Previously, we've put exactly just one sentence 
+of the movie script per each row of a file.
+Then each sentence has been 
+replaced by zero, one, two, or more simplified clauses, separated by asterisks. A row consisting
+of nothing else but an asterisk, signifies
+a sentence that has been simplified to nothing.
+If  a simplified clause (i.e., node) appears at the
+row $t$ of the file (counting starting with 0), then 
+we say that node occurs at time $t$. If a simplified clause appears after zero asterisks, we say $x=0$ for it.
+If it appears after one asterisk, we say $x=1$ for it, and so forth. Hence each node (i.e., simplified clause)
+can be labeled by its $(t,x)$ coordinates.
+
+
+
 To compare two movies 1 and 2,
 we compare every node $\tt node1$
 in movie 1 with every node $\tt node2$ in movie 2.
