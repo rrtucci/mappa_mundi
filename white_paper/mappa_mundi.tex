@@ -158,7 +158,7 @@ Hence, it makes $(N^2-N)/2$
 Before comparing movies, each movie script is simplified as follows.
 Each sentence is divided into clauses,
 and each clause is simplified by removing
-``stop-words", punctuation,  and other excess baggage from it.
+``stop-words", punctuation, proper nouns, and other excess baggage from it.
 Then we define a DAG for each movie, and a node of that DAG for each
 simplified clause. 
 
@@ -435,7 +435,7 @@ sentence per line.
 Here, I  use SpaCy to
 break each sentence into clauses.
 Then I simplify the clauses by removing
-stop-words, punctuation marks, proper nouns (a.k.a. named entities) and other extra baggage.
+stop-words, punctuation marks, proper nouns (a.k.a. named entities) and other excess baggage.
 Then I replace each clause by its simplified version.
 Different simplified clauses from the same sentence
 are put in the same line, separated by an asterisk.
