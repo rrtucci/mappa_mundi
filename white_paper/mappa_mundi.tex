@@ -384,6 +384,13 @@ and replace exclusively unicode symbols
 by their closest ANSII analogues (e.g.,
 curly quotes are replaced by straight quotes).
 
+Here I also use the software SpaCy\footnote{In the Python
+world, there are 2 general, dominant
+NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). MM uses both. There is much overlap
+between the 2. In case of overlap, I tried to use the one that was fastest.} to break up the movie script into 
+separate sentences, and return a file with only
+one sentence per line.
+
 For the case of movie scripts (but not for short 
 stories), I also try to distinguish between 
 dialog lines and narration lines.
@@ -393,12 +400,7 @@ In the case of Pixar/Disney, they don't indent dialog. In cases where the movie 
 the MM software gives the option of throwing away all the dialog lines and keeping only the narration
 ones.
 
-Here I also use the software SpaCy\footnote{In the Python
-world, there are 2 general, dominant
-NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). MM uses both. There is much overlap
-between the 2. In case of overlap, I tried to use the one that was fastest.} to break up the movie script into 
-separate sentences, and return a file with only
-one sentence per line.
+
 
 \item Spell-checking using methods in $\tt spell\_checking.py$
 
