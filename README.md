@@ -1,8 +1,12 @@
 # Mappa_Mundi
 
-Welcome to Mappa_Mundi!
+Welcome to Mappa_Mundi (MM)! 
 
-The purpose of this software is to do causal DEFT 
+MM is a method that combines seamlessly 
+Large Language Models (LLM) 
+and Causal Inference (CI).
+
+The MM software does causal DEFT 
 (causal DAG Extraction From Text).
 We store each extracted DAG in a separate file, and we put
 all DAG files in a directory
