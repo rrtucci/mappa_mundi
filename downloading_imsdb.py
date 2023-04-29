@@ -1,12 +1,15 @@
 """
 
+The goal of this file is to scrape the 1,100+ movie scripts from the IMSDb
+website.
+
 References:
 https://github.com/j2kun/imsdb_download_all_scripts
 https://github.com/AdeboyeML/Film_Script_Analysis
 https://www.datacamp.com/tutorial/scraping-reddit-python-scrapy
 
 In Chrome and most web browsers, pressing Ctrl+U opens the current page's
-source code in a new browser tab.
+source code in a new window.
 
 3 depths, d0, d1, d2
 
@@ -19,19 +22,28 @@ https://imsdb.com/Movie%20Scripts/10%20Things%20I%20Hate%20About%20You%20Script.
 d2_url (depends on movie)
 https://imsdb.com/scripts/10-Things-I-Hate-About-You.html
 
-find_all() takes you
-d0_html, d0_soup->d1_url
-d1_html, d1_soup->d2_url
+find_all() takes you from X->Y
+(d0_html, d0_soup)->d1_url
+(d1_html, d1_soup)->d2_url
 """
 from bs4 import BeautifulSoup
 import requests
-from slugify import slugify # python-slugify
+from slugify import slugify  # python-slugify
 from my_globals import *
 
+
 def get_d1_urls_and_titles():
+    """
+    This auxiliary method returns to lists, `d1_urls` and `titles`.
+
+    Returns
+    -------
+    list[str], list[str]
+
+    """
     d1_urls = []
     titles = []
-    d0_url = BASE_URL+"/all-scripts.html"
+    d0_url = BASE_URL + "/all-scripts.html"
     d0_html = requests.get(d0_url).text
     d0_soup = BeautifulSoup(d0_html, "html.parser")
     for p_tag in d0_soup.find_all('p'):
@@ -39,18 +51,32 @@ def get_d1_urls_and_titles():
         cond1 = "/Movie Scripts/" in d1_url
         cond2 = ".html" in d1_url
         if cond1 and cond2:
-            title = d1_url.replace("/Movie Scripts/", "").\
-                replace(" Script.html", "").\
+            title = d1_url.replace("/Movie Scripts/", ""). \
+                replace(" Script.html", ""). \
                 replace(".html", "")
             d1_urls.append(BASE_URL + d1_url)
             titles.append(title)
     return d1_urls, titles
 
 
-def clean_m_script(text):
-    return
-
 def get_one_m_script(d1_url, stub_only=False):
+    """
+    This method scrapes one movie script with d1-level URL `d1_url`.
+
+    Parameters
+    ----------
+    d1_url: str
+    stub_only: bool
+        True iff don't want to scrape the movie script text at all. Instead
+        of the movie script text, it leaves a message "coming soon to a
+        theater near you"
+
+    Returns
+    -------
+    str, bool
+        the movie script, and a boolean indicating if it's missing.
+
+    """
     missing = False
     tail = d1_url.split('/')[-1].replace(".html", "")
     if stub_only:
@@ -81,8 +107,25 @@ def get_one_m_script(d1_url, stub_only=False):
         # m_script = clean_m_script(m_script)
     return m_script, missing
 
-def get_batch_of_m_scripts(d1_urls, titles,
-        first=1, last=5000, stub_only=False):
+
+def get_batch_of_m_scripts(first=1, last=5000, stub_only=False):
+    """
+    This method scrapes the movie scripts starting at position `first` and
+    ending at position `last`. If `last` is larger than the number of movie
+    scripts at IMSDb, then the method ends when it has scraped all movie
+    scripts.
+
+    Parameters
+    ----------
+    first: int
+    last: int
+    stub_only: bool
+
+    Returns
+    -------
+    None
+
+    """
     d1_urls, titles = get_d1_urls_and_titles()
     num_titles = len(titles)
     missing_m_scripts = []
@@ -91,10 +134,10 @@ def get_batch_of_m_scripts(d1_urls, titles,
         last = num_titles
     if first < 1:
         first = 1
-    for i in range(first-1, last):
+    for i in range(first - 1, last):
         d1_url = d1_urls[i]
         dashed_title = slugify(titles[i])
-        print('%i. fetching %s' % (i+1, dashed_title))
+        print('%i. fetching %s' % (i + 1, dashed_title))
         m_script, missing = get_one_m_script(d1_url, stub_only=stub_only)
         outpath = M_SCRIPTS_DIR + '/' + dashed_title + '.txt'
         if missing:
@@ -115,20 +158,21 @@ def get_batch_of_m_scripts(d1_urls, titles,
     print(missing_m_scripts)
     print("number of missing m_scripts=", len(missing_m_scripts))
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     def main1():
         urls, titles = get_d1_urls_and_titles()
         print(urls)
         print(titles)
-        assert len(urls)==len(titles)
-        print("number of films=", len(urls)) # 1211
+        assert len(urls) == len(titles)
+        print("number of films=", len(urls))  # 1211
         # 75 missing
         # 1211-75=1136 expected 238 MB
 
+
     def main2():
-        d1_urls, titles = get_d1_urls_and_titles()
-        get_batch_of_m_scripts(d1_urls, titles,
-            first=1, last=100, stub_only=False)
-    #main1()
+        get_batch_of_m_scripts(first=1, last=100, stub_only=False)
+
+
+    # main1()
     main2()

@@ -1,9 +1,41 @@
+"""
+
+This file has functions to test the function `ztz_similarity(str1, str2)`
+which measures the similarity of two sentences `ztz1` and `ztz2`.
+`ztz_similarity()` has been implemented 3 different ways, in separate files
+
+1. similarity_nltk.py (Recommended)
+Uses NLTK + WordNet
+
+2. similarity_spacy.py
+Uses SpaCy + WordVec
+
+3. similarity_spacy2.py
+Attempt to use SpaCy + WordNet
+
+"""
 from my_globals import *
 import importlib as imp
+
 simi = imp.import_module(SIMI_DEF)
 from time import time
 
+
 def print_simi_12(str1, str2):
+    """
+    Prints similarity of `str1` and `str2`.
+
+    Parameters
+    ----------
+    str1: str
+    str2: str
+
+    Returns
+    -------
+    None
+
+    """
+    print()
     print("1.", str1)
     print("2.", str2)
     simi12 = simi.ztz_similarity(str1, str2)
@@ -29,6 +61,7 @@ if __name__ == "__main__":
         for ztz in ztzs:
             print_simi_12(focus_ztz, ztz)
 
+
     def main2():
         print("************ simi definition from:", SIMI_DEF)
         word1, word2 = "apple", "horse"
@@ -38,6 +71,7 @@ if __name__ == "__main__":
         ztz1 = "The cat sat on the mat."
         ztz2 = "The dog lay on the rug."
         print_simi_12(ztz1, ztz2)
+
 
     main1()
     main2()

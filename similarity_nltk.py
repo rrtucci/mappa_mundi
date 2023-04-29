@@ -1,7 +1,14 @@
 """
+
+This file contains a function `ztz_similarity(ztz1, ztz2)`
+that returns the similarity of sentences `ztz1` and `ztz2`.
+ztz = sentence
+
+It uses NLTK + WordNet
+
+Ref:
 https://nlpforhackers.io/wordnet-sentence-similarity/
 
-ztz = sentence
 """
 
 from nltk import word_tokenize, pos_tag
@@ -12,23 +19,48 @@ from time import time
 
 
 def penn_to_wn(tag):
-    """ Convert between a Penn Treebank tag to a simplified Wordnet tag """
+    """
+    Convert a Penn Treebank tag to a simplified Wordnet tag
+
+    Parameters
+    ----------
+    tag: str
+
+    Returns
+    -------
+    str
+
+    """
     if tag.startswith('N'):
-        return 'n' # noun
+        return 'n'  # noun
 
     if tag.startswith('V'):
-        return 'v' # verb
+        return 'v'  # verb
 
     if tag.startswith('J'):
-        return 'a' # adjective
+        return 'a'  # adjective
 
     if tag.startswith('R'):
-        return 'r' # adverb
+        return 'r'  # adverb
 
     return None
 
 
-def tgd_word_to_synset(tgd_word):
+def synset_for_tgd_word(tgd_word):
+    """
+    This private method returns the most likely synset for a tagged word
+    `tgd_word`. A synset (synonym set) is a sort of equivalence class of
+    words with very similar meanings.
+
+    Parameters
+    ----------
+    tgd_word: tuple(str, str)
+
+    Returns
+    -------
+    wn.synset or None
+
+    """
     word, tag = tgd_word
     wn_tag = penn_to_wn(tag)
     if wn_tag is None:
@@ -41,7 +73,21 @@ def tgd_word_to_synset(tgd_word):
 
 
 def ztz_similarity(ztz1, ztz2):
-    """ compute the ztz similarity using Wordnet """
+    """
+    This method returns the similarity between sentences `ztz1` and `ztz2`.
+    The similarity is measured as odds of a probability, so it ranges from 0
+    to infinity.
+
+    Parameters
+    ----------
+    ztz1: str
+    ztz2: str
+
+    Returns
+    -------
+    float
+
+    """
 
     do_time = False
     if do_time:
@@ -53,12 +99,12 @@ def ztz_similarity(ztz1, ztz2):
     # Get the synsets for the tagged words (tgd_word)
     all_ss1 = []
     for tgd_word in tgd_ztz1:
-        ss1 = tgd_word_to_synset(tgd_word)
+        ss1 = synset_for_tgd_word(tgd_word)
         if ss1:
             all_ss1.append(ss1)
     all_ss2 = []
     for tgd_word in tgd_ztz2:
-        ss2 = tgd_word_to_synset(tgd_word)
+        ss2 = synset_for_tgd_word(tgd_word)
         if ss2:
             all_ss2.append(ss2)
 
@@ -91,14 +137,14 @@ def ztz_similarity(ztz1, ztz2):
             count2 += 1
     if count2:
         score2 /= count2
-    prob = (score1 + score2)/2
-    if prob<1:
-        odds = prob/ (1 - prob)
+    prob = (score1 + score2) / 2
+    if prob < 1:
+        odds = prob / (1 - prob)
     else:
         odds = 1000
     if do_time:
         print("similarity ends", time())
-    return round(odds ,3)
+    return round(odds, 3)
 
 
 """

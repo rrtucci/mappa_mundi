@@ -1,11 +1,41 @@
+"""
+
+This file contains a function `ztz_similarity(ztz1, ztz2)`
+that returns the similarity of sentences `ztz1` and `ztz2`.
+ztz = sentence
+
+It uses SpaCy + WordVec
+
+Ref:
+
+
+"""
+
 from itertools import product
 import numpy as np
 import spacy
+
 nlp = spacy.load('en_core_web_lg')
 from my_globals import *
 
 
 def ztz_similarity(ztz1, ztz2):
+    """
+    This method returns the similarity between sentences `ztz1` and `ztz2`.
+    The similarity is measured as odds of a probability, so it ranges from 0
+    to infinity.
+
+    Parameters
+    ----------
+    ztz1: str
+    ztz2: str
+
+    Returns
+    -------
+    float
+
+    """
+
     def same_pos(token1, token2):
         # this gives same simi but elapsed time is less
         return token1.pos_ == token2.pos_
@@ -19,19 +49,19 @@ def ztz_similarity(ztz1, ztz2):
     token_pair_to_simi = {}
     for token1, token2 in product(sp_tokens1, sp_tokens2):
         if same_pos(token1, token2):
-            simi = nlp(token1.text.lower()).\
+            simi = nlp(token1.text.lower()). \
                 similarity(nlp(token2.text.lower()))
             # print("llkj", token1.text, token2.text, token1.pos_, simi)
             if simi is not None:
-                token_pair_to_simi[(token1, token2)]= simi
+                token_pair_to_simi[(token1, token2)] = simi
     # print("ffgh", "****************")
     # ("mmnk", token_pair_to_simi)
     score1 = 0.0
     count1 = 0
     for token1 in sp_tokens1:
         simi_list = [token_pair_to_simi[(token1, token2)]
-                for token2 in sp_tokens2
-                if same_pos(token1, token2)]
+                     for token2 in sp_tokens2
+                     if same_pos(token1, token2)]
         if simi_list:
             best_score = max(simi_list)
             score1 += best_score
@@ -42,9 +72,9 @@ def ztz_similarity(ztz1, ztz2):
     score2 = 0.0
     count2 = 0
     for token2 in sp_tokens2:
-        simi_list =[token_pair_to_simi[(token1, token2)]
-                          for token1 in sp_tokens1
-                   if same_pos(token1, token2)]
+        simi_list = [token_pair_to_simi[(token1, token2)]
+                     for token1 in sp_tokens1
+                     if same_pos(token1, token2)]
         if simi_list:
             best_score = max(simi_list)
             score2 += best_score
@@ -52,11 +82,12 @@ def ztz_similarity(ztz1, ztz2):
     if count2:
         score2 /= count2
     prob = (score1 + score2) / 2
-    if prob<1:
-        odds = prob/ (1 - prob)
+    if prob < 1:
+        odds = prob / (1 - prob)
     else:
         odds = 1000
-    return round(odds ,3)
+    return round(odds, 3)
+
 
 """
 ************ simi definition from: similarity_spacy

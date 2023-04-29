@@ -1,7 +1,12 @@
 """
+
+This file contains one of several implementations of the function
+`simplify_ztz(sentence, verbose=False)` that we considered.
+
+Refs:
 https://spacy.io/usage/spacy-101/
 
-For spacy, token.dep_ dictionary
+For spacy, here are some values of token.dep_
 
 cc: coordinating conjunction.
     i.e., FANBOYS = for, and, nor, but, or, yet, so
@@ -21,13 +26,26 @@ nlp.add_pipe("merge_entities")
 
 
 def simplify_ztz(sentence, verbose=False):
+    """
+    This method simplifies the sentence `sentence`.
+
+    Parameters
+    ----------
+    sentence: str
+    verbose: bool
+
+    Returns
+    -------
+    str
+
+    """
     doc = nlp(sentence)
     tokenized_clauses_list = []
     tokenized_clause = []
     for token in doc:
         cond = (token.dep_ == "mark") or \
-                (token.dep_ == "cc") or \
-                (token.text==";")
+               (token.dep_ == "cc") or \
+               (token.text == ";")
         if not cond:
             tokenized_clause.append(token)
         else:
@@ -35,7 +53,6 @@ def simplify_ztz(sentence, verbose=False):
             tokenized_clause = []
     # last clause
     tokenized_clauses_list.append(tokenized_clause)
-
 
     ztz_list = []
     for tokenized_clause in tokenized_clauses_list:
@@ -68,13 +85,28 @@ def simplify_ztz(sentence, verbose=False):
         print(ztz_list)
     return ztz_list
 
+
 def get_simplified_token_txt(token):
+    """
+    This auxiliary method takes as input a SpaCy Token `token` and returns a
+    simplified version of the token's text.
+
+    Parameters
+    ----------
+    token: Token
+
+    Returns
+    -------
+    str
+
+    """
     x = token.text
     # remove all punctuation marks
     x = re.sub(r'[^\w\s]', '', x)
     if token.ent_type_:
         # replace named entities by their labels
         # x = token.ent_type_
+
         # remove named entities
         x = ""
     if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
@@ -83,7 +115,7 @@ def get_simplified_token_txt(token):
         # remove stop words, except RETAINED_POS
         x = ""
     # remove single character tokens
-    if len(x.strip())==1:
+    if len(x.strip()) == 1:
         x = ""
     x = x.strip()
     return x

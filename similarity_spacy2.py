@@ -1,3 +1,14 @@
+"""
+
+This file contains a function `ztz_similarity(ztz1, ztz2)`
+that returns the similarity of sentences `ztz1` and `ztz2`.
+ztz = sentence
+
+It uses SpaCy + WordNet
+
+Ref:
+
+"""
 import spacy
 import nltk
 from nltk.corpus import wordnet as wn
@@ -5,9 +16,26 @@ from my_globals import *
 from itertools import product
 from collections import defaultdict
 from time import time
+
 nlp = spacy.load("en_core_web_sm")
 
+
 def ztz_similarity(ztz1, ztz2):
+    """
+    This method returns the similarity between sentences `ztz1` and `ztz2`.
+    The similarity is measured as odds of a probability, so it ranges from 0
+    to infinity.
+
+    Parameters
+    ----------
+    ztz1: str
+    ztz2: str
+
+    Returns
+    -------
+    float
+
+    """
     do_time = False
     if do_time:
         print("similarity begins", time())
@@ -16,13 +44,13 @@ def ztz_similarity(ztz1, ztz2):
     sp_tokens1 = [token1 for token1 in doc1 \
                   if token1.pos_ in RETAINED_POS]
     sp_tokens2 = [token2 for token2 in doc2 \
-                  if token2.pos_ in RETAINED_POS] 
+                  if token2.pos_ in RETAINED_POS]
     all_ss1 = []
     for token1 in sp_tokens1:
         if wn.synsets(token1.text):
             ss1 = wn.synsets(token1.text)[0]
             all_ss1.append(ss1)
-            
+
     all_ss2 = []
     for token2 in sp_tokens2:
         if wn.synsets(token2.text):
@@ -35,7 +63,6 @@ def ztz_similarity(ztz1, ztz2):
         simi = ss1.path_similarity(ss2)
         if simi is not None:
             ss_pair_to_simi[(ss1, ss2)] = simi
-
 
     score1 = 0.0
     count1 = 0
@@ -58,13 +85,11 @@ def ztz_similarity(ztz1, ztz2):
             count2 += 1
     if count2:
         score2 /= count2
-    prob = (score1 + score2)/2
-    if prob<1:
-        odds = prob/ (1 - prob)
+    prob = (score1 + score2) / 2
+    if prob < 1:
+        odds = prob / (1 - prob)
     else:
         odds = 1000
     if do_time:
         print("similarity ends", time())
-    return round(odds ,3)
-
-    
+    return round(odds, 3)

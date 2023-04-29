@@ -1,4 +1,9 @@
 """
+
+This file contains one of several implementations of the function
+`simplify_ztz(sentence, verbose=False)` that we considered.
+
+Refs:
 https://github.com/garain/Sentence-Simplification
 ztz = sentence
 
@@ -19,9 +24,24 @@ print("STANFORD_MODELS=\t", os.environ['STANFORD_MODELS'])
 print("JAVA_HOME=\t", os.environ['JAVA_HOME'])
 
 from nltk.parse.stanford import StanfordParser
+
 parser = StanfordParser()
 
+
 def simplify_ztz(sentence0, verbose=False):
+    """
+    This method simplifies the sentence `sentence0`.
+
+    Parameters
+    ----------
+    sentence: str
+    verbose: bool
+
+    Returns
+    -------
+    str
+
+    """
     simple_ztz_list = []
     success = False
 
@@ -31,10 +51,10 @@ def simplify_ztz(sentence0, verbose=False):
     # index1 = 0
     n = 0
     but = 0
+
     # scount = 0
     # parts = []
     # ht_3_last_obj = []
-
 
     def SBAR_simplify(sent):
 
@@ -196,7 +216,6 @@ def simplify_ztz(sentence0, verbose=False):
         else:
             AnyNode(id=str(tree), parent=t)
 
-
     def find_sbar(t):
         if t.id == 'SBAR':
             global sbar
@@ -204,14 +223,12 @@ def simplify_ztz(sentence0, verbose=False):
         for tt in t.children:
             find_sbar(tt)
 
-
     def find_vp_in_sbar(t):
         if t.id == 'VP':
             global vp_sbar
             vp_sbar = t
         for tt in t.children:
             find_vp_in_sbar(tt)
-
 
     def find_vp(t):
         if t.id == 'SBAR':
@@ -224,7 +241,6 @@ def simplify_ztz(sentence0, verbose=False):
         for tt in t.children:
             find_vp(tt)
 
-
     def find_np(t):
         if t.id == 'SBAR':
             return
@@ -235,7 +251,6 @@ def simplify_ztz(sentence0, verbose=False):
             f = False
         for tt in t.children:
             find_np(tt)
-
 
     def find_vbz(t):
         if t.id == 'SBAR':
@@ -248,7 +263,6 @@ def simplify_ztz(sentence0, verbose=False):
         for tt in t.children:
             find_vbz(tt)
 
-
     def make_sent(t):
         global simple_sentences
         if t.id in sent_list:
@@ -256,12 +270,10 @@ def simplify_ztz(sentence0, verbose=False):
         for tt in t.children:
             make_sent(tt)
 
-
     # SBAR functions end here
     # Multiple CC functions start here
     def pos_tag(tokenized_sent):
         return nltk.pos_tag(tokenized_sent)
-
 
     def has_conj(tagged_sent):
         cc_list = [('and', 'CC'), ('but', 'CC')]
@@ -270,13 +282,11 @@ def simplify_ztz(sentence0, verbose=False):
                 return True
         return False
 
-
     def split_needed(sent_list):
         for sent in sent_list:
             if has_conj(pos_tag(tokenize(sent))):
                 return True
         return False
-
 
     def do_split(sent, cc_tuple):
         pos_tagged = pos_tag(tokenize(sent))
@@ -292,7 +302,8 @@ def simplify_ztz(sentence0, verbose=False):
         index = []
         index1 = 0
         if count > 0 and (('to') not in tokenized_sent and (
-        'washed') not in tokenized_sent) and (tokenized_sent.count(",") < 2):
+                'washed') not in tokenized_sent) and (
+                tokenized_sent.count(",") < 2):
             for i in range(len(pos_tagged) - 3):
                 if (pos_tagged[i][1] == 'VBD' or pos_tagged[i][1] == 'VBZ') and \
                         pos_tagged[i + 1][1] != 'VBG' and pos_tagged[i + 3][
@@ -389,7 +400,6 @@ def simplify_ztz(sentence0, verbose=False):
 
         return split
 
-
     def split_util(sent):
         cc_list = [('and', 'CC'), ('but', 'CC')]
         for cc_pair in cc_list:
@@ -397,14 +407,12 @@ def simplify_ztz(sentence0, verbose=False):
                 return do_split(sent, cc_pair)
         return sent
 
-
     def rem_dup(list):
         final = []
         for item in list:
             if item not in final:
                 final.append(item)
         return final
-
 
     def simplify(sent):
         initial = [sent]
@@ -427,7 +435,6 @@ def simplify_ztz(sentence0, verbose=False):
         # print(final)
 
         return final
-
 
     def tokenize(sent):
         tokenized_sent = nltk.word_tokenize(sent)
@@ -604,4 +611,4 @@ def simplify_ztz(sentence0, verbose=False):
                 continue
     if not success:
         simple_ztz_list.append(sentence0)
-    return [ztz for ztz in simple_ztz_list if len(ztz)>2]
+    return [ztz for ztz in simple_ztz_list if len(ztz) > 2]

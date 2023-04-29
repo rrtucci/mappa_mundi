@@ -1,4 +1,10 @@
 """
+
+This file contains one of several implementations of the function
+`simplify_ztz(sentence, verbose=False)` that we considered.
+
+Refs:
+
 https://spacy.io/usage/spacy-101/
 
 https://github.com/ac491/Sentence-simplifier/blob/master/simplifcation.ipynb
@@ -12,6 +18,7 @@ nlp = spacy.load("en_core_web_sm")
 
 # set of relative pronouns
 RELPRON = ['whom', 'whose', 'which', 'who']
+
 
 def transform(parsed):
     d = {}
@@ -31,6 +38,7 @@ def transform(parsed):
         d[parent][rel].append(dependent)
 
     return d
+
 
 def analyse_rc(sentence):
     # check for markers indicating rel_clause
@@ -253,7 +261,21 @@ def relative_clauses(dep_dict, words, root, dep_root, rel, ant):
 sentence0 = 'Robert, who lives nearby, was walking his dog'
 sentence1 = 'Marcus, my sister\'s hamster, likes to run in a wheel.'
 
+
 def simplify_ztz(ztz, verbose=False):
+    """
+    This method simplifies the sentence `ztz`.
+
+    Parameters
+    ----------
+    sentence: str
+    verbose: bool
+
+    Returns
+    -------
+    str
+
+    """
     ztz.strip()
     sentences = [ztz]
     result = []

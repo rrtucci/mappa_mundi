@@ -1,23 +1,39 @@
+"""
+
+This file has a function that lists all SpaCy stopwords, classified by POS (
+part of speech).
+
+"""
+
 import spacy
 from pprint import pprint
 
 nlp = spacy.load('en_core_web_sm')
 
+
 def get_stopwords_dict():
+    """
+    This method returns a dictionary that maps the parts of speech (POS) to
+    a list of the stopwords that have that POS.
 
-    stop_words = nlp.Defaults.stop_words
+    Returns
+    -------
+    dict[str, list[str]]
 
-    pos_to_stop_words = {}
+    """
 
-    for word in stop_words:
+    stopwords = nlp.Defaults.stopwords
+
+    pos_to_stopwords = {}
+
+    for word in stopwords:
         pos = nlp(word)[0].pos_
-        if pos in pos_to_stop_words:
-            pos_to_stop_words[pos].append(word)
+        if pos in pos_to_stopwords:
+            pos_to_stopwords[pos].append(word)
         else:
-            pos_to_stop_words[pos] = [word]
+            pos_to_stopwords[pos] = [word]
 
-    return pos_to_stop_words
-
+    return pos_to_stopwords
 
 
 if __name__ == "__main__":
@@ -25,6 +41,8 @@ if __name__ == "__main__":
         d = get_stopwords_dict()
         print(sorted(d.keys()))
         pprint(d)
+
+
     main()
 
 """
@@ -355,6 +373,3 @@ if __name__ == "__main__":
           '’re',
           'does']}
 """
-
-
-

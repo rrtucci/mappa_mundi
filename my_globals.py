@@ -1,3 +1,9 @@
+"""
+
+This file contains all the global variables used by Mappa Mundi (MM).
+
+"""
+
 BASE_URL = "https://imsdb.com"
 
 M_SCRIPTS_DIR = "m_scripts"
@@ -14,16 +20,16 @@ DAG_RD_DIR = "m_script_dag_atlas_rd"
 # ZTZ_SIMPLIFIER = "simp_spacy_claucy"
 # ZTZ_SIMPLIFIER = "simp_spacy1"
 # ZTZ_SIMPLIFIER = "simp_spacy2"
-ZTZ_SIMPLIFIER = "simp_spacy3" # recommended
+ZTZ_SIMPLIFIER = "simp_spacy3"  # recommended
 
 # SIMI_DEF = "similarity_spacy"
 # SIMI_DEF = "similarity_spacy2"
-SIMI_DEF = "similarity_nltk" # recommended
+SIMI_DEF = "similarity_nltk"  # recommended
 
-# good thresholds from similarity.py examples
+# good threshold values gleaned from similarity.py examples
 # SIMI_THRESHOLD = 2.2 for NLTK
 # SIMI_THRESHOLD = 2.69 for SpaCy
-SIMI_THRESHOLD = 3
+SIMI_THRESHOLD = 3  # recommended
 
 ZTZ_SEPARATOR = "*"
 
@@ -31,11 +37,11 @@ CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 
 SPELLING_CORRECTION_RISK = 1e-8
 
-# pos (part of speech) in stopwords.py
+# POS (part of speech) in stopwords.py
 # ['ADJ', 'ADP', 'ADV', 'AUX', 'CCONJ', 'DET', 'INTJ',
 # 'NOUN', 'NUM', 'PART', 'PRON', 'PUNCT', 'SCONJ', 'VERB']
 
-# To see full list, see jpg in pics folder
+# To see full list of POS, see jpg in pics folder
 
 # ADP (adposition) are mostly prepositions
 # AUX contains verbs like 'is'
@@ -46,6 +52,6 @@ SPELLING_CORRECTION_RISK = 1e-8
 RETAINED_POS = ['ADJ', 'ADV', 'NOUN', 'VERB']
 
 # See stopwords.py
-# should be subset of RETAINED_POS
+# RETAINED_STOPWORD_POS should be subset of RETAINED_POS
 # RETAINED_STOPWORD_POS = RETAINED_POS
-RETAINED_STOPWORD_POS = [] # recommended
+RETAINED_STOPWORD_POS = []  # recommended
