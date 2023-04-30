@@ -8,14 +8,14 @@ from my_globals import *
 import shutil
 
 
-def zero_based_position_from_m_title(dir, title):
+def zero_based_position_from_m_title(dir_, title):
     """
     This method returns the position (zero based, starting from zero) of
-    title `title` in directory `dir`.
+    title `title` in directory `dir_`.
 
     Parameters
     ----------
-    dir: str
+    dir_: str
     title: str
 
     Returns
@@ -23,16 +23,17 @@ def zero_based_position_from_m_title(dir, title):
     int
 
     """
-    return list(my_listdir(dir)).index(title + ".txt")
+    return list(my_listdir(dir_)).index(title + ".txt")
 
 
-def m_title_from_zero_based_position(dir, pos):
+def m_title_from_zero_based_position(dir_, pos):
     """
-    This method returns the title in directory `dir` of the movie at
+    This method returns the title in directory `dir_` of the movie at
     position `pos` (zero based, starting from zero).
 
     Parameters
     ----------
+    dir_: str
     pos: int
 
     Returns
@@ -40,16 +41,16 @@ def m_title_from_zero_based_position(dir, pos):
     str
 
     """
-    return list(my_listdir(dir))[pos][:-len(".txt")]
+    return list(my_listdir(dir_))[pos][:-len(".txt")]
 
 
-def argmax_of_list(l):
+def argmax_of_list(lista):
     """
-    This method returns the argmax of list `l`.
+    This method returns the argmax of list `lista`.
 
     Parameters
     ----------
-    l: list[X]
+    lista: list[X]
 
     Returns
     -------
@@ -57,7 +58,7 @@ def argmax_of_list(l):
 
 
     """
-    return max(range(len(l)), key=(lambda i: l[i]))
+    return max(range(len(lista)), key=(lambda i: lista[i]))
 
 
 def print_welcome_message():
@@ -70,19 +71,19 @@ def print_welcome_message():
 
     """
     print("Welcome Causal AI Navigator. We have been waiting for you for "
-          "millenia. Where would you like us to go next?")
+          "millennia. Where would you like us to go next?")
 
 
-def my_listdir(dir):
+def my_listdir(dir_):
     """
-    Whenever one opens a text file within directory `dir` using jupyter lab
-    ( JL), JL writes an annoying `.ipynb.checkpoints` folder inside `dir`.
+    Whenever one opens a text file within directory `dir_` using jupyter lab
+    ( JL), JL writes an annoying `.ipynb.checkpoints` folder inside `dir_`.
     This method deletes that checkpoints folder and then returns the usual
-    `os.listdir( dir)`
+    `os.listdir( dir_)`
 
     Parameters
     ----------
-    dir: str
+    dir_: str
 
     Returns
     -------
@@ -90,6 +91,6 @@ def my_listdir(dir):
 
     """
     # listdir includes hidden files like .ipynb_checkpoints
-    checkpoints = dir + "/" + ".ipynb_checkpoints"
+    checkpoints = dir_ + "/" + ".ipynb_checkpoints"
     shutil.rmtree(checkpoints, ignore_errors=True)
-    return os.listdir(dir)
+    return os.listdir(dir_)

@@ -4,10 +4,10 @@ import sys
 from itertools import product
 from my_globals import *
 import importlib as imp
-
-simi = imp.import_module(SIMI_DEF)
 import pickle as pik
 from time import time
+
+simi = imp.import_module(SIMI_DEF)
 
 
 class DagAtlas:
@@ -205,6 +205,7 @@ class DagAtlas:
 
         Parameters
         ----------
+        title: str
         other_titles: list[str]
 
         Returns

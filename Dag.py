@@ -265,9 +265,10 @@ class Dag:
         ----------
         s: output of graphviz Source(dot_str)
         j_embed: bool
-            True iff want to embed image in jupyter notebook. If you are using a
-            python terminal instead of a jupyter notebook, only j_embed=False
-            will draw image.
+            True iff want to embed image in jupyter notebook. If you are
+            using a python terminal instead of a jupyter notebook,
+            only j_embed=False will draw image.
+
         Returns
         -------
         None

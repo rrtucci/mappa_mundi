@@ -47,6 +47,7 @@ import spacy
 
 nlp = spacy.load('en_core_web_sm')
 
+
 def expand_contractions(line):
     """
     This auxiliary method replaces all contractions in the string `line` by

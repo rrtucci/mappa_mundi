@@ -60,7 +60,7 @@ def remove_all(aux, item):
 
 
 def build(root, dep, aux, words, final, yes_root=True, previous=None):
-    if previous == None:
+    if previous is None:
         previous = []
 
     if root in previous:
@@ -103,7 +103,7 @@ def appositive_phrases(dep_dict, words, root, dep_root, ant):
             del dep_dict[subj]['amod']
             deps_subj = dep_dict[subj]
 
-            ## Treat simple cases such as 'general rule'
+            # Treat simple cases such as 'general rule'
             if 'JJ' in words[mod - 1][1] and 'punct' not in deps_subj:
                 return False, ant
 
@@ -219,7 +219,9 @@ def relative_clauses(dep_dict, words, root, dep_root, rel, ant):
             if mark in RELPRON:
                 deps_relc[subj_rel][0] = subj
                 remove_all(dep_dict, to_remove)
-            elif 'dobj' in deps_relc:  ## needed for cases where the subject of the relative clause is the object
+            # needed for cases where the subject of
+            # the relative clause is the object
+            elif 'dobj' in deps_relc:
                 obj = deps_relc['dobj'][0]
 
                 if 'poss' in dep_dict[obj]:
@@ -231,7 +233,11 @@ def relative_clauses(dep_dict, words, root, dep_root, rel, ant):
                 else:
                     return False, ant
             else:
-                return False, ant  # for borken cases - " There are some situations where it is particularly important that you get financial information and advice that is independent of us."
+                return False, ant  # for broken cases -
+                # " There are some
+                # situations where it is particularly important
+                # that you get financial information and
+                # advice that is independent of us."
 
             del dep_dict[subj][type_rc]
 
@@ -268,7 +274,7 @@ def simplify_ztz(ztz, verbose=False):
 
     Parameters
     ----------
-    sentence: str
+    ztz: str
     verbose: bool
 
     Returns

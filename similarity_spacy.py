@@ -14,9 +14,9 @@ Ref:
 from itertools import product
 import numpy as np
 import spacy
+from my_globals import *
 
 nlp = spacy.load('en_core_web_lg')
-from my_globals import *
 
 
 def ztz_similarity(ztz1, ztz2):

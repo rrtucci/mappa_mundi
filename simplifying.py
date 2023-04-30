@@ -74,7 +74,7 @@ def simplify_one_m_script(
                 simple_ztz_list = [ZTZ_SEPARATOR]
 
             # replace multiple white spaces by single white space
-            simple_ztz_list = [re.sub('\s+', ' ', ztz) for ztz in
+            simple_ztz_list = [re.sub(r'\s+', ' ', ztz) for ztz in
                                simple_ztz_list]
 
             if len(simple_ztz_list) > 1:
@@ -125,7 +125,8 @@ if __name__ == "__main__":
     def main1():
         print("************ simplifier:", ZTZ_SIMPLIFIER)
         ztz = \
-            'The man, who had never liked the words "booby" and "boobyhatch,"' \
+            'The man, who had never liked the words' \
+            ' "booby" and "boobyhatch,"' \
             ' and who liked them even less on a shining morning when there' \
             ' was a unicorn in the garden, thought for a moment.'
         zsimp.simplify_ztz(ztz, verbose=True)
