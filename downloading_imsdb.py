@@ -34,7 +34,7 @@ from my_globals import *
 
 def get_d1_urls_and_titles():
     """
-    This auxiliary method returns to lists, `d1_urls` and `titles`.
+    This auxiliary method returns lists `d1_urls` and `titles`.
 
     Returns
     -------
