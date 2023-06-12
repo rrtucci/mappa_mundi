@@ -142,7 +142,8 @@ class DagAtlas:
         for nd1, nd2 in product(dag1.nodes, dag2.nodes):
             ztz1 = node_to_simple_ztz1[nd1]
             ztz2 = node_to_simple_ztz2[nd2]
-            if simi.ztz_similarity(ztz1, ztz2) > SIMI_THRESHOLD:
+            if simi.ztz_similarity(ztz1, ztz2, model=self.model) > \
+                    SIMI_THRESHOLD:
                 nd1_nd2_bridges.append((nd1, nd2))
                 bridge_count += 1
                 print(bridge_count, "bridges")
