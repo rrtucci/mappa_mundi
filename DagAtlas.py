@@ -6,6 +6,7 @@ from my_globals import *
 import importlib as imp
 import pickle as pik
 from time import time
+from sentence_transformers import SentenceTransformer
 
 simi = imp.import_module(SIMI_DEF)
 
@@ -23,6 +24,8 @@ class DagAtlas:
     dag_dir: str
         directory where this class writes pickled files. One pickled file (
         i.e., DAG) per movie.
+    model: SentenceTransformer
+        Model returned by SentenceTransformer constructor
     preconnected: bool
         True iff all Dag objects created by this class are preconnected
     simp_dir: str
@@ -51,7 +54,8 @@ class DagAtlas:
             True iff all Dag objects created by this class are preconnected
         recycled_pickles: list[str]
             titles for which overwriting of pickled files is forbidden, at the
-            beginning, when self is first constructed.  .
+            beginning, when self is first constructed.
+
         """
         self.start_time = time()
         time_now = (time() - self.start_time) / 60
@@ -74,6 +78,11 @@ class DagAtlas:
         for title in recycled_pickles:
             assert title in all_dag_titles
             self.title_to_permission_to_write_new_pickle[title] = False
+
+        if SIMI_DEF == "similarity_bert":
+            self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        else:
+            self.model = None
 
     def update_arrows_for_two_m_scripts(self, title1, title2):
         """

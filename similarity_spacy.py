@@ -19,7 +19,7 @@ from my_globals import *
 nlp = spacy.load('en_core_web_lg')
 
 
-def ztz_similarity(ztz1, ztz2):
+def ztz_similarity(ztz1, ztz2, **kwargs):
     """
     This method returns the similarity between sentences `ztz1` and `ztz2`.
     The similarity is measured as odds of a probability, so it ranges from 0

@@ -1,0 +1,7 @@
+python -m spacy download en_core_web_lg
+python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_trf
+
+python -m coreferee install en
+
+python -m nltk.downloader popular # this includes wordnet

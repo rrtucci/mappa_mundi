@@ -72,7 +72,7 @@ def synset_for_tgd_word(tgd_word):
         return None
 
 
-def ztz_similarity(ztz1, ztz2):
+def ztz_similarity(ztz1, ztz2, **kwargs):
     """
     This method returns the similarity between sentences `ztz1` and `ztz2`.
     The similarity is measured as odds of a probability, so it ranges from 0

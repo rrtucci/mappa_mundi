@@ -165,7 +165,7 @@ if __name__ == "__main__":
             batch_file_names)
 
 
-    # main1()
-    # main2()
+    main1()
+    main2()
     # main3()
-    main4()
+    # main4()
