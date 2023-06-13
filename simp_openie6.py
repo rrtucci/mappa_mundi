@@ -53,9 +53,9 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     cpu_command = gpu_command.replace("--gpus 1", "--gpus 0")
 
     if USE_GPU:
-        subprocess.run(["gpu_command"])
+        subprocess.Popen(gpu_command, shell=True)
     else:
-        subprocess.run(["cpu_command"])
+        subprocess.Popen(cpu_command, shell=True)
 
     ztz_list = []
     with open("../openie6_predictions.txt.conj", "r") as f:
