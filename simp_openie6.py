@@ -38,7 +38,7 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
 
     """
 
-    with open("openie6_sentences.txt", "w") as f:
+    with open("../openie6_sentences.txt", "w") as f:
         f.write(sentence)
 
     gpu_command = \
@@ -55,7 +55,7 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     os.system(gpu_command if USE_GPU else cpu_command)
 
     ztz_list = []
-    with open("openie6_predictions.txt.conj", "r") as f:
+    with open("../openie6_predictions.txt.conj", "r") as f:
         for line in f:
             ztz_list.append(line)
 
