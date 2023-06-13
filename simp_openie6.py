@@ -42,7 +42,8 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
         f.write(sentence)
 
     gpu_command = \
-        "cd openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0 " \
+        "cd ../openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID " \
+        "CUDA_VISIBLE_DEVICES=0 " \
         "PYTHONPATH=imojie:imojie/allennlp:imojie" \
         "/pytorch_transformers:$PYTHONPATH python run.py " \
         "--save models/conj_model --mode predict " \
@@ -61,5 +62,5 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     with open("../openie6_predictions.txt.conj", "r") as f:
         for line in f:
             ztz_list.append(line)
-
-    return ztz_list
+    # ztz_list has full sentence in first row
+    return ztz_list[1:]
