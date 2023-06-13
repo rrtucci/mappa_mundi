@@ -46,13 +46,16 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
         "PYTHONPATH=imojie:imojie/allennlp:imojie" \
         "/pytorch_transformers:$PYTHONPATH python run.py " \
         "--save models/conj_model --mode predict " \
-        "--inp openie6_sentences.txt --batch_size 1 " \
+        "--inp ../openie6_sentences.txt --batch_size 1 " \
         "--model_str bert-large-cased --task conj " \
-        "--gpus 1 --out openie6_predictions.txt"
+        "--gpus 1 --out ../openie6_predictions.txt"
 
     cpu_command = gpu_command.replace("--gpus 1", "--gpus 0")
 
-    os.system(gpu_command if USE_GPU else cpu_command)
+    if USE_GPU:
+        os.system(gpu_command)
+    else:
+        os.system(cpu_command)
 
     ztz_list = []
     with open("../openie6_predictions.txt.conj", "r") as f:
