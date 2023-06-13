@@ -18,7 +18,7 @@ Refs:
 3. https://github.com/dair-iitd/openie6
 
 """
-import os
+import subprocess
 from my_globals import *
 
 def simplify_ztz(sentence, verbose=False, **kwargs):
@@ -53,9 +53,9 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     cpu_command = gpu_command.replace("--gpus 1", "--gpus 0")
 
     if USE_GPU:
-        os.system(gpu_command)
+        subprocess.run(["gpu_command"])
     else:
-        os.system(cpu_command)
+        subprocess.run(["cpu_command"])
 
     ztz_list = []
     with open("../openie6_predictions.txt.conj", "r") as f:
