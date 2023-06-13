@@ -77,20 +77,23 @@ def compound_to_simple(sentence):
     clauses_text = [clause.text for clause in sentence_clauses]
     return clauses_text
 
-def simplify_ztz(sentence, verbose=False):
+def simplify_ztz(sentence, verbose=False, **kwargs):
     """
-    This method simplifies the sentence `sentence`.
+    This method simplifies the sentence `sentence`. It returns a list of
+    simple sentences extracted from the input sentence.
 
     Parameters
     ----------
     sentence: str
     verbose: bool
+    kwargs: dict[]
 
     Returns
     -------
-    str
+    list[str]
 
     """
+
     textres = coref_resolve(sentence)
     ztz_list = compound_to_simple(textres)
     if verbose:

@@ -30,18 +30,21 @@ parser = StanfordParser()
 
 def simplify_ztz(sentence0, verbose=False):
     """
-    This method simplifies the sentence `sentence0`.
+    This method simplifies the sentence `sentence`. It returns a list of
+    simple sentences extracted from the input sentence.
 
     Parameters
     ----------
-    sentence: str
+    sentence0: str
     verbose: bool
+    kwargs: dict[]
 
     Returns
     -------
-    str
+    list[str]
 
     """
+
     simple_ztz_list = []
     success = False
 

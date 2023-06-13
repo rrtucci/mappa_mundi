@@ -5,9 +5,9 @@ This file contains functions for simplifying movie scripts (or short stories).
 input directory: m_scripts_spell or short_stories_spell
 output directory: m_scripts_simp or short_stories_simp
 
-Simplification is done by the function `simplify_ztz(line, verbose)`. This
-function was implemented in several ways before we decided to stick with the
-version in file `simp_spacy3`.
+Simplification is done by the function `simplify_ztz()`. This function was
+implemented in several ways before we decided to stick with the version in
+file `simp_spacy3`.
 
 simp_spacy1.py
 simp_spacy2.py
@@ -37,7 +37,8 @@ from utils import *
 def simplify_one_m_script(
         in_dir, out_dir,
         file_name,
-        verbose=False):
+        verbose=False,
+        use_gpu=False):
     """
     in_dir and out_dir can be the same, but this will overwrite the files.
 
@@ -51,6 +52,7 @@ def simplify_one_m_script(
     out_dir: str
     file_name: str
     verbose: bool
+    use_gpu: bool
 
     Returns
     -------
@@ -65,7 +67,9 @@ def simplify_one_m_script(
         for line in f:
             if verbose:
                 print(str(count) + ".")
-            simple_ztz_list = zsimp.simplify_ztz(line, verbose)
+            simple_ztz_list = zsimp.simplify_ztz(line,
+                                                 verbose=verbose,
+                                                 use_gpu=use_gpu)
 
             # remove empty clauses
             simple_ztz_list = [ztz for ztz in simple_ztz_list if ztz]

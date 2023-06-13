@@ -270,18 +270,21 @@ sentence1 = 'Marcus, my sister\'s hamster, likes to run in a wheel.'
 
 def simplify_ztz(ztz, verbose=False):
     """
-    This method simplifies the sentence `ztz`.
+    This method simplifies the sentence `sentence`. It returns a list of
+    simple sentences extracted from the input sentence.
 
     Parameters
     ----------
     ztz: str
     verbose: bool
+    kwargs: dict[]
 
     Returns
     -------
-    str
+    list[str]
 
     """
+
     ztz.strip()
     sentences = [ztz]
     result = []

@@ -23,7 +23,7 @@ properties = {
 client = StanfordOpenIE(properties=properties)
 
 
-def simplify_ztz(sentence, verbose=False):
+def simplify_ztz(sentence, verbose=False, **kwargs):
     """
     This method simplifies the sentence `sentence`.
 
