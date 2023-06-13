@@ -20,8 +20,8 @@ DAG_RD_DIR = "m_script_dag_atlas_rd"
 # ZTZ_SIMPLIFIER = "simp_spacy_claucy"
 # ZTZ_SIMPLIFIER = "simp_spacy1"
 # ZTZ_SIMPLIFIER = "simp_spacy2"
-ZTZ_SIMPLIFIER = "simp_spacy3"
-# ZTZ_SIMPLIFIER = "simp_openie"  # recommended
+# ZTZ_SIMPLIFIER = "simp_spacy3"
+ZTZ_SIMPLIFIER = "simp_openie6"  # recommended
 
 # SIMI_DEF = "similarity_spacy"
 # SIMI_DEF = "similarity_spacy2"
