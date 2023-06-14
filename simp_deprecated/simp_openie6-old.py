@@ -1,8 +1,9 @@
 """
 
-The functions in this file are used inside the following jupyter notebook at
-Google Colab
+This file contains one of several implementations of the function 
+`simplify_ztz(sentence, verbose=False)` that we considered.
 
+It is called within a jupyter notebook at Google colab
 https://colab.research.google.com/drive/1S2EWOGkoCgjfOJzTRJ7PLeu4T8SBwhlF?usp=sharing
 
 Refs:
@@ -17,30 +18,23 @@ Refs:
 import subprocess
 from my_globals import *
 
-def openie6_simplify_batch_of_m_scripts(
-        in_dir, out_dir,
-        batch_file_names,
-        verbose=False):
+def simplify_ztz(sentence, verbose=False):
     """
-    This method does the same thing as the method
-    `simplifying.simplify_batch_of_m_scripts()` but for the case
-    `ZTZ_SIMPLIFIER = "simp_openie6"`
+    This method simplifies the sentence `sentence`. It returns a list of
+    simple sentences extracted from the input sentence.
 
     Parameters
     ----------
-    in_dir: str
-    out_dir: str
-    batch_file_names: list[str]
+    sentence: str
     verbose: bool
+    kwargs: dict[]
 
     Returns
     -------
-    None
+    list[str]
 
     """
-    # assume directories `openie6` and `mappa_mundi`
-    # live side by side inside a bigger folder
-    # and that the cwd is `mappa_mundi`
+
     with open("../openie6_sentences.txt", "w") as f:
         f.write(sentence)
 
@@ -65,5 +59,5 @@ def openie6_simplify_batch_of_m_scripts(
     with open("../openie6_predictions.txt.conj", "r") as f:
         for line in f:
             ztz_list.append(line)
-    # ztz_list has original sentence in first row
+    # ztz_list has full sentence in first row
     return ztz_list[1:]

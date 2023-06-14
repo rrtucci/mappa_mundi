@@ -20,12 +20,12 @@ DAG_RD_DIR = "m_script_dag_atlas_rd"
 # ZTZ_SIMPLIFIER = "simp_spacy_claucy"
 # ZTZ_SIMPLIFIER = "simp_spacy1"
 # ZTZ_SIMPLIFIER = "simp_spacy2"
-# ZTZ_SIMPLIFIER = "simp_spacy3"
+# ZTZ_SIMPLIFIER = "simp_spacy3" # originally recommended
 ZTZ_SIMPLIFIER = "simp_openie6"  # recommended
 
 # SIMI_DEF = "similarity_spacy"
 # SIMI_DEF = "similarity_spacy2"
-# SIMI_DEF = "similarity_nltk"
+# SIMI_DEF = "similarity_nltk" # originally recommended
 SIMI_DEF = "similarity_bert"  # recommended
 
 # good threshold values gleaned from similarity.py examples
