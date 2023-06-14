@@ -16,7 +16,7 @@ nlp = spacy.load('en_core_web_sm')
 
 # sentence = "He eats cheese, but he won't eat ice cream."
 
-def simplify_ztz(sentence, verbose=False, **kwargs):
+def simplify_ztz(sentence, verbose=False):
     """
     This method simplifies the sentence `sentence`. It returns a list of
     simple sentences extracted from the input sentence.

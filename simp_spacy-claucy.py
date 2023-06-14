@@ -16,7 +16,7 @@ nlp = spacy.load('en_core_web_sm')
 claucy.add_to_pipe(nlp)
 
 
-def simplify_ztz(sentence, verbose=False, **kwargs):
+def simplify_ztz(sentence, verbose=False):
     """
     This method simplifies the sentence `sentence`. It returns a list of
     simple sentences extracted from the input sentence.

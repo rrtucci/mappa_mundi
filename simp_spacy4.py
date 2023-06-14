@@ -77,7 +77,7 @@ def compound_to_simple(sentence):
     clauses_text = [clause.text for clause in sentence_clauses]
     return clauses_text
 
-def simplify_ztz(sentence, verbose=False, **kwargs):
+def simplify_ztz(sentence, verbose=False):
     """
     This method simplifies the sentence `sentence`. It returns a list of
     simple sentences extracted from the input sentence.

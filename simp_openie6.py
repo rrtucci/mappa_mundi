@@ -21,7 +21,7 @@ Refs:
 import subprocess
 from my_globals import *
 
-def simplify_ztz(sentence, verbose=False, **kwargs):
+def simplify_ztz(sentence, verbose=False):
     """
     This method simplifies the sentence `sentence`. It returns a list of
     simple sentences extracted from the input sentence.
@@ -37,7 +37,9 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     list[str]
 
     """
-
+    # assume directories `openie6` and `mappa_mundi`
+    # are live side by side inside a bigger folder
+    # and that the cwd is `mappa_mundi`
     with open("../openie6_sentences.txt", "w") as f:
         f.write(sentence)
 
@@ -62,5 +64,5 @@ def simplify_ztz(sentence, verbose=False, **kwargs):
     with open("../openie6_predictions.txt.conj", "r") as f:
         for line in f:
             ztz_list.append(line)
-    # ztz_list has full sentence in first row
+    # ztz_list has original sentence in first row
     return ztz_list[1:]
