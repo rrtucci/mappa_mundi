@@ -99,6 +99,7 @@ def make_all_sentences_file(in_dir, batch_file_names):
     with open("all_sentences.txt", "w") as big_f:
         for fname in batch_file_names:
             in_path = in_dir + '/' + fname
+            print("bbng", in_path)
             with open(in_path, "r") as f:
                 m_script_starting_line_nums.append(cum_line_num)
                 f_len = sum(1 for _ in f)
