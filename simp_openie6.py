@@ -49,14 +49,14 @@ def openie6_simplify_batch_of_m_scripts(
         make_all_sentences_file(in_dir= in_dir,
                                 batch_file_names=batch_file_names)
     gpu_command = \
-        "cd openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID " \
-        "CUDA_VISIBLE_DEVICES=0 " \
-        "PYTHONPATH=imojie:imojie/allennlp:imojie" \
-        "/pytorch_transformers:$PYTHONPATH python run.py " \
-        "--save models/conj_model --mode predict " \
-        "--inp ../all_sentences.txt --batch_size 1 " \
-        "--model_str bert-large-cased --task conj " \
-        "--gpus 1 --out ../all_predictions.txt"
+        r"cd openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID " \
+        r"CUDA_VISIBLE_DEVICES=0 " \
+        r"PYTHONPATH=imojie:imojie/allennlp:imojie" \
+        r"/pytorch_transformers:$PYTHONPATH python run.py " \
+        r"--save models/conj_model --mode predict " \
+        r"--inp ../all_sentences.txt --batch_size 1 " \
+        r"--model_str bert-large-cased --task conj " \
+        r"--gpus 1 --out ../all_predictions.txt"
 
     cpu_command = gpu_command.replace("--gpus 1", "--gpus 0")
 
