@@ -42,7 +42,7 @@ def openie6_simplify_batch_of_m_scripts(
     """
     # assume directories `openie6` and `mappa_mundi`
     # live side by side inside a bigger folder X
-    # and that the cwd X
+    # and that the cwd is X
 
     m_script_starting_line_nums = \
         make_all_sentences_file(in_dir='mappa_mundi' + "/" + in_dir,
@@ -113,14 +113,14 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
     This internal method reads the file `all_predictions.txt.conj` and
     translates it into a new file called `all_predictions_in_mm.txt`. The
     input file is in the format of openie6 extractions output and the output
-    one is in the mappa mundi (mm) simp format.
+    file is in the mappa mundi (mm) simp format.
 
-    openie6 extractions output format: one sentence or empty space per line.
-    Groups separated by empty line. Each group consists of the original
-    sentence followed by the extraction sentences.
+    openie6 extractions output format: one sentence or empty line ("row
+    gap") per line. Groups separated by empty line. Each group consists of
+    the original sentence followed by the extraction sentences.
 
-    mm simp format: one sentence per line. No empty lines. Each line has all
-    the extractions from a single sentence, separated by ZTZ_SEPARATOR.
+    mm simp format: one sentence per line. No row gaps. Each line has all
+    the extractions from the original sentence, separated by ZTZ_SEPARATOR.
 
     Parameters
     ----------
@@ -135,23 +135,27 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
     with open(in_fname, "r") as in_file:
         with open(out_fname, "w") as out_file:
             in_parts = []
-            original_ztz = True
-            for line in in_file:
-                if line:
-                    if not original_ztz:
-                        in_parts.append(line)
+            on_original_ztz = True
+            for line_num, line in enumerate(in_file):
+                # print("llko", line)
+                on_row_gap = (line.strip()=='')
+                if not on_row_gap:
+                    if not on_original_ztz:
+                        in_parts.append(line.strip())
+                    else:
+                        on_original_ztz = False
                 else:
-                    original_ztz = True
                     out_file.write(ZTZ_SEPARATOR.join(in_parts) + "\n")
                     in_parts = []
+                    on_original_ztz = True
 
 
 def make_m_scripts_simp_dir(batch_file_names,
                             m_script_starting_line_nums):
     """
     This internal method reads the file `all_predictions_in_mm.txt` and it
-    uses that to create a new directory populated by files with the names of
-    file names in list `batch_file_names'.
+    uses that to create a new directory populated by files with the names in
+    list `batch_file_names`.
 
     Parameters
     ----------
@@ -176,3 +180,13 @@ def make_m_scripts_simp_dir(batch_file_names,
             f.write(line)
         if f:
             f.close()
+
+
+if __name__ == "__main__":
+    def main():
+        translate_predictions_file_from_openie6_to_mm(
+            "openie6_translation_test.txt",
+            "openie6_test_answer.txt")
+
+
+    main()

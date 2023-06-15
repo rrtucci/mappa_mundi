@@ -33,7 +33,7 @@ SIMI_DEF = "similarity_bert"  # recommended
 # SIMI_THRESHOLD = 2.69 for SpaCy
 SIMI_THRESHOLD = 2.5  # for bert, recommended
 
-ZTZ_SEPARATOR = "[%@!]"
+ZTZ_SEPARATOR = " [%@!] "
 
 CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 
