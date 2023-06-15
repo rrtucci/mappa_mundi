@@ -61,9 +61,9 @@ def openie6_simplify_batch_of_m_scripts(
     cpu_command = gpu_command.replace("--gpus 1", "--gpus 0")
 
     if USE_GPU:
-        subprocess.Popen(gpu_command, shell=True)
+        os.system(gpu_command)
     else:
-        subprocess.Popen(cpu_command, shell=True)
+        os.system(cpu_command)
 
     translate_predictions_file_from_openie6_to_mm(
         in_fname="all_predictions.txt.conj",
