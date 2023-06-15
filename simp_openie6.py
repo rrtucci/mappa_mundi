@@ -45,7 +45,7 @@ def openie6_simplify_batch_of_m_scripts(
     # and that the cwd is X
 
     m_script_starting_line_nums = \
-        make_all_sentences_file(in_dir= in_dir
+        make_all_sentences_file(in_dir= in_dir,
                                 batch_file_names=batch_file_names)
     gpu_command = \
         "cd openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID " \
