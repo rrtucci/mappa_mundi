@@ -141,19 +141,18 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
     with open(in_fname, "r") as in_file:
         with open(out_fname, "w") as out_file:
             in_parts = []
-            on_original_ztz = True
+            prev_line_is_empty = True
             for line in in_file:
-                # print("llko", line)
-                on_row_gap = (line.strip()=='')
-                if not on_row_gap:
-                    if not on_original_ztz:
-                        in_parts.append(line.strip())
-                    else:
-                        on_original_ztz = False
+                if line.strip():
+                    in_parts.append(line.strip())
+                    prev_line_is_empty = False
                 else:
-                    out_file.write(ZTZ_SEPARATOR.join(in_parts) + "\n")
-                    in_parts = []
-                    on_original_ztz = True
+                    if not prev_line_is_empty:
+                        if len(in_parts) > 1:
+                            in_parts = in_parts[1:]
+                        if len(in_parts)>0:
+                            out_file.write(ZTZ_SEPARATOR.join(in_parts) + "\n")
+                            in_parts = []
 
 
 def make_m_scripts_simp_dir(batch_file_names,
