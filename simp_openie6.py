@@ -17,6 +17,7 @@ Refs:
 import subprocess
 import os
 from my_globals import *
+from utils import my_listdir
 
 
 def openie6_simplify_batch_of_m_scripts(
@@ -99,14 +100,17 @@ def make_all_sentences_file(in_dir, batch_file_names):
     with open("all_sentences.txt", "w") as big_f:
         for fname in batch_file_names:
             in_path = in_dir + '/' + fname
-            print("bbng", in_path)
+            # print("bbng", in_path)
             with open(in_path, "r") as f:
+                # print("hhji", cum_line_num)
                 m_script_starting_line_nums.append(cum_line_num)
-                f_len = sum(1 for _ in f)
-                cum_line_num += f_len
+                f_len = 0
                 for line in f:
-                    print("llmk", line)
+                    f_len +=1
+                    # print("llmk", line)
                     big_f.write(line)
+                cum_line_num += f_len
+                # print("nnmj", f_len)
     return m_script_starting_line_nums
 
 
@@ -186,6 +190,10 @@ def make_m_scripts_simp_dir(batch_file_names,
 
 if __name__ == "__main__":
     def main():
+        in_dir = "short_stories_spell"
+        batch_file_names = my_listdir(in_dir)
+        make_all_sentences_file(in_dir=in_dir,
+                                batch_file_names=batch_file_names)
         translate_predictions_file_from_openie6_to_mm(
             "openie6_translation_test.txt",
             "openie6_test_answer.txt")
