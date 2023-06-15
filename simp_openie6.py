@@ -105,6 +105,7 @@ def make_all_sentences_file(in_dir, batch_file_names):
                 f_len = sum(1 for _ in f)
                 cum_line_num += f_len
                 for line in f:
+                    print("llmk", line)
                     big_f.write(line)
     return m_script_starting_line_nums
 
@@ -137,7 +138,7 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
         with open(out_fname, "w") as out_file:
             in_parts = []
             on_original_ztz = True
-            for line_num, line in enumerate(in_file):
+            for line in in_file:
                 # print("llko", line)
                 on_row_gap = (line.strip()=='')
                 if not on_row_gap:
