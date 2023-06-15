@@ -54,7 +54,7 @@ def openie6_simplify_batch_of_m_scripts(
         r"PYTHONPATH=imojie:imojie/allennlp:imojie" \
         r"/pytorch_transformers:$PYTHONPATH python run.py " \
         r"--save models/conj_model --mode predict " \
-        r"--inp ../sentences.txt --batch_size 1 " \
+        r"--inp ../all_sentences.txt --batch_size 1 " \
         r"--model_str bert-large-cased --task conj " \
         r"--gpus 1 --out ../all_predictions.txt"
 
