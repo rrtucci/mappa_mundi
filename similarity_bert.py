@@ -39,8 +39,9 @@ def ztz_similarity(ztz1, ztz2, **kwargs):
 
     prob = util.pytorch_cos_sim(embedding_1, embedding_2).item()
     if prob < 0:
-        print("neg. prob.=", prob)
-        print(ztz1)
-        print(ztz2)
+        # print("neg. prob.=", prob)
+        # print(ztz1)
+        # print(ztz2)
+        prob = 0
     odds = prob / (1 - prob) if prob < 1 else 1e5
     return round(odds, 3)
