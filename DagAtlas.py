@@ -13,7 +13,7 @@ simi = imp.import_module(SIMI_DEF)
 
 class DagAtlas:
     """
-    This class reads movie script txt files from the `simp_dir` directory (
+    This class reads movie script txt files from the `out_dir` directory (
     simplified movie scripts) and creates a pickled file for each movie
     script. Each pickled file contains a Dag object for one movie. `dag_dir`
     (called the DAG atlas) is the directory containing the pickled files.

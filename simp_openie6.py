@@ -46,7 +46,7 @@ def openie6_simplify_batch_of_m_scripts(
     # and that the cwd is X
 
     m_script_starting_line_nums = \
-        make_all_sentences_file(in_dir= in_dir,
+        make_all_sentences_file(in_dir=in_dir,
                                 batch_file_names=batch_file_names)
     gpu_command = \
         r"cd openie6 && CUDA_DEVICE_ORDER=PCI_BUS_ID " \
@@ -69,7 +69,8 @@ def openie6_simplify_batch_of_m_scripts(
         in_fname="all_predictions.txt.conj",
         out_fname="all_predictions_in_mm.txt")
 
-    make_m_scripts_simp_dir(batch_file_names,
+    make_m_scripts_simp_dir(out_dir,
+                            batch_file_names,
                             m_script_starting_line_nums)
 
     os.remove("all_sentences.txt")
@@ -106,7 +107,7 @@ def make_all_sentences_file(in_dir, batch_file_names):
                 m_script_starting_line_nums.append(cum_line_num)
                 f_len = 0
                 for line in f:
-                    f_len +=1
+                    f_len += 1
                     # print("llmk", line)
                     big_f.write(line)
                 cum_line_num += f_len
@@ -150,20 +151,22 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
                     if not prev_line_is_empty:
                         if len(in_parts) > 1:
                             in_parts = in_parts[1:]
-                        if len(in_parts)>0:
+                        if len(in_parts) > 0:
                             out_file.write(ZTZ_SEPARATOR.join(in_parts) + "\n")
                             in_parts = []
 
 
-def make_m_scripts_simp_dir(batch_file_names,
+def make_m_scripts_simp_dir(out_dir,
+                            batch_file_names,
                             m_script_starting_line_nums):
     """
     This internal method reads the file `all_predictions_in_mm.txt` and it
-    uses that to create a new directory populated by files with the names in
-    list `batch_file_names`.
+    uses that to create a new directory called `out_dir` populated by files
+    with the names in list `batch_file_names`.
 
     Parameters
     ----------
+    out_dir: str
     batch_file_names: list[str]
     m_script_starting_line_nums: list[int]
 
@@ -172,10 +175,9 @@ def make_m_scripts_simp_dir(batch_file_names,
     None
 
     """
-    out_dir = "m_script_simp"
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    with open("all_sentences_in_mm.txt", "r") as big_f:
+    with open("all_predictions_in_mm.txt", "r") as big_f:
         m_script_num = -1
         for line_num, line in enumerate(big_f):
             if line_num in m_script_starting_line_nums:
