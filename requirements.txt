@@ -13,3 +13,5 @@ requests~=2.28.2
 beautifulsoup4~=4.11.1
 python-slugify~=8.0.1
 # claucy~=0.0.2.0
+pyspellchecker
+sentence-transformers

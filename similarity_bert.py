@@ -38,6 +38,7 @@ def ztz_similarity(ztz1, ztz2, **kwargs):
     embedding_2 = model.encode(ztz2, convert_to_tensor=True)
 
     prob = util.pytorch_cos_sim(embedding_1, embedding_2).item()
-    assert prob >= 0
+    if prob < 0:
+        prob = 0
     odds = prob / (1 - prob) if prob < 1 else 1e5
     return round(odds, 3)
