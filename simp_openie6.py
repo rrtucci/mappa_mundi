@@ -172,6 +172,9 @@ def make_m_scripts_simp_dir(batch_file_names,
     None
 
     """
+    out_dir = "m_script_simp"
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
     with open("all_sentences_in_mm.txt", "r") as big_f:
         m_script_num = -1
         for line_num, line in enumerate(big_f):
@@ -180,7 +183,7 @@ def make_m_scripts_simp_dir(batch_file_names,
                     f.close()
                 m_script_num += 1
                 fname = batch_file_names[m_script_num]
-                out_path = "m_scripts_simp" + "/" + fname
+                out_path = out_dir + "/" + fname
                 f = open(out_path, "w")
             f.write(line)
         if f:

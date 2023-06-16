@@ -93,4 +93,5 @@ def my_listdir(dir_):
     # listdir includes hidden files like .ipynb_checkpoints
     checkpoints = dir_ + "/" + ".ipynb_checkpoints"
     shutil.rmtree(checkpoints, ignore_errors=True)
-    return os.listdir(dir_)
+    # os.listdir list in arbitrary order!
+    return sorted(os.listdir(dir_))
