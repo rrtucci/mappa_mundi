@@ -179,6 +179,7 @@ def make_m_scripts_simp_dir(out_dir,
         os.makedirs(out_dir)
     with open("all_predictions_in_mm.txt", "r") as big_f:
         m_script_num = -1
+        f = None
         for line_num, line in enumerate(big_f):
             if line_num in m_script_starting_line_nums:
                 if f:
