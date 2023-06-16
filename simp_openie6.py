@@ -74,7 +74,7 @@ def openie6_simplify_batch_of_m_scripts(
                             m_script_starting_line_nums)
 
     os.remove("all_sentences.txt")
-    os.remove("all_predictions.txt")
+    os.remove("all_predictions.txt.conj")
     os.remove("all_predictions_in_mm.txt")
 
 
