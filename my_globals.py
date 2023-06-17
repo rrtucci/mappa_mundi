@@ -13,6 +13,8 @@ SPELL_DIR = "m_scripts_spell"
 SPELL_RD_DIR = "m_scripts_spell_rd"
 SIMP_DIR = "m_scripts_simp"
 SIMP_RD_DIR = "m_scripts_simp_rd"
+POST_CLEAN_DIR = "m_scripts_post_clean"
+POST_CLEAN_RD_DIR = "m_scripts_post_clean_rd"
 DAG_DIR = "m_script_dag_atlas"
 DAG_RD_DIR = "m_script_dag_atlas_rd"
 
@@ -33,7 +35,7 @@ SIMI_DEF = "similarity_bert"  # recommended
 # SIMI_THRESHOLD = 2.69 for SpaCy
 SIMI_THRESHOLD = 2.5  # for bert, recommended
 
-ZTZ_SEPARATOR = " [%@!] "
+ZTZ_SEPARATOR = "[%@!]"
 
 CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
 

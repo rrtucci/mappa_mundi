@@ -34,7 +34,6 @@ def simplify_ztz(sentence, verbose=False):
     ----------
     sentence: str
     verbose: bool
-    kwargs: dict[]
 
     Returns
     -------

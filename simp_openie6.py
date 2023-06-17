@@ -123,7 +123,7 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
     file is in the mappa mundi (mm) simp format.
 
     openie6 extractions output format: one sentence or empty line ("row
-    gap") per line. Groups separated by empty line. Each group consists of
+    gap") per line. Groups separated by empty lines. Each group consists of
     the original sentence followed by the extraction sentences.
 
     mm simp format: one sentence per line. No row gaps. Each line has all
@@ -152,7 +152,8 @@ def translate_predictions_file_from_openie6_to_mm(in_fname, out_fname):
                         if len(in_parts) > 1:
                             in_parts = in_parts[1:]
                         if len(in_parts) > 0:
-                            out_file.write(ZTZ_SEPARATOR.join(in_parts) + "\n")
+                            xx = " " + ZTZ_SEPARATOR + " "
+                            out_file.write(xx.join(in_parts) + "\n")
                             in_parts = []
 
 
