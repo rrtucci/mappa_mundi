@@ -1,14 +1,13 @@
 from Dag import *
+from BatchSimilarity import *
 from utils import *
 import sys
 from itertools import product
 from my_globals import *
-import importlib as imp
+
 import pickle as pik
 from time import time
 from sentence_transformers import SentenceTransformer
-
-simi = imp.import_module(SIMI_DEF)
 
 
 class DagAtlas:
@@ -139,14 +138,17 @@ class DagAtlas:
 
         nd1_nd2_bridges = []
         bridge_count = 0
-        for nd1, nd2 in product(dag1.nodes, dag2.nodes):
+        all_ztz2 = [node_to_simple_ztz2[nd] for nd in dag2.nodes]
+        for nd1 in dag1.nodes:
             ztz1 = node_to_simple_ztz1[nd1]
-            ztz2 = node_to_simple_ztz2[nd2]
-            if simi.ztz_similarity(ztz1, ztz2, model=self.model) > \
-                    SIMI_THRESHOLD:
-                nd1_nd2_bridges.append((nd1, nd2))
-                bridge_count += 1
-                print(bridge_count, "bridges")
+            one_to_many = BatchSimilarity(ztz1, all_ztz2,
+                                          model=self.model)
+            for nd2 in dag2.nodes:
+                ztz2 = node_to_simple_ztz2[nd2]
+                if one_to_many.simi(ztz2) > SIMI_THRESHOLD:
+                    nd1_nd2_bridges.append((nd1, nd2))
+                    bridge_count += 1
+                    print(bridge_count, "bridges")
         ran = range(len(nd1_nd2_bridges))
         for i, j in product(ran, ran):
             if i < j:

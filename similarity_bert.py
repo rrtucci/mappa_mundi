@@ -12,8 +12,7 @@ Ref:
 3. https://towardsdatascience.com/bert-for-measuring-text-similarity
 -eec91c6bf9e1
 """
-
-from sentence_transformers import SentenceTransformer, util
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 def ztz_similarity(ztz1, ztz2, **kwargs):
@@ -34,10 +33,10 @@ def ztz_similarity(ztz1, ztz2, **kwargs):
 
     """
     model = kwargs['model']
-    embedding_1 = model.encode(ztz1, convert_to_tensor=True)
-    embedding_2 = model.encode(ztz2, convert_to_tensor=True)
+    embedding_1 = model.encode(ztz1)
+    embedding_2 = model.encode(ztz2)
 
-    prob = util.pytorch_cos_sim(embedding_1, embedding_2).item()
+    prob = cosine_similarity([embedding_1], [embedding_2])[0, 0]
     if prob < 0:
         # print("neg. prob.=", prob)
         # print(ztz1)
