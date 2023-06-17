@@ -237,7 +237,7 @@ class DagAtlas:
 
 if __name__ == "__main__":
     def main1():
-        simp_dir = "short_stories_simp"
+        simp_dir = "short_stories_post_clean"
         dag_dir = "short_stories_dag_atlas"
         atlas = DagAtlas(simp_dir, dag_dir)
         all_titles = [file_name[:-len(".txt")] \
@@ -249,7 +249,8 @@ if __name__ == "__main__":
     def main2():
         remove_dialog = False
         atlas = DagAtlas(
-            simp_dir=SIMP_DIR if not remove_dialog else SIMP_RD_DIR,
+            simp_dir=POST_CLEAN_DIR if not remove_dialog else
+                POST_CLEAN_RD_DIR,
             dag_dir=DAG_DIR)
         all_titles = [file_name[:-len(".txt")] \
                       for file_name in my_listdir(SIMP_DIR)]

@@ -111,17 +111,18 @@ def get_post_cleaned_token_txt(token):
     x = token.text
     # remove all punctuation marks
     x = re.sub(r'[^\w\s]', '', x)
-    if token.ent_type_:
-        # replace named entities by their labels
-        # x = token.ent_type_
 
-        # remove named entities
-        x = ""
-    if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
-        x = ""
-    if token.pos_ not in RETAINED_POS:
-        # remove stop words, except RETAINED_POS
-        x = ""
+    # if token.ent_type_:
+    #     # replace named entities by their labels
+    #     # x = token.ent_type_
+    #
+    #     # remove named entities
+    #     x = ""
+    # if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
+    #     x = ""
+    # if token.pos_ not in RETAINED_POS:
+    #     x = ""
+
     # remove single character tokens
     if len(x.strip()) == 1:
         x = ""
@@ -236,5 +237,5 @@ if __name__ == "__main__":
             in_dir, out_dir,
             batch_file_names)
 
-    # main1()
-    # main2()
+    main1()
+    main2()

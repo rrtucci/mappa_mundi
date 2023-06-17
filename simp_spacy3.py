@@ -113,7 +113,6 @@ def get_simplified_token_txt(token):
     if token.is_stop and (token.pos_ not in RETAINED_STOPWORD_POS):
         x = ""
     if token.pos_ not in RETAINED_POS:
-        # remove stop words, except RETAINED_POS
         x = ""
     # remove single character tokens
     if len(x.strip()) == 1:
