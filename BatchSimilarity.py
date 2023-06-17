@@ -13,7 +13,7 @@ class BatchSimilarity:
         self.all_ztz2 = all_ztz2
         self.model = model
         if model:
-            sent_embeddings = model.encode(ztz1 + all_ztz2)
+            sent_embeddings = model.encode([ztz1] + all_ztz2)
             self.cos_vec = cosine_similarity([sent_embeddings[0]],
                               sent_embeddings[1:])[0]
 
