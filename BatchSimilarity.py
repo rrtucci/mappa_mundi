@@ -21,7 +21,7 @@ class BatchSimilarity:
         if not self.model:
             return simi.ztz_similarity(self.ztz1, ztz2)
         else:
-            i = ztz2.index(self.all_ztz2)
+            i = self.all_ztz2.index(ztz2)
             prob = self.cos_vec[i]
             if prob < 0:
                 # print("neg. prob.=", prob)
