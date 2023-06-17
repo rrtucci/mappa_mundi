@@ -33,7 +33,7 @@ SIMI_DEF = "similarity_bert"  # recommended
 # good threshold values gleaned from similarity.py examples
 # SIMI_THRESHOLD = 2.2 for NLTK
 # SIMI_THRESHOLD = 2.69 for SpaCy
-SIMI_THRESHOLD = 2.5  # for bert, recommended
+SIMI_THRESHOLD = 2  # for bert, recommended
 
 ZTZ_SEPARATOR = "[%@!]"
 
