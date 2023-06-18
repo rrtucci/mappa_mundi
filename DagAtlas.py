@@ -138,17 +138,15 @@ class DagAtlas:
 
         nd1_nd2_bridges = []
         bridge_count = 0
-        all_ztz2 = [node_to_simple_ztz2[nd] for nd in dag2.nodes]
-        for nd1 in dag1.nodes:
-            ztz1 = node_to_simple_ztz1[nd1]
-            one_to_many = BatchSimilarity(ztz1, all_ztz2,
-                                          model=self.model)
-            for nd2 in dag2.nodes:
-                ztz2 = node_to_simple_ztz2[nd2]
-                if one_to_many.simi(ztz2) > SIMI_THRESHOLD:
-                    nd1_nd2_bridges.append((nd1, nd2))
-                    bridge_count += 1
-                    print(bridge_count, "bridges")
+        batch_simi = BatchSimilarity(dag1, dag2,
+                                    node_to_simple_ztz1,
+                                    node_to_simple_ztz2,
+                                    model=self.model)
+        for nd1, nd2 in product(dag1.nodes, dag2.nodes):
+            if batch_simi.simi(nd1, nd2) > SIMI_THRESHOLD:
+                nd1_nd2_bridges.append((nd1, nd2))
+                bridge_count += 1
+                print(bridge_count, "bridges")
         ran = range(len(nd1_nd2_bridges))
         for i, j in product(ran, ran):
             if i < j:
