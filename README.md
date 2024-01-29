@@ -16,6 +16,8 @@ a DAG Atlas.
 I discuss the software in
 detail [here](https://github.com/rrtucci/mappa_mundi/blob/master/white_paper/mappa_mundi.pdf).
 
+![LLM add-ons](pics/llm-addons.jpg)
+
 ![My First Big Atlas](pics/my_first_big_atlas.jpeg)
 
 
