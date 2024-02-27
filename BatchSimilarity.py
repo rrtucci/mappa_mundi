@@ -2,7 +2,7 @@ import importlib as imp
 from my_globals import *
 from Dag import *
 
-simi = imp.import_module(SIMI_DEF)
+simi_def = imp.import_module(SIMI_DEF)
 from sklearn.metrics.pairwise import cosine_similarity
 
 
@@ -74,7 +74,7 @@ class BatchSimilarity:
         ztz1 = self.node_to_simple_ztz1[nd1]
         ztz2 = self.node_to_simple_ztz2[nd2]
         if not self.model:
-            return simi.ztz_similarity(ztz1, ztz2)
+            return simi_def.ztz_similarity(ztz1, ztz2)
         else:
             k1 = self.all_ztz1.index(ztz1)
             k2 = self.all_ztz2.index(ztz2)

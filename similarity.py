@@ -21,7 +21,7 @@ from my_globals import *
 import importlib as imp
 from sentence_transformers import SentenceTransformer
 
-simi = imp.import_module(SIMI_DEF)
+simi_def = imp.import_module(SIMI_DEF)
 
 
 def print_simi_12(str1, str2, **kwargs):
@@ -41,8 +41,8 @@ def print_simi_12(str1, str2, **kwargs):
     print()
     print("1.", str1)
     print("2.", str2)
-    simi12 = simi.ztz_similarity(str1, str2, **kwargs)
-    simi21 = simi.ztz_similarity(str2, str1, **kwargs)
+    simi12 = simi_def.ztz_similarity(str1, str2, **kwargs)
+    simi21 = simi_def.ztz_similarity(str2, str1, **kwargs)
     print("simi(1, 2)=", str(simi12))
     print("simi(2, 1)=", str(simi21))
 
