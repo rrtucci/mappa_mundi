@@ -179,7 +179,7 @@ class Dag:
         """
         high_prob_arrows = []
         for arrow in self.arrows:
-            prob_acc = get_prob_acc(self.arrow_to_acc_rej_nums[arrow])
+            prob_acc = get_prob_acc(*self.arrow_to_acc_rej_nums[arrow])
             if prob_acc >= prob_acc_threshold:
                 high_prob_arrows.append(arrow)
 
