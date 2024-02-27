@@ -28,7 +28,7 @@ class Dag:
 
     """
 
-    def __init__(self, m_title, simp_dir, preconnected=False):
+    def __init__(self, m_title, simp_dir):
         """
         Constructor
 
@@ -39,9 +39,6 @@ class Dag:
         simp_dir: str
             the directory in which simplified files are stored, and from
             which objects of this class are constructed.
-        preconnected: bool
-            preconnected=True iff upon creation, arrows are defined from
-            every node at time `t-1` to every node at time `t`.
         """
         self.m_title = m_title
         path = simp_dir + "/" + m_title + ".txt"
@@ -54,20 +51,7 @@ class Dag:
                 for place in range(len(ztz_list)):
                     self.nodes.append(Node(time, place))
         self.arrows = []
-        self.arrow_to_reps = {}
-        if preconnected:
-            for node in self.nodes:
-                prev_nodes = []
-                for prev_nd in self.nodes:
-                    if prev_nd.time < node.time:
-                        if prev_nd.time == node.time - 1:
-                            prev_nodes.append(prev_nd)
-                    else:
-                        break
-                for prev_nd in prev_nodes:
-                    new_arrow = (prev_nd, node)
-                    self.arrows.append(new_arrow)
-                    self.arrow_to_reps[new_arrow] = 1
+        self.arrow_to_acc_rej_probs = {}
 
     def save_self(self, dag_dir):
         """
@@ -87,15 +71,16 @@ class Dag:
         with open(path, "wb") as f:
             pik.dump(self, f, protocol=pik.HIGHEST_PROTOCOL)
 
-    def update_arrow(self, arrow, change):
+    def update_arrow(self, arrow, accepted):
         """
-        This method changes the weight (i.e., number of repetitions) of
-        arrow `arrow` by adding to that weight the quantity `change`.
+        This method changes the tuple (num_accepted, num_rejected) of
+        `arrow`. If accepted=True, num_accepted is increased by one. If
+        accepted=False, num_rejected is increased by one.
 
         Parameters
         ----------
         arrow: tuple[Node, Node]
-        change: float
+        accepted: bool
 
         Returns
         -------
@@ -104,15 +89,11 @@ class Dag:
         """
         if arrow not in self.arrows:
             self.arrows.append(arrow)
-            self.arrow_to_reps[arrow] = change
+            self.arrow_to_acc_rej_probs[arrow] = [0, 0]
+        if accepted:
+            self.arrow_to_acc_rej_probs[arrow][0] += 1
         else:
-            self.arrow_to_reps[arrow] += change
-        # change can be negative.
-        # negative changes can accumulate to
-        # make arrow_to_reps[arrow] <= 0
-        if self.arrow_to_reps[arrow] <= 0:
-            self.arrows.remove(arrow)
-            del self.arrow_to_reps[arrow]
+            self.arrow_to_acc_rej_probs[arrow][1] += 1
 
     def build_node_to_clean_ztz_dict(self, clean_dir):
         """
@@ -180,40 +161,43 @@ class Dag:
 
         return nd_to_simp_ztz
 
-    def build_high_reps_arrows(self, reps_threshold):
+    def build_high_prob_acc_arrows(self, prob_acc_threshold):
         """
         This method builds from scratch and returns a list of all arrows
-        whose weight (i.e., number of repetitions) is >= `reps_threshold`.
+        whose weight (i.e., probability of acceptance) is >=
+        `prob_acc_threshold`.
 
         Parameters
         ----------
-        reps_threshold: float
+        prob_acc_threshold: float
 
         Returns
         -------
         list[tuple[Node, Node]]
 
         """
-        high_reps_arrows = []
+        high_prob_arrows = []
         for arrow in self.arrows:
-            if self.arrow_to_reps[arrow] >= reps_threshold:
-                high_reps_arrows.append(arrow)
+            num_acc, num_rej = self.arrow_to_acc_rej_probs[arrow]
+            prob_acc = num_acc / (num_acc + num_rej)
+            if prob_acc >= prob_acc_threshold:
+                high_prob_arrows.append(arrow)
 
-        return high_reps_arrows
+        return high_prob_arrows
 
-    def print_map_legend(self, clean_dir, simp_dir, reps_threshold):
+    def print_map_legend(self, clean_dir, simp_dir, prob_acc_threshold):
         """
         This method prints the DAG Rosetta stone (map legend).
 
         For each node labeled `( time, place)`, this method prints the
         simplified clause ( i.e., simplified sentence) in line `time` of the
-        simplified file, after a number `place` of asterisks. It also prints
-        the original sentence from which that simplified clause came from.
-        The full sentence is preceded by the label `(full)` and the
+        simplified file, after a number `place` of separator-tokens. It also
+        prints the original sentence from which that simplified clause came
+        from. The full sentence is preceded by the label `(full)` and the
         simplified sentence by the label `(part)`.
 
         It only prints the `(full)` and `(part)` for those nodes that appear
-        in the DAG, after all arrows with weight less than `reps_threshold`
+        in the DAG, after all arrows with weight less than `prob_acc_threshold`
         are removed.
 
         Parameters
@@ -222,17 +206,17 @@ class Dag:
             directory of movie scripts after cleaning
         simp_dir: str
             directory of movie scripts after simplification
-        reps_threshold: float
+        prob_acc_threshold: float
 
         Returns
         -------
         None
 
         """
-        hr_arrows = self.build_high_reps_arrows(reps_threshold)
+        hr_arrows = self.build_high_prob_acc_arrows(prob_acc_threshold)
         print("MAP LEGEND")
         print("title:", self.m_title)
-        print("arrow repetitions threshold:", reps_threshold)
+        print("arrow repetitions threshold:", prob_acc_threshold)
         print("number of arrows shown:", len(hr_arrows))
         print("number of arrows dropped:", len(self.arrows) - len(hr_arrows))
 
@@ -279,14 +263,14 @@ class Dag:
         else:
             open_image("tempo.png").show()
 
-    def draw(self, reps_threshold, jupyter=False):
+    def draw(self, prob_acc_threshold, jupyter=False):
         """
         This method draws the graph for self. Only arrows with a weight (
-        i.e., number of repetitions) >= `reps_threshold` are drawn.
+        i.e., number of repetitions) >= `prob_acc_threshold` are drawn.
 
         Parameters
         ----------
-        reps_threshold: float
+        prob_acc_threshold: float
         jupyter: bool
 
         Returns
@@ -294,14 +278,15 @@ class Dag:
         None
 
         """
-        hr_arrows = self.build_high_reps_arrows(reps_threshold)
+        hr_arrows = self.build_high_prob_acc_arrows(prob_acc_threshold)
 
         dot = "digraph {\n"
         for arrow in hr_arrows:
-            reps = round(self.arrow_to_reps[arrow], 2)
+            num_acc, num_rej = self.arrow_to_acc_rej_probs[arrow]
+            prob_acc = round(num_acc/(num_acc + num_rej), 2)
             dot += '"' + node_str(arrow[0]) + '"' + "->" + \
                    '"' + node_str(arrow[1]) + '"' + \
-                   ' [label=' + str(reps) + "];\n"
+                   ' [label=' + str(prob_acc) + "];\n"
         dot += 'labelloc="b";\n'
         dot += 'label="' + self.m_title + '";\n'
         dot += "}\n"
@@ -310,7 +295,7 @@ class Dag:
 
 
 if __name__ == "__main__":
-    def main1(reps_threshold, draw):
+    def main1(prob_acc_threshold, draw):
         dag_dir = "short_stories_dag_atlas"
         simp_dir = "short_stories_simp"
         clean_dir = "short_stories_clean"
@@ -326,14 +311,15 @@ if __name__ == "__main__":
         for dag in dags:
             print("==================================")
             print(dag.m_title)
-            hreps_arrows = dag.build_high_reps_arrows(
-                reps_threshold)
-            print({arrow_str(arrow): dag.arrow_to_reps[arrow] \
+            hreps_arrows = dag.build_high_prob_acc_arrows(
+                prob_acc_threshold)
+            print({arrow_str(arrow):
+                       dag.arrow_to_acc_rej_probs[arrow] \
                    for arrow in hreps_arrows})
             print()
             if draw:
-                dag.draw(reps_threshold)
-                dag.print_map_legend(clean_dir, simp_dir, reps_threshold)
+                dag.draw(prob_acc_threshold)
+                dag.print_map_legend(clean_dir, simp_dir, prob_acc_threshold)
 
 
-    main1(reps_threshold=4, draw=True)
+    main1(prob_acc_threshold=.90, draw=True)

@@ -25,8 +25,6 @@ class DagAtlas:
         i.e., DAG) per movie.
     model: SentenceTransformer
         Model returned by SentenceTransformer constructor
-    preconnected: bool
-        True iff all Dag objects created by this class are preconnected
     simp_dir: str
         directory where this class reads txt files.
     start_time: float
@@ -38,7 +36,7 @@ class DagAtlas:
     """
 
     def __init__(self, simp_dir, dag_dir,
-                 preconnected=False, recycled_pickles=None):
+                 recycled_pickles=None):
         """
         Constructor
 
@@ -49,8 +47,6 @@ class DagAtlas:
         dag_dir: str
             directory with a pickled file containing a Dag object for each
             movie script
-        preconnected: bool
-            True iff all Dag objects created by this class are preconnected
         recycled_pickles: list[str]
             titles for which overwriting of pickled files is forbidden, at the
             beginning, when self is first constructed.
@@ -62,7 +58,6 @@ class DagAtlas:
 
         self.simp_dir = simp_dir
         self.dag_dir = dag_dir
-        self.preconnected = preconnected
         all_simp_titles = [file_name[:-len(".txt")] for \
                            file_name in my_listdir(self.simp_dir)]
         all_dag_titles = [file_name[:-len(".pkl")] for \
@@ -101,8 +96,7 @@ class DagAtlas:
         print(f"Starting comparison of 2 titles: {time_now:.2f} minutes")
 
         if self.title_to_permission_to_write_new_pickle[title1]:
-            dag1 = Dag(title1, simp_dir=self.simp_dir,
-                       preconnected=self.preconnected)
+            dag1 = Dag(title1, simp_dir=self.simp_dir)
         else:
             path1 = self.dag_dir + "/" + title1 + ".pkl"
             try:
@@ -113,8 +107,7 @@ class DagAtlas:
                 sys.exit()
 
         if self.title_to_permission_to_write_new_pickle[title2]:
-            dag2 = Dag(title2, simp_dir=self.simp_dir,
-                       preconnected=self.preconnected)
+            dag2 = Dag(title2, simp_dir=self.simp_dir)
         else:
             path2 = self.dag_dir + "/" + title2 + ".pkl"
             try:
@@ -147,25 +140,28 @@ class DagAtlas:
                 nd1_nd2_bridges.append((nd1, nd2))
                 bridge_count += 1
                 print(bridge_count, "bridges")
-        ran = range(len(nd1_nd2_bridges))
-        for i, j in product(ran, ran):
+        range0 = range(len(nd1_nd2_bridges))
+        for i, j in product(range0, range0):
             if i < j:
                 bridge_a = nd1_nd2_bridges[i]
                 bridge_b = nd1_nd2_bridges[j]
-                time_gap1 = bridge_a[0].time - bridge_b[0].time
-                time_gap2 = bridge_a[1].time - bridge_b[1].time
-                bridges_do_not_cross = (time_gap1 * time_gap2 > 0)
-                if bridges_do_not_cross:
-                    if time_gap1 > 0:
-                        arrow1 = (bridge_b[0], bridge_a[0])
-                        arrow2 = (bridge_b[1], bridge_a[1])
+                arrows = [None, None]
+                time_gaps = [0, 0]
+                for movie in range(2):
+                    time_gaps[movie] = \
+                        bridge_a[movie].time - bridge_b[movie].time
+                    if time_gaps[movie] > 0:
+                        arrows[movie] = (bridge_b[movie], bridge_a[movie])
                     else:
-                        arrow1 = (bridge_a[0], bridge_b[0])
-                        arrow2 = (bridge_a[1], bridge_b[1])
-                    assert arrow1[0].time < arrow1[1].time
-                    assert arrow2[0].time < arrow2[1].time
-                    dag1.update_arrow(arrow1, change=1)
-                    dag2.update_arrow(arrow2, change=1)
+                        arrows[movie] = (bridge_a[movie], bridge_b[movie])
+                bridges_do_not_cross = (time_gaps[0] * time_gaps[1] > 0)
+                if bridges_do_not_cross:
+                    accepted = True
+                else:
+                    accepted = False
+                dag1.update_arrow(arrows[0], accepted)
+                dag2.update_arrow(arrows[1], accepted)
+
         time_now = (time() - self.start_time) / 60
         print(f"Before saving 2 dags: {time_now:.2f} minutes")
         dag1.save_self(self.dag_dir)
@@ -256,5 +252,5 @@ if __name__ == "__main__":
             batch_titles=all_titles[0:3])
 
 
-    # main1()
-    main2()
+    main1()
+    # main2()

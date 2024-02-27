@@ -20,7 +20,7 @@ to break each sentence into clauses. Then we simplify the clauses by
 removing stop-words, punctuation marks, proper nouns (a.k.a. named entities)
 and other excess baggage. Then we replace each clause by its simplified
 version. Different simplified clauses from the same sentence are put in the
-same line, separated by an asterisk. Some sentences are diminished to
+same line, separated by a separator-token. Some sentences are diminished to
 nothing after the simplification. Those sentences are replaced by a single
 asterisk.
 

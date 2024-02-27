@@ -7,14 +7,14 @@ class Node:
     Each simplified clause becomes a node of the DAG.
 
     For brevity, let us refer to time as `t` and place as `x`. Previously,
-    we put exactly just one sentence of the movie script into each row of a
-    file. Then each sentence was replaced by zero, one, two, or more
-    simplified clauses, separated by asterisks. If a simplified clause (
-    i.e., node) appears at the row $t$ of the file (counting starting with
-    0), then we say that the node occurs at time $t$. If a simplified clause
-    appears after zero asterisks, we say $x=0$ for it. If it appears after
-    one asterisk, we say $x=1$ for it, and so forth. Hence each node ( i.e.,
-    simplified clause) can be labeled by its $(t, x)$ coordinates.
+    we put each full sentence of the movie script into one row of a file.
+    Then each sentence was replaced by zero, one, two, or more simplified
+    clauses, separated by separator-tokens. If a simplified clause ( i.e.,
+    node) appears at the row $t$ of the file (counting starting with 0),
+    then we say that the node occurs at time $t$. If a simplified clause
+    appears after zero separator-tokens, we say $x=0$ for it. If it appears
+    after one separator-token, we say $x=1$ for it, and so forth. Hence each
+    node ( i.e., simplified clause) can be labeled by its $(t, x)$ coordinates.
 
     Attributes
     ----------
