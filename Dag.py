@@ -281,7 +281,7 @@ class Dag:
 
         dot = "digraph {\n"
         for arrow in hr_arrows:
-            prob_acc = get_prob_acc(self.arrow_to_acc_rej_nums[arrow])
+            prob_acc = get_prob_acc(*self.arrow_to_acc_rej_nums[arrow])
             dot += '"' + node_str(arrow[0]) + '"' + "->" + \
                    '"' + node_str(arrow[1]) + '"' + \
                    ' [label=' + str(prob_acc) + "];\n"
