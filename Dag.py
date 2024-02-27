@@ -182,7 +182,6 @@ class Dag:
             prob_acc = get_prob_acc(*self.arrow_to_acc_rej_nums[arrow])
             if prob_acc >= prob_acc_threshold:
                 high_prob_arrows.append(arrow)
-
         return high_prob_arrows
 
     def print_map_legend(self, clean_dir, simp_dir, prob_acc_threshold):
