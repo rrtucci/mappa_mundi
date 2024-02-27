@@ -3,7 +3,7 @@ from BatchSimilarity import *
 from utils import *
 import sys
 from itertools import product
-from my_globals import *
+from globals import *
 
 import pickle as pik
 from time import time

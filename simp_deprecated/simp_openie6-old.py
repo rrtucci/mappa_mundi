@@ -16,7 +16,7 @@ Refs:
 
 """
 import subprocess
-from my_globals import *
+from globals import *
 
 def simplify_ztz(sentence, verbose=False):
     """

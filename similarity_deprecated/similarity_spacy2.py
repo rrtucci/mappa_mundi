@@ -12,7 +12,7 @@ Ref:
 import spacy
 import nltk
 from nltk.corpus import wordnet as wn
-from my_globals import *
+from globals import *
 from itertools import product
 from collections import defaultdict
 from time import time

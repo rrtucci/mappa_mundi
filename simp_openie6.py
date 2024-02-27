@@ -16,7 +16,7 @@ Refs:
 """
 import subprocess
 import os
-from my_globals import *
+from globals import *
 from utils import my_listdir
 
 

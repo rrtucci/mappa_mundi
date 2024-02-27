@@ -41,7 +41,7 @@ This spell checker also uses two agents (WordGuess objects) working
 separately to produce their best possible guess.
 
 """
-from my_globals import *
+from globals import *
 from spellchecker import SpellChecker # package is called pyspellchecker
 import os
 import re

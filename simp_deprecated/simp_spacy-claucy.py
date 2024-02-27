@@ -8,7 +8,7 @@ https://spacy.io/usage/spacy-101/
 
 https://github.com/mmxgn/spacy-clausieec13/splitting-sentences-into-clauses
 """
-from my_globals import *
+from globals import *
 import spacy
 import claucy
 

@@ -25,7 +25,7 @@ nothing after the simplification. Those sentences are replaced by a single
 asterisk.
 
 """
-from my_globals import *
+from globals import *
 import os
 import re
 import importlib as imp

@@ -19,7 +19,7 @@ ADP: adposition, e.g. in, to, during
 
 import spacy
 import re
-from my_globals import *
+from globals import *
 
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe("merge_entities")

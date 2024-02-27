@@ -14,7 +14,7 @@ from anytree import NodeMixin, Node, AnyNode, RenderTree
 import re
 import os
 import subprocess
-from my_globals import *
+from globals import *
 
 version = subprocess.check_output(
     ['java', '-version'], stderr=subprocess.STDOUT)

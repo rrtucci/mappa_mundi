@@ -28,7 +28,7 @@ mark: marker that introduces a subordinate subline
 ADP: adposition, e.g. in, to, during
 
 """
-from my_globals import *
+from globals import *
 import importlib as imp
 
 zsimp = imp.import_module(ZTZ_SIMPLIFIER)
@@ -36,7 +36,7 @@ from utils import *
 
 import spacy
 import re
-from my_globals import *
+from globals import *
 
 nlp = spacy.load("en_core_web_sm")
 

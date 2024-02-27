@@ -4,7 +4,7 @@ This file holds some general purpose functions (utilities).
 
 """
 import os
-from my_globals import *
+from globals import *
 import shutil
 
 
@@ -95,3 +95,23 @@ def my_listdir(dir_):
     shutil.rmtree(checkpoints, ignore_errors=True)
     # os.listdir list in arbitrary order!
     return sorted(os.listdir(dir_))
+
+
+def get_prob_acc(num_acc, num_rej, round_digits=3):
+    """
+    This method returns the probability of acceptance.
+
+    Parameters
+    ----------
+    num_acc: int
+        number of times an arrow has been accepted
+    num_rej: int
+        number of times an arrow has been rejected.
+    round_digits: int
+
+    Returns
+    -------
+    float
+
+    """
+    return round(num_acc / (num_acc + num_rej), round_digits)

@@ -29,7 +29,7 @@ find_all() takes you from X->Y
 from bs4 import BeautifulSoup
 import requests
 from slugify import slugify  # python-slugify
-from my_globals import *
+from globals import *
 
 
 def get_d1_urls_and_titles():

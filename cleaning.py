@@ -37,7 +37,7 @@ import os
 # sentence splitting with NLTK
 # from nltk.tokenize import sent_tokenize
 import collections as co
-from my_globals import *
+from globals import *
 from unidecode import unidecode
 import contractions
 from utils import *
@@ -295,7 +295,7 @@ def clean_batch_of_m_scripts(
 
 
 if __name__ == "__main__":
-    from my_globals import *
+    from globals import *
 
 
     def main1():

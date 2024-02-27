@@ -14,7 +14,7 @@ Ref:
 from itertools import product
 import numpy as np
 import spacy
-from my_globals import *
+from globals import *
 
 nlp = spacy.load('en_core_web_lg')
 

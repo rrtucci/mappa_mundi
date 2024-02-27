@@ -17,7 +17,7 @@ Uses SpaCy + WordVec
 Attempt to use SpaCy + WordNet
 
 """
-from my_globals import *
+from globals import *
 import importlib as imp
 from sentence_transformers import SentenceTransformer
 

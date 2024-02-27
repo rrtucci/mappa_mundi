@@ -1,5 +1,5 @@
 import importlib as imp
-from my_globals import *
+from globals import *
 from Dag import *
 
 simi_def = imp.import_module(SIMI_DEF)

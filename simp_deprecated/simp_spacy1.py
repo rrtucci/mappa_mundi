@@ -8,7 +8,7 @@ https://spacy.io/usage/spacy-101/
 
 https://subscription.packtpub.com/book/data/9781838987312/2/ch02lvl1sec13/splitting-sentences-into-clauses
 """
-from my_globals import *
+from globals import *
 import spacy
 
 nlp = spacy.load('en_core_web_sm')
