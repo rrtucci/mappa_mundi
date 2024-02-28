@@ -1,0 +1,633 @@
+\documentclass[12pt]{article}
+\input{bayesuvius.sty}
+
+
+\begin{document}
+\title{Causal DAG Extraction from 3 Short Stories  \\
+and 3 Movie Scripts}
+\date{ \today}
+\author{Robert R. Tucci\\
+        tucci@ar-tiste.com}
+\maketitle
+\vskip2cm
+\section*{Abstract}
+I improve an algorithm previously
+proposed by me 
+for doing causal DEFT (DAG Extraction from Text), and then I apply the new algorithm to 2 usecases:
+3 short stories by P.G. Wodehouse and 3 movie scripts by Pixar/Disney. The software  used to accomplish this 
+endeavor is called ``Mappa Mundi" and is available as open source at GitHub. 
+I discuss possible ways of improving the Mappa Mundi algorithm 
+using LLMs (Large
+Language Models such as ChatGPT).
+I also travel this road in the opposite direction---I discuss possible ways of improving
+LLMs using the Mappa Mundi algorithm.
+\newpage
+
+\chapquote{``If humans were so good at causal inference, religion would not exist."}
+{Yann LeCun}{Ref.\cite{yann-religion}}
+
+\chapquote{``How much of human knowledge is captured in all the text ever written? To which my answer is: not much.
+"}{Yann LeCun}{Ref.\cite{yann-text}}
+\section{Introduction}
+
+
+In this paper, I improve an algorithm
+for doing causal DEFT (DAG Extraction from Text)
+that was
+first proposed by me in Ref.\cite{deft1}
+I then apply the new algorithm to 2 usecases:
+\begin{enumerate}
+
+\item 3 short stories by P.G. Wodehouse
+(the text for these was obtained from the
+Project Gutenberg website Ref.\cite{project-gutenberg}) 
+
+\begin{itemize}
+\item  Bill the Bloodhound
+\item  Extricating Young Gussie
+\item Wilton's Holiday
+\end{itemize}
+
+\item 3 movie scripts by Pixar/Disney.
+(the text for these was obtained from the IMSDb website Ref.\cite{imsdb})\footnote{The Mappa Mundi repo at GitHub
+contains a Python script called {\tt downloading.py}
+that uses the BeautifulSoup Python
+package to scrape all the $1100+$ movie
+scripts available (about 230 MB) at the IMSDb website.
+My original intention
+was to apply my algorithm to 
+all of those movie scripts.
+However, due to lack of
+hardware resources, I had to 
+settle for just 3 movie scripts.}
+
+\begin{itemize}
+\item Toy Story 
+\item Up
+\item WALL-E
+\end{itemize}
+\end{enumerate}
+
+The Python 
+software that was used to 
+accomplish this endeavor is 
+called Mappa Mundi (MM). It is open source and available
+at GitHub (Ref.\cite{github-mappa-mundi}).
+
+
+
+So what is MM good for? The goal of DEFT in general and MM in particular, is to create a directory 
+of DAGs (``DAG atlas").
+Conjecturing
+a DAG is always the first step
+in doing Judea Pearl's causal inference (CI).\footnote{Judea Pearl's CI is described
+in detail in Pearl's {\it The Book of Why}
+(Ref.\cite{book-of-why})
+and in my free, open source book {\it Bayesuvius} (Ref. \cite{bayesuvius}).}
+Once a DAG is available,
+one can use it to 
+do Pearl's 3 rungs of CI,
+using tools such as SCuMpy.\footnote{DAG = Directed Acyclic Graph, SCM = Structural Causal Model, a type of DAG}\footnote{Shameless plug: my free, open source software
+SCuMpy (Ref.\cite{scumpy})
+can be used to do all 3 rungs
+of CI. 
+It can handle all types of linear SCM, including
+SCM with feedback loops and hidden variables.} 
+
+As I explained in my previous paper Ref.\cite{deft1}, the scientific method (SM) looks for causation, not correlation. Pearl CI is the gold standard theory for distinguishing
+between correlation and causation.
+Hence, the SM and Pearl CI are closely related.
+Pearl CI can be viewed as an application of the SM, wherein the DAG is the hypothesis part of the SM---what we want to  
+prove or disprove.
+DEFT provides DAG hypotheses.
+For example,
+DEFT could be used to discover causal DAGs that indicate pathways to diseases.
+
+At the end of this paper, I discuss possible ways of improving the MM algorithm 
+using LLMs (Large
+Language Models such as ChatGPT).
+I also travel this road in the opposite direction---
+I discuss
+possible ways of improving
+LLMs using the MM algorithm.
+
+
+\section{MM Algorithm Overview}
+\label{sec-algo-overview}
+The MM algorithm proposed in this
+paper can be applied to a broad range of texts. The only constraint is that those texts 
+do ``story-telling" in a chronological order.
+That is why I decided to use movie scripts,
+because movie-scripts usually do story-telling in a chronological order (except when they do 
+flashbacks or time travel, but that isn't very
+common in movies.)
+
+The MM algorithm would not work well
+if applied to the corpus of science papers at arXiv,
+because scientific papers normally don't do chronological story-telling. 
+On the other hand,
+it might work well if applied to a corpus of (time stamped) lab notebooks maintained by one or more experimental scientists.
+It might also work well on a corpus of time-stamped logs maintained by one or more person
+trying to figure out the cause of a disease.
+
+The MM algorithm would also
+work well on a corpus of videos or movies that
+do chronological story telling,
+even if the movie scripts were unavailable. This
+would require that  
+some human or AI
+narrated the movie/video as the action happened. Such ``in-time" movie and video narration,
+often referred to as AD (audio description)
+(Ref.\cite{audio-description}),
+and also closed captioning, are becoming 
+increasingly
+widespread in the movie, TV and internet video streaming industries. In certain cases, 
+they are mandated by laws 
+(like the CVAA, Twenty-First Century Communications and Video Accessibility Act of 2010) that
+address the needs of persons with disabilities.
+
+
+
+The essence of the MM algorithm can be described as follows.
+
+Given a set of $N$ movie scripts (or short stories),
+the algorithm compares all possible pairs of movies.
+Hence, it makes $(N^2-N)/2$
+ comparisons of 2 movies.
+
+Before comparing movies, each movie script is simplified as follows.
+Each sentence is divided into clauses,
+and each clause is simplified by removing
+``stop-words", punctuation, proper nouns, and other excess baggage from it.
+Then we define a DAG for each movie, and a node of that DAG for each
+simplified clause. 
+
+
+
+To compare two movies 1 and 2,
+we compare every node $\tt node1$
+in movie 1 with every node $\tt node2$ in movie 2.
+To compare two nodes $\tt (node1, node2)$,
+we use what is called, in the NLP (Natural Language Processing)
+field, a {\bf similarity between two sentences}. 
+If the similarity
+between $\tt node1$ and $\tt node2$ exceeds a certain threshold
+that we call $\tt SIMI\_THRESHOLD$,
+then we store that node pair and its
+similarity in a dictionary with
+a node pair as key and its similarity 
+as value. Call this dictionary $\tt nd1\_nd2\_bridges$.
+We say that there is a {\bf bridge} 
+between $\tt node1$ and $\tt node2$
+if $\tt (node1, node2)$ is contained 
+in the keys of $\tt nd1\_nd2\_bridges$.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=5in]
+{crossing-bridges.png}
+\caption{Bridges span two DAGs (i.e., movies). We consider 2 possibilities:
+bridges $a$ and $b$ cross,
+or they don't. 
+}
+\label{fig-crossing-bridges}
+\end{figure}
+
+Next we consider every  pair $\{a,b\}$
+of bridges. Suppose bridge  $a$ 
+connects node $\tt node1a$ in movie 1
+to node $\tt node2a$ in movie 2.
+Likewise, suppose bridge $b$ connects
+$\tt node1b$ in movie 1 to
+node $\tt node2b$ in movie 2.
+Let $\tt node1a.time$ be the time at which 
+$\tt node1a$ occurs and define
+$\tt node1b.time$,
+$\tt node2a.time$, and
+$\tt node2b.time$ similarly.
+Assume that
+$\tt
+node1a.time< node1b.time$.
+Then there are two possibilities
+that we wish to consider. These 2 possibilities are illustrated in Fig.\ref{fig-crossing-bridges}.
+Either the bridges don't cross 
+(i.e. $\tt node2a.time < node2b.time$)
+or they cross (i.e. $\tt node2b.time < node2a.time$).\footnote{We ignore cases
+where the 2 nodes in movie 1 or the 
+2 nodes in movie 2 occur at the same time.}
+Let $N_{rep}$ be the {\bf number
+of repetitions of an arrow}.
+If bridges $a$ and $b$ cross,
+we do nothing.\footnote{It's also 
+possible to assign a penalty
+when the bridges cross,
+but we don't explore that option in this paper.} If they don't cross,
+we do the following for both DAG1 and DAG2.
+If an arrow between the earlier and latter of the two nodes doesn't already
+exist, we add one with $N_{rep}=1$.
+If such an arrow already exists,
+we increase its $N_{rep}$ by one.
+
+That's basically the whole algorithm.
+At the end of it, we will have
+generated DAG1 for movie 1 and DAG2 for movie 2.
+
+When drawing one of those DAGs with MM,
+one specifies a number $\tt reps\_threshold$.
+Only the arrows with $N_{reps}$
+larger than $\tt reps\_threshold$
+are drawn.
+The number $N_{reps}$ for each arrow is drawn
+in the middle of the arrow.
+
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=2in]
+{shark-attacks.png}
+\caption{
+DAG that expresses the fact that both
+shark attacks and ice
+cream sales increase during the summer,
+because both are caused by hot summer weather.
+}
+\label{fig-shark-attacks}
+\end{figure}
+
+Here is a simple argument for
+why this algorithm should work.
+Consider Fig.\ref{fig-shark-attacks}.
+The figure depicts a DAG that
+expresses the fact that both
+shark attacks and ice
+cream sales increase during the summer,
+because both are caused by hot summer weather.
+Let 
+
+$H$ = hot summer weather starts,
+
+$Sh$ = shark attacks increase, 
+
+$IC$ = ice cream sales increase.
+
+If we compare this DAG to $N$
+other DAGs that contain these 3 nodes,
+then, since it is always true
+that summer precedes shark
+attack increases and ice cream sales increases, the two arrows 
+emanating
+from the $H$ node 
+will have $N_{reps} =N$.
+On the other hand, we expect that half of the time, the $Sh$ node will occur before
+the $IC$ node,
+and half of the time it will happen after.
+Hence, $N_{reps}=\frac{N}{2}$ for the
+arrow $Sh\rarrow IC$.
+If, when we draw this DAG, we set $\tt reps\_threshold$ to be 
+greater than $\frac{N}{2}$
+but smaller than $N$,
+then only the two causal arrows will be visible. The difference  between
+ $N_{reps}$ for the causal and non-causal
+ arrows (call it the {\bf repetition gap}) will grow \footnote{This gap
+  can probably be made to increase
+  even faster if we penalize crossing
+  bridges, but 
+  we won't consider that case in this paper.}
+   as $\frac{N}{2}$.
+   
+   
+ It's important to point out
+ that I expect this algorithm
+ to produce good DAGs only
+ after a large number $N$ of DAGs (i.e.,
+ movie scripts or short stories)
+ are compared. That's because the repetition gap
+ grows relatively slowly, just linearly in $N$. Since,
+ due to lack of hardware resources,
+ this paper
+ only compares a minuscule $N=3$,
+ one can't expect very dramatic causal
+ revelations from this paper.
+
+It's also important to point out
+that every time a new movie script is added to
+the list of the $N$ already
+analyzed movie scripts,
+that new movie script must be compared to the
+preceding $N$ movie scripts.
+If we imagine a robot watching a movie daily,
+then his daily dream time, if used solely
+for movie comparison, 
+would grow linearly in time.
+At some point, it would take more than a day
+of dream time to
+compare today's movie to all movies in its past.
+To keep his dream time constant, at 8 hours a day,
+the robot
+would have to compare today's movie
+to a fixed number, say the most recent 365 movies 
+viewed previously.
+
+
+
+ 
+
+\section{Software Description}
+
+The full MM process applied to the 3 short stories,
+is documented in the jupyter notebook
+
+$$\tt jupyter\_notebooks/navigating\_short\_stories.ipynb$$
+
+The full MM process applied to the 3 movie scripts,
+is documented in the jupyter notebook
+
+$$\tt jupyter\_notebooks/navigating\_m\_scripts.ipynb$$
+
+For a detailed description, encompassing 
+every method and variable used in the
+MM software,
+please consult the software's Python ``docstrings".
+This section of the paper merely
+presents a brief overview of what you
+will find in those jupyter notebooks and docstrings.
+
+The full process from raw data to DAG atlas
+is broken down in MM to
+performing the following steps. 
+Most of my time programming
+was spent on the scripts that do
+pre-processing of the data (
+i.e., steps 2, 3 and 4 below).
+Pre-processing data is hard!,
+and not doing it is fatal
+to this algorithm. When 
+evaluating the similarity between
+two clauses,
+even small misspellings can 
+change that value substantially.
+ 
+
+\begin{enumerate}
+\item Data scraping using methods in $\tt downloading\_imsdb.py$.
+
+This python script was only used for the movie
+scripts, not for the short stories. It 
+scrapes all the movie scripts from the IMSDb
+website using the Python Package Beautiful Soup.
+
+\item Cleaning using methods in $\tt cleaning.py$
+
+Here I remove contractions like ``didn't",
+and replace exclusively unicode symbols 
+by their closest ANSII analogues (e.g.,
+curly quotes are replaced by straight quotes).
+
+Here I also use the software SpaCy\footnote{In the Python
+world, there are 2 general, dominant
+NLP libraries, SpaCy and NLTK (Natural Language Tool Kit). MM uses both. There is much overlap
+between the 2. In case of overlap, I tried to use the one that was fastest.} to break up the movie script into 
+separate sentences, and return a file with only
+one sentence per line.
+
+For the case of movie scripts (but not for short 
+stories), I also try to distinguish between 
+dialog lines and narration lines.
+In many but not all movie scripts, the dialog lines are indented with 
+respect to the narration lines.
+In the case of Pixar/Disney, they don't indent dialog. In cases where the movie script indents,
+the MM software gives the option of throwing away all the dialog lines and keeping only the narration
+ones.
+
+
+
+\item Spell-checking using methods in $\tt spell\_checking.py$
+
+I discovered, to my chagrin, that spell-checking
+without any input from a human user,
+is very error prone, unless one takes context into consideration. LLMs can do contextual spell-checking, but this project did not use LLMs,
+since I don't have access to them.
+Instead of a contextual spell-checker,
+I used the non-contextual
+spell-checker $\tt pyspellchecker$
+that tries to replace infrequent words by
+more frequent ones (a very risky
+and error prone approach). To 
+diminish the risk, I
+ constrained it in various ways so
+that it only makes very conservative corrections.
+
+\item Simplifying using methods in $\tt simplifying.py$
+
+At this point, the file
+has only one
+sentence per line.
+Here, I  use SpaCy to
+break each sentence into clauses.
+Then I simplify the clauses by removing
+stop-words, punctuation marks, proper nouns (a.k.a. named entities) and other excess baggage.
+Then I replace each clause by its simplified version.
+Different simplified clauses from the same sentence
+are put in the same line, separated by an asterisk.
+Some sentences are diminished to nothing after
+the simplification.
+Those sentences are replaced by a single asterisk.
+
+Each simplified clause becomes a node of the DAG.
+
+Previously, I've put exactly just one sentence 
+of the movie script into each row of a file.
+Then each sentence has been 
+replaced by zero, one, two, or more simplified clauses, separated by asterisks.
+If  a simplified clause (i.e., node) appears at the
+row $t$ of the file (counting starting with 0), then 
+we say that node occurs at time $t$. If a simplified clause appears after zero asterisks, we say $x=0$ for it.
+If it appears after one asterisk, we say $x=1$ for it, and so forth. Hence each node (i.e., simplified clause)
+can be labeled by its $(t,x)$ coordinates.
+
+
+\item Creating DAG atlas using methods in
+$\tt DagAtlas.py$
+
+Everything up to this point has just been
+pre-processing of the data. 
+Here, I finally implement the algorithm described
+in Section \ref{sec-algo-overview}.
+The bottleneck and rate-determining-step for
+the full MM process is
+calculating the similarity between 2 nodes.
+If DAG1 for movie script (or short story) 1 has $k_1$ 
+nodes, and DAG2 has $k_2$ nodes,
+then $k_1 k_2$ similarity calculations have to be made.
+For the short stories I considered, $k_1k_2$
+is typically on the order of $0.1M$.
+For the movies, it is typically $1.5M$.
+My computer is slow and old (I refuse
+to give specs so as not to embarrass myself).
+It can do about a million similarity calculations per hour. It can compare the 3 short stories in 20 minutes. I haven't tried it, but I calculate that the
+3 movie comparison would take $15(\frac{1}{3})=5$ hours.
+
+For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+WordNet,
+and another method that uses SpaCy  +WordVec.
+The NLTK+WordNet method\footnote{The NLKT+WordNet method 
+calculates the distance between synsets  of nouns
+in node1 and node2.  It also calculates the distance between synsets of verbs, adjectives and adverbs. (Synsets, i.e., synonym sets,
+are a sort of equivalence class of words.)
+Then it calculates from all those synset distances,
+a distance between the two nodes (i.e., clauses or sentences).} is, in my
+opinion,  more logical, and it gives more reasonable distances. I also found it
+to be faster than the SpaCy+WordVec method.\footnote{The
+ SpaCy+WordVec method turns 
+each word of the clause of node1 into a vector, and then it calculates the center of mass (CM) of those word vectors.
+It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I dislike this method because I don't believe that
+a CM vector is a good representation of the
+meaning of
+a list of words. There's a huge number
+of sentences, some
+of them with quite different meanings, 
+that have the same CM vector.
+A blue whale and an ant can have the same CM vector.
+}
+
+\item Visualizing DAGs using methods in $\tt Dag.py$.
+
+This step is easy. I use $\tt graphviz$ to 
+accomplish it.
+
+\end{enumerate}
+
+\section{Possible Improvements
+of the MM algorithm
+using LLMs}
+
+This study did not use LLMs at all,
+because I don't have the necessary
+funding or
+access to those tools.
+However,
+I believe the results
+of this study would improve
+dramatically if they were redone with LLMs.
+LLMs could perform better
+the 3 data pre-processing steps
+(2-cleaning, 3-spell-checking and 4-simplifying).
+They  could also perform Step 5, DAG atlas creation,
+better by providing a  
+measure of the similarity 
+between two sentences that is more
+precise than the 
+measure I am currently using, based on NLTK+WordNet.
+
+
+Cleaning and spell-checking
+could be done by the LLM
+taking context into consideration,
+and the output would be in the 
+flawless English that ChatGPT
+answers questions with.
+As to step 4-simplifying,
+rather than using the crude method
+of breaking each sentence into clauses
+and calling each clause a node,
+one could, for example,
+ask the LLM to summarize each sentence (or a few 
+consecutive sentences) as a list of simple
+declarative sentences.
+To demonstrate that current LLMs can 
+performing this task superbly, I
+did the following test. I gave ChatGPT the
+beginning narrative paragraph of the movie 
+WALL-E, and I asked her to summarize the
+paragraph as a list of simple declarative sentences.
+Here is the result:
+\\
+\hrule
+\noindent {\bf PROMPT:} 
+
+Consider the following quote:
+\begin{quote}
+``A range of mountains takes form in the haze.
+Moving closer.
+The mountains are piles of TRASH.
+The entire surface is nothing but waste.
+
+``..We're gonna find adventure in the evening air...''
+
+A silhouetted city in the distance.
+What looks like skyscrapers turns into trash.
+Thousands of neatly stacked CUBES OF TRASH, stories high.
+Rows and rows of stacked cubes, like city avenues.
+They go on for miles."
+\end{quote}
+
+Give an enumerated list summarizing this quote.
+Each list item must be a simple declarative sentence
+consisting of a subject phrase and a verb phrase.
+The list items must be in chronological order of occurrence
+in the quote.
+\\
+\hrule
+\noindent {\bf REPLY:}
+
+\begin{enumerate}
+\item A range of mountains appears in the haze.
+\item The narrator moves closer.
+\item The mountains are revealed to be piles of trash.
+\item The entire surface is described as nothing but waste.
+\item The narrator speaks of finding adventure in the evening air.
+\item A silhouetted city appears in the distance.
+\item The skyscrapers turn out to be made of trash.
+\item Thousands of neatly stacked cubes of trash are seen, stories high.
+\item Rows and rows of stacked cubes are seen, resembling city avenues.
+\item The expanse of trash goes on for miles.
+\end{enumerate}
+\hrule
+.\\
+Each of these 10 sentences would make
+a superb node in a causal DAG. With nodes defined
+with such clarity, 
+one could avoid much noise in the calculation of the similarity
+of 2 nodes.
+
+A few years ago, AI would have been
+incapable of such precise and exquisite summarizing.
+ChatGPT and 
+comparable LLMs 
+have finally reached the point where they 
+can greatly aid
+in the practice of Pearl CI.
+
+
+\section{Possible Improvements
+of LLMs 
+using the MM algorithm}
+ 
+LLMs
+are very good at what they do,
+but ultimately, they are just curve fitters
+that cannot perform the scientific method (SM)
+and causal inference (CI)
+in a deliberate way. At best, they can 
+perform the SM in a trial an error way, as in 
+Fig.\ref{fig-harris-e-mc2}.
+This weakness of LLMs can be overcome
+by adding to them
+a DAG atlas and an explicit (not an implicit or emergent) CI engine.
+
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=3in]
+{harris-e-mc2.jpg}
+\caption{Cartoon 
+by S.Harris
+about $E=mc^2$.
+}
+\label{fig-harris-e-mc2}
+\end{figure}
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}
