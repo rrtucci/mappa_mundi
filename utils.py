@@ -97,9 +97,10 @@ def my_listdir(dir_):
     return sorted(os.listdir(dir_))
 
 
-def get_prob_acc(num_acc, num_rej, round_digits=3):
+def get_prob_acc_and_nsam(num_acc, num_rej, round_digits=3):
     """
-    This method returns the probability of acceptance.
+    This method returns the probability of acceptance `prob_acc` and the
+    number of samples `nsam` used to calculate that probability.
 
     Parameters
     ----------
@@ -111,7 +112,8 @@ def get_prob_acc(num_acc, num_rej, round_digits=3):
 
     Returns
     -------
-    float
+    float, int
 
     """
-    return round(num_acc / (num_acc + num_rej), round_digits)
+    nsam = num_acc + num_rej
+    return round(num_acc / nsam, round_digits), nsam

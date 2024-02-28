@@ -162,15 +162,19 @@ class Dag:
 
         return nd_to_simp_ztz
 
-    def build_high_prob_acc_arrows(self, prob_acc_threshold):
+    def build_high_prob_acc_arrows(self,
+                                   prob_acc_thold,
+                                   nsam_thold):
         """
         This method builds from scratch and returns a list of all arrows
-        whose weight (i.e., probability of acceptance) is >=
-        `prob_acc_threshold`.
+        whose `prob_acc` (i.e., probability of acceptance) is >=
+        `prob_acc_thold` with `nsam` (i.e., number of samples used to
+        calculate that probability) >= `nsam_thold`. thold = threshold
 
         Parameters
         ----------
-        prob_acc_threshold: float
+        prob_acc_thold: float
+        nsam_thold: int
 
         Returns
         -------
@@ -179,12 +183,18 @@ class Dag:
         """
         high_prob_arrows = []
         for arrow in self.arrows:
-            prob_acc = get_prob_acc(*self.arrow_to_acc_rej_nums[arrow])
-            if prob_acc >= prob_acc_threshold:
+            prob_acc, nsam = get_prob_acc_and_nsam(
+                *self.arrow_to_acc_rej_nums[arrow])
+            if prob_acc >= prob_acc_thold and\
+                   nsam >= nsam_thold:
                 high_prob_arrows.append(arrow)
         return high_prob_arrows
 
-    def print_map_legend(self, clean_dir, simp_dir, prob_acc_threshold):
+    def print_map_legend(self,
+                         clean_dir,
+                         simp_dir,
+                         prob_acc_thold,
+                         nsam_thold):
         """
         This method prints the DAG Rosetta stone (map legend).
 
@@ -196,8 +206,9 @@ class Dag:
         simplified sentence by the label `(part)`.
 
         It only prints the `(full)` and `(part)` for those nodes that appear
-        in the DAG, after all arrows with weight less than `prob_acc_threshold`
-        are removed.
+        in the DAG, after removing all arrows with probability of acceptance
+        < `prob_acc_thold` or number of sample used to calculate that
+        probability < `nsam_thold`.
 
         Parameters
         ----------
@@ -205,32 +216,36 @@ class Dag:
             directory of movie scripts after cleaning
         simp_dir: str
             directory of movie scripts after simplification
-        prob_acc_threshold: float
+        prob_acc_thold: float
+        nsam_thold: int
 
         Returns
         -------
         None
 
         """
-        hr_arrows = self.build_high_prob_acc_arrows(prob_acc_threshold)
+        hprob_arrows = self.build_high_prob_acc_arrows(
+            prob_acc_thold, nsam_thold)
         print("MAP LEGEND")
         print("title:", self.m_title)
-        print("arrow prob_acceptance threshold:", prob_acc_threshold)
-        print("number of arrows shown:", len(hr_arrows))
-        print("number of arrows dropped:", len(self.arrows) - len(hr_arrows))
+        print("prob of acceptance threshold:", prob_acc_thold)
+        print("number of samples threshold:", nsam_thold)
+        print("number of arrows shown:", len(hprob_arrows))
+        print("number of arrows dropped:",
+              len(self.arrows) - len(hprob_arrows))
 
-        hr_nodes = []
-        for arrow in hr_arrows:
-            if arrow[0] not in hr_nodes:
-                hr_nodes.append(arrow[0])
-            if arrow[1] not in hr_nodes:
-                hr_nodes.append(arrow[1])
+        hprob_nodes = []
+        for arrow in hprob_arrows:
+            if arrow[0] not in hprob_nodes:
+                hprob_nodes.append(arrow[0])
+            if arrow[1] not in hprob_nodes:
+                hprob_nodes.append(arrow[1])
 
-        hr_nodes = sorted(hr_nodes, key=lambda x: x.time)
+        hprob_nodes = sorted(hprob_nodes, key=lambda x: x.time)
         nd_to_clean_ztz = self.build_node_to_clean_ztz_dict(clean_dir)
         nd_to_simple_ztz = self.build_node_to_simple_ztz_dict(simp_dir)
 
-        for nd in hr_nodes:
+        for nd in hprob_nodes:
             print(node_str(nd) + ":")
             print("(FULL)", nd_to_clean_ztz[nd])
             print("(PART)", nd_to_simple_ztz[nd])
@@ -262,14 +277,15 @@ class Dag:
         else:
             open_image("tempo.png").show()
 
-    def draw(self, prob_acc_threshold, jupyter=False):
+    def draw(self, prob_acc_thold, nsam_thold, jupyter=False):
         """
         This method draws the graph for self. Only arrows with
-        `prob_acceptance` >= `prob_acc_threshold` are drawn.
+        `prob_acceptance` >= `prob_acc_thold` are drawn.
 
         Parameters
         ----------
-        prob_acc_threshold: float
+        prob_acc_thold: float
+        nsam_thold: int
         jupyter: bool
 
         Returns
@@ -277,14 +293,17 @@ class Dag:
         None
 
         """
-        hr_arrows = self.build_high_prob_acc_arrows(prob_acc_threshold)
+        hprob_arrows = self.build_high_prob_acc_arrows(
+            prob_acc_thold, nsam_thold)
 
         dot = "digraph {\n"
-        for arrow in hr_arrows:
-            prob_acc = get_prob_acc(*self.arrow_to_acc_rej_nums[arrow])
+        for arrow in hprob_arrows:
+            prob_acc, nsam = get_prob_acc_and_nsam(
+                *self.arrow_to_acc_rej_nums[arrow])
+            X = '"' + str(prob_acc) + " (" + str(nsam) + ")" + '"'
             dot += '"' + node_str(arrow[0]) + '"' + "->" + \
                    '"' + node_str(arrow[1]) + '"' + \
-                   ' [label=' + str(prob_acc) + "];\n"
+                   ' [label=' + X + "];\n"
         dot += 'labelloc="b";\n'
         dot += 'label="' + self.m_title + '";\n'
         dot += "}\n"
@@ -293,7 +312,7 @@ class Dag:
 
 
 if __name__ == "__main__":
-    def main1(prob_acc_threshold, draw):
+    def main1(prob_acc_thold, nsam_thold, draw):
         dag_dir = "short_stories_dag_atlas"
         simp_dir = "short_stories_simp"
         clean_dir = "short_stories_clean"
@@ -310,14 +329,13 @@ if __name__ == "__main__":
             print("==================================")
             print(dag.m_title)
             hprob_arrows = dag.build_high_prob_acc_arrows(
-                prob_acc_threshold)
+                prob_acc_thold, nsam_thold)
             print({arrow_str(arrow):
                        dag.arrow_to_acc_rej_nums[arrow] \
                    for arrow in hprob_arrows})
             print()
             if draw:
-                dag.draw(prob_acc_threshold)
-                dag.print_map_legend(clean_dir, simp_dir, prob_acc_threshold)
+                dag.draw(prob_acc_thold, nsam_thold)
+                dag.print_map_legend(clean_dir, simp_dir, prob_acc_thold)
 
-
-    main1(prob_acc_threshold=.90, draw=True)
+    main1(prob_acc_thold=.90, nsam_thold = 2, draw=True)
