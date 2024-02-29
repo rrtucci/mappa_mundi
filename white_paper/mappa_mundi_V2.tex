@@ -4,7 +4,7 @@
 
 \begin{document}
 \title{Causal DAG Extraction from 3 Short Stories  \\
-and 3 Movie Scripts}
+and 3 Movie Scripts (V2)}
 \date{ \today}
 \author{Robert R. Tucci\\
         tucci@ar-tiste.com}
@@ -15,8 +15,9 @@ I improve an algorithm previously
 proposed by me 
 for doing causal DEFT (DAG Extraction from Text), and then I apply the new algorithm to 2 usecases:
 3 short stories by P.G. Wodehouse and 3 movie scripts by Pixar/Disney. The software  used to accomplish this 
-endeavor is called ``Mappa Mundi" and is available as open source at GitHub. 
-I discuss possible ways of improving the Mappa Mundi algorithm 
+endeavor is called ``Mappa Mundi" (MM) and is available as open source at
+GitHub.
+I discuss possible ways of improving the MM algorithm
 using LLMs (Large
 Language Models such as ChatGPT).
 I also travel this road in the opposite direction---I discuss possible ways of improving
@@ -49,7 +50,8 @@ Project Gutenberg website Ref.\cite{project-gutenberg})
 \end{itemize}
 
 \item 3 movie scripts by Pixar/Disney.
-(the text for these was obtained from the IMSDb website Ref.\cite{imsdb})\footnote{The Mappa Mundi repo at GitHub
+(the text for these was obtained from the IMSDb website
+Ref.\cite{imsdb})\footnote{The Mappa Mundi repo at GitHub
 contains a Python script called {\tt downloading.py}
 that uses the BeautifulSoup Python
 package to scrape all the $1100+$ movie
@@ -152,15 +154,15 @@ The essence of the MM algorithm can be described as follows.
 
 Given a set of $N$ movie scripts (or short stories),
 the algorithm compares all possible pairs of movies.
-Hence, it makes $(N^2-N)/2$
- comparisons of 2 movies.
+Hence, it makes $\frac{N^2-N}{2}$
+ movie pair comparisons.
 
 Before comparing movies, each movie script is simplified as follows.
-Each sentence is divided into clauses,
-and each clause is simplified by removing
-``stop-words", punctuation, proper nouns, and other excess baggage from it.
-Then we define a DAG for each movie, and a node of that DAG for each
-simplified clause. 
+Each complex or compound sentence is split into simple sentences (ssents).\footnote{Ssents
+have a single subject and verb. They are essentially
+the same as the (subject, relation, object) triples
+used to construct ``knowledge graphs".}
+Then we define a node for each ssent, and collect those nodes to form a DAG for each movie.
 
 
 
@@ -168,7 +170,7 @@ To compare two movies 1 and 2,
 we compare every node $\tt node1$
 in movie 1 with every node $\tt node2$ in movie 2.
 To compare two nodes $\tt (node1, node2)$,
-we use what is called, in the NLP (Natural Language Processing)
+we compute what is called, in the NLP (Natural Language Processing)
 field, a {\bf similarity between two sentences}. 
 If the similarity
 between $\tt node1$ and $\tt node2$ exceeds a certain threshold
@@ -211,20 +213,16 @@ node1a.time< node1b.time$.
 Then there are two possibilities
 that we wish to consider. These 2 possibilities are illustrated in Fig.\ref{fig-crossing-bridges}.
 Either the bridges don't cross 
-(i.e. $\tt node2a.time < node2b.time$)
-or they cross (i.e. $\tt node2b.time < node2a.time$).\footnote{We ignore cases
-where the 2 nodes in movie 1 or the 
-2 nodes in movie 2 occur at the same time.}
+(i.e. $a$ occurs before $b$ in both movies)
+or they cross (i.e. $a$ occurs before $b$
+in movie 1 but after in movie 2).
 Let $N_{rep}$ be the {\bf number
 of repetitions of an arrow}.
 If bridges $a$ and $b$ cross,
-we do nothing.\footnote{It's also 
-possible to assign a penalty
-when the bridges cross,
-but we don't explore that option in this paper.} If they don't cross,
+we do nothing. If they don't cross,
 we do the following for both DAG1 and DAG2.
 If an arrow between the earlier and latter of the two nodes doesn't already
-exist, we add one with $N_{rep}=1$.
+exist, we add it with $N_{rep}=1$.
 If such an arrow already exists,
 we increase its $N_{rep}$ by one.
 
@@ -232,13 +230,13 @@ That's basically the whole algorithm.
 At the end of it, we will have
 generated DAG1 for movie 1 and DAG2 for movie 2.
 
-When drawing one of those DAGs with MM,
-one specifies a number $\tt reps\_threshold$.
-Only the arrows with $N_{reps}$
-larger than $\tt reps\_threshold$
+When drawing one of those DAGs,
+one specifies a number {\tt reps\_threshold}$=N_{reps}^*$.
+Only the arrows with $N_{reps}> N^*_{reps}$
 are drawn.
 The number $N_{reps}$ for each arrow is drawn
 in the middle of the arrow.
+
 
 
 
@@ -284,16 +282,14 @@ the $IC$ node,
 and half of the time it will happen after.
 Hence, $N_{reps}=\frac{N}{2}$ for the
 arrow $Sh\rarrow IC$.
-If, when we draw this DAG, we set $\tt reps\_threshold$ to be 
-greater than $\frac{N}{2}$
-but smaller than $N$,
+
+Let $\tt reps\_threshold$ $=N_{reps}^*$. Select $N_{reps}^*$ such that
+$\frac{N}{2}< N_{reps}^* < N$. If when we draw this DAG, 
+we only draw arrows with $N_{reps}> N_{reps}^*$, 
 then only the two causal arrows will be visible. The difference  between
  $N_{reps}$ for the causal and non-causal
- arrows (call it the {\bf repetition gap}) will grow \footnote{This gap
-  can probably be made to increase
-  even faster if we penalize crossing
-  bridges, but 
-  we won't consider that case in this paper.}
+ arrows (call it the {\bf repetition gap})
+  will grow 
    as $\frac{N}{2}$.
    
    
@@ -328,6 +324,15 @@ the robot
 would have to compare today's movie
 to a fixed number, say the most recent 365 movies 
 viewed previously.
+
+This section has described how the original version 
+of MM did DEFT. More recent versions
+of MM do DEFT slightly differently. For each arrow, the new versions store two weights $n_{acc}$
+and $n_{rej}$ instead of just one weight $N_{reps}$.
+As we explain in Appendix \ref{app-2-weights}, this
+2 weight per arrow DEFT is stricter and more 
+specific.
+
 
 
 
@@ -364,7 +369,7 @@ Pre-processing data is hard!,
 and not doing it is fatal
 to this algorithm. When 
 evaluating the similarity between
-two clauses,
+two ssents,
 even small misspellings can 
 change that value substantially.
  
@@ -375,7 +380,7 @@ change that value substantially.
 This python script was only used for the movie
 scripts, not for the short stories. It 
 scrapes all the movie scripts from the IMSDb
-website using the Python Package Beautiful Soup.
+website using the Python package Beautiful Soup.
 
 \item Cleaning using methods in $\tt cleaning.py$
 
@@ -422,28 +427,25 @@ that it only makes very conservative corrections.
 
 At this point, the file
 has only one
-sentence per line.
-Here, I  use SpaCy to
-break each sentence into clauses.
-Then I simplify the clauses by removing
-stop-words, punctuation marks, proper nouns (a.k.a. named entities) and other excess baggage.
-Then I replace each clause by its simplified version.
-Different simplified clauses from the same sentence
-are put in the same line, separated by an asterisk.
-Some sentences are diminished to nothing after
-the simplification.
-Those sentences are replaced by a single asterisk.
+full sentence per line.
+Here, I  use Openie6 to
+break each full sentence into ssents.\footnote{Alternatively,
+one can use my software SentenceAx.
+SentenceAx is a full rewrite of Openie6. 
+Openie6 and SentenceAx are both available at GitHub.
+}
+Each line with a full sentence is replaced by
+all of ssents derived from the full sentence.  The
+ssents are separated by 
+a separator-token ({\tt ZTZ\_SEPARATOR}).
 
-Each simplified clause becomes a node of the DAG.
 
-Previously, I've put exactly just one sentence 
-of the movie script into each row of a file.
-Then each sentence has been 
-replaced by zero, one, two, or more simplified clauses, separated by asterisks.
-If  a simplified clause (i.e., node) appears at the
+Each ssent becomes a node of the DAG.
+
+If  a ssent (i.e., node) appears at the
 row $t$ of the file (counting starting with 0), then 
-we say that node occurs at time $t$. If a simplified clause appears after zero asterisks, we say $x=0$ for it.
-If it appears after one asterisk, we say $x=1$ for it, and so forth. Hence each node (i.e., simplified clause)
+we say that node occurs at time $t$. If a ssent appears after zero separator-tokens, we say $x=0$ for it.
+If it appears after one separator-token, we say $x=1$ for it, and so forth. Hence each node (i.e., ssent)
 can be labeled by its $(t,x)$ coordinates.
 
 
@@ -463,32 +465,10 @@ then $k_1 k_2$ similarity calculations have to be made.
 For the short stories I considered, $k_1k_2$
 is typically on the order of $0.1M$.
 For the movies, it is typically $1.5M$.
-My computer is slow and old (I refuse
-to give specs so as not to embarrass myself).
-It can do about a million similarity calculations per hour. It can compare the 3 short stories in 20 minutes. I haven't tried it, but I calculate that the
-3 movie comparison would take $15(\frac{1}{3})=5$ hours.
 
-For the similarity measure between nodes (i.e., sentences or clauses), I tried one method that uses NLTK+WordNet,
-and another method that uses SpaCy  +WordVec.
-The NLTK+WordNet method\footnote{The NLKT+WordNet method 
-calculates the distance between synsets  of nouns
-in node1 and node2.  It also calculates the distance between synsets of verbs, adjectives and adverbs. (Synsets, i.e., synonym sets,
-are a sort of equivalence class of words.)
-Then it calculates from all those synset distances,
-a distance between the two nodes (i.e., clauses or sentences).} is, in my
-opinion,  more logical, and it gives more reasonable distances. I also found it
-to be faster than the SpaCy+WordVec method.\footnote{The
- SpaCy+WordVec method turns 
-each word of the clause of node1 into a vector, and then it calculates the center of mass (CM) of those word vectors.
-It likewise calculates a CM vector for node2. Then it calculates the cosine of the angle between those two CM vectors. I dislike this method because I don't believe that
-a CM vector is a good representation of the
-meaning of
-a list of words. There's a huge number
-of sentences, some
-of them with quite different meanings, 
-that have the same CM vector.
-A blue whale and an ant can have the same CM vector.
-}
+For the similarity measure between nodes (i.e., ssents), I tried 
+many methods. I
+ended up using sBERT. 
 
 \item Visualizing DAGs using methods in $\tt Dag.py$.
 
@@ -501,41 +481,37 @@ accomplish it.
 of the MM algorithm
 using LLMs}
 
-This study did not use LLMs at all,
-because I don't have the necessary
-funding or
-access to those tools.
-However,
-I believe the results
-of this study would improve
-dramatically if they were redone with LLMs.
-LLMs could perform better
+MM uses 
+LLMs twice: first, 
+it uses Openie6
+to do sentence spitting,
+and second, it uses 
+sBERT to calculate sentence
+similarities.
+Openie6 and sBERT are both
+fine tunings of BERT.
+BERT is the encoder 
+part of the Vanilla Transformer
+Network
+first proposed in 2017.\footnote{For more information about Transformer Networks,
+see my book Bayesuvius (Ref.\cite{bayesuvius}) which
+has a long chapter dedicated
+to them.}
+
+
+MM does not, however, use 
+a promptable LLM such as
+ChatGPT. But it could use one.
+A promptable
+LLM could perform
 the 3 data pre-processing steps
-(2-cleaning, 3-spell-checking and 4-simplifying).
-They  could also perform Step 5, DAG atlas creation,
-better by providing a  
-measure of the similarity 
-between two sentences that is more
-precise than the 
-measure I am currently using, based on NLTK+WordNet.
+(2-cleaning, 3-spell-checking and 4-simplifying) in lieu of 
+Openie6. It could also calculate sentence similarities in lieu of sBERT.
 
 
-Cleaning and spell-checking
-could be done by the LLM
-taking context into consideration,
-and the output would be in the 
-flawless English that ChatGPT
-answers questions with.
-As to step 4-simplifying,
-rather than using the crude method
-of breaking each sentence into clauses
-and calling each clause a node,
-one could, for example,
-ask the LLM to summarize each sentence (or a few 
-consecutive sentences) as a list of simple
-declarative sentences.
-To demonstrate that current LLMs can 
-performing this task superbly, I
+To demonstrate that 
+promptable LLMs can 
+perform these task superbly, I
 did the following test. I gave ChatGPT the
 beginning narrative paragraph of the movie 
 WALL-E, and I asked her to summarize the
@@ -590,14 +566,6 @@ with such clarity,
 one could avoid much noise in the calculation of the similarity
 of 2 nodes.
 
-A few years ago, AI would have been
-incapable of such precise and exquisite summarizing.
-ChatGPT and 
-comparable LLMs 
-have finally reached the point where they 
-can greatly aid
-in the practice of Pearl CI.
-
 
 \section{Possible Improvements
 of LLMs 
@@ -626,6 +594,121 @@ about $E=mc^2$.
 }
 \label{fig-harris-e-mc2}
 \end{figure}
+
+\appendix
+
+\section{Appendix: Two weights per arrow instead of one}\label{app-2-weights}
+
+In the original MM version, each arrow carries a single weight $N_{reps}$ initially set to 0. $N_{reps}=$ the number
+of repetitions of that arrow. When we compare two bridges,
+\begin{itemize}
+
+\item If the bridges don't
+cross, we increase by 1 the $N_{reps}$
+ for the arrow between points $a$ and $b$ in
+movie 1, and for the
+corresponding arrow in movie 2.
+
+\item
+If the bridges cross, we do nothing. 
+\end{itemize}
+We then define a threshold value $N^*_{reps}$
+for $N_{reps}$.
+When drawing the DAG, we only
+draw arrows with $N_{reps}>N^*_{reps}$.
+Each arrow in the DAG looks like 
+
+$$\xymatrix@C=5pc{A\ar[r]_5&B}$$
+when $N_{reps} =5$
+
+
+In the new version of MM, 
+each arrow carries a pair of weights $(n_{acc}, n_{rej})$ initially set to $(0,0)$.
+$n_{acc}=$ the number of acceptances.
+$n_{rej}=$ the number of rejections. 
+
+\begin{itemize}
+\item If the bridges don't
+cross, we accept. We increase $n_{acc}$ by 1, for the arrow between bridges $a$ and $b$ in movie 1,
+and for the corresponding arrow in movie 2. 
+\item
+If the bridges cross, we reject. We increase $n_{rej}$ by 1, for the arrow between bridges $a$ and $b$ in movie 1,
+and for the corresponding arrow in movie 2. 
+\end{itemize}
+
+We define the acceptance probability $p_{acc}$ 
+for each arrow by
+
+\beq
+p_{acc} = \frac{n_{acc}}{n_{acc} + n_{rej}}
+\eeq
+We also define the total number $N$ of samples for each arrow by
+
+\beq
+N = n_{acc} + n_{rej}
+\eeq
+Then we  define a threshold value $p^*_{acc}$ 
+for $p_{acc}$ and a threshold value $N^*$
+for $N$. When drawing the DAG, we only draw arrows with $p_{acc}>p^*_{acc}$
+and $N> N^*$. Each arrow in the DAG looks like 
+
+$$\xymatrix@C=5pc{A\ar[r]_{0.93 (5)}&B}$$
+when $p_{acc} =0.93$ and $N= 5$.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=4in]
+{nacc-nrej-plane.png}
+\caption{
+$(n_{acc}, n_{rej})$ plane. The purple region satisfies the 
+2 constraints $p_{acc} > p_{acc}^*$ and $N> N^*$.}
+\label{fig-nacc-nrej-plane}
+\end{figure}
+
+
+Fig.\ref{fig-nacc-nrej-plane}
+shows a picture of the $(n_{acc}, n_{rej})$
+plane. We assume that $p_{acc}^*$ is fairly
+close to 1 so the
+line $\frac{n_{acc}}{n_{acc}+ n_{rej}} = p^*_{acc}$
+is close to being horizontal.
+The purple region satisfies the 
+2 constraints $p_{acc} > p_{acc}^*$ and $N> N^*$.
+
+The two weights per arrow (2W/A) method
+gives bnets with fewer  but more trustworthy
+arrows, than the one weight per arrow (1W/A) method. 
+This can be easily seen from Fig.\ref{fig-nacc-nrej-plane}.
+The $N_{reps}$ in the 1W/A method corresponds to
+the $n_{acc}$ in the 2W/A method.
+Thus, the threshold $N^*_{reps}$ for $N_{reps}$
+becomes a threshold $n^*_{acc}$ for $n_{acc}$.
+The set of points satisfying $n_{acc} > n^*_{acc} $
+equals a half plane $H$ in $(n_{acc}, n_{rej})$ space. For instance, if $n_{acc}^*$
+is the value of $n_{acc}$
+for the dashed line 
+in Fig.\ref{fig-nacc-nrej-plane},
+then $H$ equals the half plane of all points to the right of that
+dashed line.
+Clearly, $H$
+contains many more 
+points than the purple region
+in Fig.\ref{fig-nacc-nrej-plane}.
+
+Hence, one is justified in saying that the 2W/A method
+is stricter and more specific (i.e., more restrictive) than the
+1W/A method. It is also
+less lossy. When the 1W/A method does nothing 
+for crossing bridges, it is
+throwing away some information
+that the 2W/A method keeps. This extra information
+is used to filter out less trustworthy points with
+high $n_{rej}$ counts (high compared to $n_{acc}$)
+
+
+
+
+
 
 
 \bibliographystyle{plain}
