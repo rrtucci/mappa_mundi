@@ -37,8 +37,6 @@ SIMI_THRESHOLD = 2  # for bert, recommended
 
 ZTZ_SEPARATOR = "[%@!]"
 
-CAUSAL_MISMATCH_PENALTY = 2 / 3  # CAUSAL_MISMATCH_PENALTY >= 2/3
-
 SPELLING_CORRECTION_RISK = 1e-8
 
 # POS (part of speech) in stopwords.py

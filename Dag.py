@@ -113,6 +113,8 @@ class Dag:
 
         """
         path = clean_dir + "/" + self.m_title + ".txt"
+        if not os.path.isfile(path):
+            path = path.replace(".txt", ".csv")
 
         time_to_clean_ztz = {}
         with open(path, "r") as f:
