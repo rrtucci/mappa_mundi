@@ -96,7 +96,9 @@ class Dag:
         else:
             self.arrow_to_acc_rej_nums[arrow][1] += 1
 
-    def build_node_to_clean_ztz_dict(self, clean_dir):
+    def build_node_to_clean_ztz_dict(self,
+                                     clean_dir,
+                                     skip_1st_line=False):
         """
         This method builds from scratch and returns a dictionary called
         `nd_to_clean_ztz` that maps each node to a clean sentence. ztz
@@ -113,15 +115,24 @@ class Dag:
 
         """
         path = clean_dir + "/" + self.m_title + ".txt"
+        is_csv = False
         if not os.path.isfile(path):
             path = path.replace(".txt", ".csv")
+            is_csv = True
+        assert os.path.isfile(path)
 
         time_to_clean_ztz = {}
         with open(path, "r") as f:
             time = -1
             for line in f:
                 time += 1
-                time_to_clean_ztz[time] = line.strip()
+                if is_csv:
+                    if time == 0:
+                        continue
+                    else:
+                        time_to_clean_ztz[time - 1] = line.strip()
+                else:
+                    time_to_clean_ztz[time] = line.strip()
 
         nd_to_clean_ztz = {}
         for nd in self.nodes:
@@ -187,8 +198,8 @@ class Dag:
         for arrow in self.arrows:
             prob_acc, nsam = get_prob_acc_and_nsam(
                 *self.arrow_to_acc_rej_nums[arrow])
-            if prob_acc >= prob_acc_thold and\
-                   nsam >= nsam_thold:
+            if prob_acc >= prob_acc_thold and \
+                    nsam >= nsam_thold:
                 high_prob_arrows.append(arrow)
         return high_prob_arrows
 
@@ -244,12 +255,18 @@ class Dag:
                 hprob_nodes.append(arrow[1])
 
         hprob_nodes = sorted(hprob_nodes, key=lambda x: x.time)
-        nd_to_clean_ztz = self.build_node_to_clean_ztz_dict(clean_dir)
+        if clean_dir:
+            nd_to_clean_ztz = self.build_node_to_clean_ztz_dict(clean_dir)
+        else:
+            nd_to_clean_ztz = None
         nd_to_simple_ztz = self.build_node_to_simple_ztz_dict(simp_dir)
 
         for nd in hprob_nodes:
-            print(node_str(nd) + ":")
-            print("(FULL)", nd_to_clean_ztz[nd])
+            print(color.GREEN + color.BOLD + node_str(nd) + ":" + color.END)
+            ztz0 = ""
+            if nd_to_clean_ztz:
+                ztz0 = nd_to_clean_ztz[nd]
+            print("(FULL)", ztz0)
             print("(PART)", nd_to_simple_ztz[nd])
 
     @staticmethod
@@ -340,4 +357,5 @@ if __name__ == "__main__":
                 dag.draw(prob_acc_thold, nsam_thold)
                 dag.print_map_legend(clean_dir, simp_dir, prob_acc_thold)
 
-    main1(prob_acc_thold=.90, nsam_thold = 2, draw=True)
+
+    main1(prob_acc_thold=.90, nsam_thold=2, draw=True)
