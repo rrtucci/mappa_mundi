@@ -222,7 +222,7 @@ If bridges $a$ and $b$ cross,
 we do nothing. If they don't cross,
 we do the following for both DAG1 and DAG2.
 If an arrow between the earlier and latter of the two nodes doesn't already
-exist, we add it with $N_{rep}=1$.
+exist, we add the arrow with $N_{rep}=1$.
 If such an arrow already exists,
 we increase its $N_{rep}$ by one.
 
@@ -362,7 +362,7 @@ The full process from raw data to DAG atlas
 is broken down in MM to
 performing the following steps. 
 Most of my time programming
-was spent on the scripts that do
+was spent on the python scripts that do
 pre-processing of the data (
 i.e., steps 2, 3 and 4 below).
 Pre-processing data is hard!,
@@ -411,8 +411,7 @@ ones.
 
 I discovered, to my chagrin, that spell-checking
 without any input from a human user,
-is very error prone, unless one takes context into consideration. LLMs can do contextual spell-checking, but this project did not use LLMs,
-since I don't have access to them.
+is very error prone, unless one takes context into consideration. Certain types of LLMs can do contextual spell-checking, but this project did not use them.
 Instead of a contextual spell-checker,
 I used the non-contextual
 spell-checker $\tt pyspellchecker$
@@ -432,10 +431,9 @@ Here, I  use Openie6 to
 break each full sentence into ssents.\footnote{Alternatively,
 one can use my software SentenceAx.
 SentenceAx is a full rewrite of Openie6. 
-Openie6 and SentenceAx are both available at GitHub.
-}
+Openie6 and SentenceAx are both available at GitHub (Refs.\cite{openie6}, \cite{sentence-ax})}
 Each line with a full sentence is replaced by
-all of ssents derived from the full sentence.  The
+all the ssents derived from the full sentence.  The
 ssents are separated by 
 a separator-token ({\tt ZTZ\_SEPARATOR}).
 
@@ -468,7 +466,7 @@ For the movies, it is typically $1.5M$.
 
 For the similarity measure between nodes (i.e., ssents), I tried 
 many methods. I
-ended up using sBERT. 
+ended up using sBERT (Ref.\cite{sbert}). 
 
 \item Visualizing DAGs using methods in $\tt Dag.py$.
 
@@ -493,7 +491,7 @@ fine tunings of BERT.
 BERT is the encoder 
 part of the Vanilla Transformer
 Network
-first proposed in 2017.\footnote{For more information about Transformer Networks,
+first proposed in 2017 in the famous ``Attention is all you need" paper.\footnote{For more information about Transformer Networks,
 see my book Bayesuvius (Ref.\cite{bayesuvius}) which
 has a long chapter dedicated
 to them.}
@@ -501,7 +499,10 @@ to them.}
 
 MM does not, however, use 
 a promptable LLM such as
-ChatGPT. But it could use one.
+ChatGPT.\footnote{
+Promptable LLMs use the full (i.e., encoder and decoder)
+Vanilla Transformer Network, whereas BERT only uses the encoder part.} 
+But it could use one.
 A promptable
 LLM could perform
 the 3 data pre-processing steps
