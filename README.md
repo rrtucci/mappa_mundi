@@ -20,6 +20,8 @@ detail in this white paper:
 
 ![LLM add-ons](pics/llm-addons.jpg)
 
+![Mappa Mundi Causal Bridges](https://github.com/rrtucci/mappa_mundi/blob/master/pics/causal-bridges.png)
+
 ![My First Big Atlas](pics/my_first_big_atlas.jpeg)
 
 
