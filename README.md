@@ -24,6 +24,8 @@ detail in this white paper:
 
 ![Mappa Mundi Causal Bridges](https://github.com/rrtucci/mappa_mundi/blob/master/pics/causal-bridges-captioned.png)
 
+![Mappa Mundi Project](https://github.com/rrtucci/mappa_mundi/blob/master/pics/mm-project.png)
+
 ![My First Big Atlas](pics/my_first_big_atlas.jpeg)
 
 
